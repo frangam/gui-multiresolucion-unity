@@ -52,6 +52,9 @@ public class GUIComponente : IPosicionable {
 		get{			
 			Rect dist; //la distribucion
 			Vector2 posicionEscalada = Vector2.zero; //posicion escalada para la resolucion de pantalla
+			Vector2 dimensionesPantalla = dimensionPantallaEscalada(); //obtenemos la dimension de la pantalla ya aplicado el escalado
+			
+			Debug.Log(dimensionesPantalla);
 			
 			//si se ha indicado un anclado para el componente, lo anclamos a este
 			if(_ancladoA != TipoAnclado.SIN_ANCLADO){
@@ -73,12 +76,12 @@ public class GUIComponente : IPosicionable {
 			//si se quiere que el componente ocupe toda la anchura de la pantalla
 			//teniendo en cuenta que la anchura de la pantalla es la anchura nativa a la que se ha modelado la gui
 			if(ocuparTodoElAncho){
-				anchura = GUIEscalador.ANCHO_NATIVO;	
+				anchura = dimensionesPantalla.x; //anchura	
 			}
 			//si se quiere que el componente ocupe toda la altura de la pantalla
 			//teniendo en cuenta que la altura de la pantalla es la altura nativa a la que se ha modelado la gui
 			if(ocuparTodoElAlto){
-				altura = GUIEscalador.ALTO_NATIVO;
+				altura = dimensionesPantalla.y; //altura
 			}
 			
 			//construimos el rectangulo que es la distribucion en pantalla del componente gui
@@ -182,21 +185,29 @@ public class GUIComponente : IPosicionable {
 		return posicionRelativa;
 	}
 	
-	public Vector2 dimensionEscaladaPantalla(){
+	public Vector2 dimensionPantallaEscalada(){
 		float anchuraDispositivo = Screen.width; //la anchura del dispositivo donde se esta ejecutando el juego
 		float alturaDispositivo = Screen.height; //la anchura del dispositivo donde se esta ejecutando el juego
 		float factorEscaladoAnchura = GUIEscalador.factorEscaladoX; //factor para escalar la anchura del componenete gui
 		float factorEscaladoAltura = GUIEscalador.factorEscaladoY; //factor para escalar la altura del componenete gui
 		
-		float anchuraEscalada = (anchuraDispositivo/factorEscaladoAnchura) - anchura;
-		float alturaEscalada = (alturaDispositivo/factorEscaladoAltura) - altura;
+		float anchuraEscalada = (anchuraDispositivo/factorEscaladoAnchura);
+		float alturaEscalada = (alturaDispositivo/factorEscaladoAltura);
+		
+		return new Vector2(anchuraEscalada, alturaEscalada);	
+	}
+	
+	public Vector2 dimensionPantallaEscaladaSegunDimensionesDelComponente(){
+		Vector2 dimensionPantalla = dimensionPantallaEscalada();
+		float anchuraEscalada = dimensionPantalla.x - anchura;
+		float alturaEscalada = dimensionPantalla.y - altura;
 		
 		return new Vector2(anchuraEscalada, alturaEscalada);
 	}
 	
 	public Vector2 posicionDesdeSuperiorIzquierda(float xPorcentaje, float yPorcentaje){
 		Vector2 posicionAncla = posicionDelAncladoSeleccionado(TipoAnclado.SUPERIOR_IZQUIERDA); //obtenemos la posicion del anclado
-		Vector2 dimensionPantalla = dimensionEscaladaPantalla(); //x: anchura, y:altura
+		Vector2 dimensionPantalla = dimensionPantallaEscaladaSegunDimensionesDelComponente(); //x: anchura, y:altura
 		float xEscalada = posicionAncla.x + (dimensionPantalla.x*Mathf.Clamp(xPorcentaje, 0f, 1f)); 
 		float yEscalada = posicionAncla.y + (dimensionPantalla.y*Mathf.Clamp(yPorcentaje, 0f, 1f)); 
 		
@@ -205,7 +216,7 @@ public class GUIComponente : IPosicionable {
 	
 	public Vector2 posicionDesdeSuperiorCentro(float xPorcentaje, float yPorcentaje){
 		Vector2 posicionAncla = posicionDelAncladoSeleccionado(TipoAnclado.SUPERIOR_CENTRO); //obtenemos la posicion del anclado
-		Vector2 dimensionPantalla = dimensionEscaladaPantalla(); //x: anchura, y:altura
+		Vector2 dimensionPantalla = dimensionPantallaEscaladaSegunDimensionesDelComponente(); //x: anchura, y:altura
 		float xEscalada = posicionAncla.x + (dimensionPantalla.x/2*Mathf.Clamp(xPorcentaje, -1f, 1f)); //Dividir entre 2 dimensionPantalla.x para no salirnos de los bordes. -1f de minimo (-100%) para distanciarlo hacia la izq
 		float yEscalada = posicionAncla.y + (dimensionPantalla.y*Mathf.Clamp(yPorcentaje, 0f, 1f)); 
 		
@@ -214,7 +225,7 @@ public class GUIComponente : IPosicionable {
 	
 	public Vector2 posicionDesdeSuperiorDerecha(float xPorcentaje, float yPorcentaje){
 		Vector2 posicionAncla = posicionDelAncladoSeleccionado(TipoAnclado.SUPERIOR_DERECHA); //obtenemos la posicion del anclado
-		Vector2 dimensionPantalla = dimensionEscaladaPantalla(); //x: anchura, y:altura
+		Vector2 dimensionPantalla = dimensionPantallaEscaladaSegunDimensionesDelComponente(); //x: anchura, y:altura
 		float xEscalada = posicionAncla.x - (dimensionPantalla.x*Mathf.Clamp(xPorcentaje, 0f, 1f)); //restamos porque distanciamos el componente gui hacia la izquierda
 		float yEscalada = posicionAncla.y + (dimensionPantalla.y*Mathf.Clamp(yPorcentaje, 0f, 1f)); 
 		
@@ -223,7 +234,7 @@ public class GUIComponente : IPosicionable {
 	
 	public Vector2 posicionDesdeCentroIzquierda(float xPorcentaje, float yPorcentaje){
 		Vector2 posicionAncla = posicionDelAncladoSeleccionado(TipoAnclado.CENTRO_IZQUIERDA); //obtenemos la posicion del anclado
-		Vector2 dimensionPantalla = dimensionEscaladaPantalla(); //x: anchura, y:altura
+		Vector2 dimensionPantalla = dimensionPantallaEscaladaSegunDimensionesDelComponente(); //x: anchura, y:altura
 		float xEscalada = posicionAncla.x + (dimensionPantalla.x*Mathf.Clamp(xPorcentaje, 0f, 1f)); 
 		float yEscalada = posicionAncla.y + (dimensionPantalla.y/2*Mathf.Clamp(yPorcentaje, -1f, 1f)); //Dividir entre 2 dimensionPantalla.x para no salirnos de los bordes. -1f de minimo (-100%) para distanciarlo hacia abajo
 		
@@ -232,7 +243,7 @@ public class GUIComponente : IPosicionable {
 	
 	public Vector2 posicionDesdeCentro(float xPorcentaje, float yPorcentaje){
 		Vector2 posicionAncla = posicionDelAncladoSeleccionado(TipoAnclado.CENTRO); //obtenemos la posicion del anclado
-		Vector2 dimensionPantalla = dimensionEscaladaPantalla(); //x: anchura, y:altura
+		Vector2 dimensionPantalla = dimensionPantallaEscaladaSegunDimensionesDelComponente(); //x: anchura, y:altura
 		float xEscalada = posicionAncla.x + (dimensionPantalla.x/2*Mathf.Clamp(xPorcentaje, -1f, 1f)); //Dividir entre 2 dimensionPantalla.x para no salirnos de los bordes. -1f de minimo (-100%) para distanciarlo hacia la izq
 		float yEscalada = posicionAncla.y + (dimensionPantalla.y/2*Mathf.Clamp(yPorcentaje, -1f, 1f)); //Dividir entre 2 dimensionPantalla.x para no salirnos de los bordes. -1f de minimo (-100%) para distanciarlo hacia abajo
 		
@@ -241,7 +252,7 @@ public class GUIComponente : IPosicionable {
 	
 	public Vector2 posicionDesdeCentroDerecha(float xPorcentaje, float yPorcentaje){
 		Vector2 posicionAncla = posicionDelAncladoSeleccionado(TipoAnclado.CENTRO_DERECHA); //obtenemos la posicion del anclado
-		Vector2 dimensionPantalla = dimensionEscaladaPantalla(); //x: anchura, y:altura
+		Vector2 dimensionPantalla = dimensionPantallaEscaladaSegunDimensionesDelComponente(); //x: anchura, y:altura
 		float xEscalada = posicionAncla.x - (dimensionPantalla.x*Mathf.Clamp(xPorcentaje, 0f, 1f)); //restamos porque distanciamos el componente gui hacia la izquierda 
 		float yEscalada = posicionAncla.y + (dimensionPantalla.y/2*Mathf.Clamp(yPorcentaje, -1f, 1f)); //Dividir entre 2 dimensionPantalla.x para no salirnos de los bordes. -1f de minimo (-100%) para distanciarlo hacia abajo
 		
@@ -250,7 +261,7 @@ public class GUIComponente : IPosicionable {
 	
 	public Vector2 posicionDesdeInferiorIzquierda(float xPorcentaje, float yPorcentaje){
 		Vector2 posicionAncla = posicionDelAncladoSeleccionado(TipoAnclado.INFERIOR_IZQUIERDA); //obtenemos la posicion del anclado	
-		Vector2 dimensionPantalla = dimensionEscaladaPantalla(); //x: anchura, y:altura
+		Vector2 dimensionPantalla = dimensionPantallaEscaladaSegunDimensionesDelComponente(); //x: anchura, y:altura
 		float xEscalada = posicionAncla.x + (dimensionPantalla.x*Mathf.Clamp(xPorcentaje, 0f, 1f)); 
 		float yEscalada = posicionAncla.y - (dimensionPantalla.y*Mathf.Clamp(yPorcentaje, 0f, 1f)); //restamos porque distanciamos el componente gui hacia arriba
 			
@@ -259,7 +270,7 @@ public class GUIComponente : IPosicionable {
 	
 	public Vector2 posicionDesdeInferiorCentro(float xPorcentaje, float yPorcentaje){
 		Vector2 posicionAncla = posicionDelAncladoSeleccionado(TipoAnclado.INFERIOR_CENTRO); //obtenemos la posicion del anclado	
-		Vector2 dimensionPantalla = dimensionEscaladaPantalla(); //x: anchura, y:altura
+		Vector2 dimensionPantalla = dimensionPantallaEscaladaSegunDimensionesDelComponente(); //x: anchura, y:altura
 		float xEscalada = posicionAncla.x + (dimensionPantalla.x/2*Mathf.Clamp(xPorcentaje, -1f, 1f)); //Dividir entre 2 dimensionPantalla.x para no salirnos de los bordes. -1f de minimo (-100%) para distanciarlo hacia la izq
 		float yEscalada = posicionAncla.y - (dimensionPantalla.y*Mathf.Clamp(yPorcentaje, 0f, 1f)); //restamos porque distanciamos el componente gui hacia arriba
 			
@@ -268,7 +279,7 @@ public class GUIComponente : IPosicionable {
 	
 	public Vector2 posicionDesdeInferiorDerecha(float xPorcentaje, float yPorcentaje){
 		Vector2 posicionAncla = posicionDelAncladoSeleccionado(TipoAnclado.INFERIOR_DERECHA); //obtenemos la posicion del anclado	
-		Vector2 dimensionPantalla = dimensionEscaladaPantalla(); //x: anchura, y:altura
+		Vector2 dimensionPantalla = dimensionPantallaEscaladaSegunDimensionesDelComponente(); //x: anchura, y:altura
 		float xEscalada = posicionAncla.x - (dimensionPantalla.x*Mathf.Clamp(xPorcentaje, 0f, 1f)); //restamos porque distanciamos el componente gui hacia la izquierda
 		float yEscalada = posicionAncla.y - (dimensionPantalla.y*Mathf.Clamp(yPorcentaje, 0f, 1f)); //restamos porque distanciamos el componente gui hacia arriba
 			

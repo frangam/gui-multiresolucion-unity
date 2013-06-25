@@ -171,5 +171,14 @@ public interface IPosicionable {
 	/// <returns>
 	/// La componenete x del Vector2 es la anchura escalada, y la componente y la altura escalada
 	/// </returns>
-	Vector2 dimensionEscaladaPantalla();
+	Vector2 dimensionPantallaEscalada();
+	
+	/// <summary>
+	/// La dimension de la pantalla escalada para todo tipo de resoluciones de pantalla
+	/// teniendo en cuenta las dimensiones del componente GUI que se va a posicionar.
+	/// </summary>
+	/// <returns>
+	/// La componenete x del Vector2 es la anchura escalada, y la componente y la altura escalada
+	/// </returns>
+	Vector2 dimensionPantallaEscaladaSegunDimensionesDelComponente();
 }
