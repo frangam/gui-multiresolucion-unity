@@ -10,10 +10,8 @@ using System.Collections;
 public class GUIImagen:GUIComponente {
     public Texture textura;
 	
-    public Rect distribucion
-    {
-        get
-        {
+    public Rect distribucion{
+        get{
 			//cambiamos las dimensiones si la anchura/altura del componente es 0
 			if(this.anchura == 0 && textura.width != null){
 	        	this.anchura =  textura.width;

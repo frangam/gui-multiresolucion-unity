@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 /// <summary>
 /// Autor: Fran Garcia <www.fgarmo.com>
@@ -7,10 +8,16 @@ using System.Collections;
 /// Representa un componente de la GUI
 /// </summary>
 [System.Serializable]
-public class GUIComponente : IPosicionable {
+public class GUIComponente : IPosicionable, IComparable {	
 	public string nombre;	
 	public float anchura = 0;
 	public float altura = 0;
+	
+	/// <summary>
+	/// La profundid es un numero para ordenar el renderizado de los gui componentes,
+	/// es decir, establece un orden de dibujado en pantalla segun este parametro.
+	/// </summary>
+	public int profundidad = 0;
 	
 	/// <summary>
 	/// Si es true ocupara todo el ancho de a pantalla
@@ -45,8 +52,6 @@ public class GUIComponente : IPosicionable {
 			Rect dist; //la distribucion
 			Vector2 posicionEscalada = Vector2.zero; //posicion escalada para la resolucion de pantalla
 			Vector2 dimensionesPantalla = dimensionPantallaEscalada(); //obtenemos la dimension de la pantalla ya aplicado el escalado
-			
-//			Debug.Log(dimensionesPantalla);
 			
 			if(_relativoA != TipoAnclado.SIN_ANCLADO){ //si se quiere posicionar de forma relativa a un anclado concreto
 				posicionEscalada = posicionRelativaAlAncla(_relativoA); //obtenemos la posicion relativa al ancla indicada
@@ -415,6 +420,38 @@ public class GUIComponente : IPosicionable {
 		float yEscalada = this.posicionDelAnclado.y - (dimensionPantalla.y*Mathf.Clamp(yPorcentaje, 0f, 1f)); //restamos porque distanciamos el componente gui hacia arriba
 			
 		return new Vector2(xEscalada, yEscalada);
+	}
+	
+	#endregion
+	
+	
+	#region implementacion del IComparable
+	
+	/// <summary>
+	/// Ordena los GUI Componentes segun su valor de profundidad. Una profundidad mayor indica que el componente
+	/// se dibujara mas abajo. Una profundidad menor, indica que el componente se dibujara mas al frente (arriba).
+	/// 
+	/// Por lo que, tenemos que modificar el CompareTo para que funcione al revés.
+	/// </summary>
+	/// <returns>
+	/// -1 si la profundidad del otro componente es menor. 0 si tienen la misma profundidad. +1 si la profundidad del otro 
+	/// componente es mayor.
+	/// </returns>
+	/// <param name='otroComponente'>
+	/// El otro gui componente
+	/// </param>
+	public int CompareTo(System.Object otroComponente){
+		int res = 0;
+		GUIComponente aux = (GUIComponente) otroComponente;
+		
+		if(aux.profundidad > this.profundidad){
+			res = 1;	
+		}
+		else if(aux.profundidad < this.profundidad){
+			res = -1;	
+		}
+		
+		return res;
 	}
 	
 	#endregion

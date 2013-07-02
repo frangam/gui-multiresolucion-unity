@@ -1,15 +1,11 @@
 using UnityEngine;
 using System.Collections;
+using TouchScript;
+using TouchScript.Hit;
 
-public class ControlToques : MonoBehaviour {
+public class ControlToques : HitTest {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+	public ControlToques(){
+		
 	}
 }
