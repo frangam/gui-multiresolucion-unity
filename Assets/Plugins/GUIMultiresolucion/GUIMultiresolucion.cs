@@ -2,7 +2,9 @@ using UnityEngine;
 using System.Collections;
 using GUIMultiresolucion.GUIComponentes;
 
+
 namespace GUIMultiresolucion{
+	[ExecuteInEditMode]
 	/// <summary>
 	/// Adjuntar a un GameObject vacio y añadir los componentes de la gui al array
 	/// </summary>
@@ -93,7 +95,7 @@ namespace GUIMultiresolucion{
 			//dibuja los botones
 			foreach(GUIBoton b in botonesAL){
 				//si se pulsa un boton
-				GUI.Button(b.distribucion,b.texturaNormal, p_buttonStyle);
+				GUI.Button(b.distribucion,b.TexturaDibujar, p_buttonStyle);
 	//			DibujarRectangulo(b.distribucion, Color.black); //solo para TEST
 				
 				

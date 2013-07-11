@@ -15,8 +15,9 @@ namespace GUIMultiresolucion.GUIComponentes{
 		public Texture texturaNormal;
 		public Texture texturaPulsado;
 		
-		public Texture texturaDibujar;
+		private Texture texturaDibujar;
 	
+		#region propiedades publicas
 	    public Rect distribucion{
 	        get{
 	           
@@ -34,7 +35,12 @@ namespace GUIMultiresolucion.GUIComponentes{
 	        }
 	    }
 		
-		public BoxCollider collider;
+		public Texture TexturaDibujar{
+			get{return texturaDibujar;}
+			set{texturaDibujar = value;}
+		}
+		
+		#endregion
 		
 		
 		
@@ -51,6 +57,11 @@ namespace GUIMultiresolucion.GUIComponentes{
 		}		
 		
 		
-
+		#region Unity
+		public void Start(){
+//			base.Start();
+			texturaDibujar = texturaNormal;
+		}
+		#endregion
 	}
 }
