@@ -9,7 +9,17 @@ namespace GUIMultiresolucion{
 	/// Adjuntar a un GameObject vacio y añadir los componentes de la gui al array
 	/// </summary>
 	public class GUIMultiresolucion : MonoBehaviour {
-	
+		#region atributos configurables
+		/// <summary>
+		/// Ancho usado para crear las texturas
+		/// </summary>
+		public float anchoNativo = 800; 
+		
+		/// <summary>
+		/// Alto usado para crear las texturas
+		/// </summary>
+		public float altoNativo = 1280;
+		
 		public GUIBoton[] botones;
 		public GUIImagen[] imagenes;
 		
@@ -20,11 +30,26 @@ namespace GUIMultiresolucion{
 		public string buttonStyle; //nombre del estilo para el boton
 		
 		
+		/// <summary>
+		/// la camara de la gui, que es ortografica.
+		/// No crear mas camaras ortograficas, solo con proyeccion perspectiva. 
+		/// Si se quiere una camara ortografica, usar esta que se crea sola con el prefab GUIMultiresolucion.
+		/// </summary>
+		private Camera camGUI;
+		#endregion
 		
+		#region atributos privados
+		private DeviceOrientation orientacionPrevia;
+		#endregion
 		
 		#region Unity
 		
-		void Start(){
+		void Awake(){
+			orientacionPrevia = Input.deviceOrientation;
+			camGUI = GameObject.Find("GUIMultiresolucion").GetComponent<Camera>(); 
+			
+			GUIEscalador.inicializar(camGUI, anchoNativo, altoNativo);
+			
 			//primero ordenamos los gui componentes segun su profundidad para que se muestren en orden
 			//primero los menos profundos, y debajo de estos los mas profundos
 			ordenarComponentesADibujar();
@@ -35,6 +60,15 @@ namespace GUIMultiresolucion{
 	//		GameObject cubo =  GameObject.CreatePrimitive(PrimitiveType.Cube);
 	//		cubo.name = "cubo";
 	//		cubo.transform.localScale = new Vector3(botones[0].anchura, botones[0].altura, 1);
+		}
+		
+		void Update(){
+			if (Input.deviceOrientation != orientacionPrevia && (Input.deviceOrientation == DeviceOrientation.Portrait || Input.deviceOrientation == DeviceOrientation.PortraitUpsideDown)){
+				Debug.Log("actualizando guiescalador para Portrait");	
+			}
+			else if(Input.deviceOrientation != orientacionPrevia && (Input.deviceOrientation == DeviceOrientation.LandscapeLeft || Input.deviceOrientation == DeviceOrientation.LandscapeRight)){
+				Debug.Log("actualizando guiescalador para Apaisado");	
+			}
 		}
 		
 		void OnGUI(){

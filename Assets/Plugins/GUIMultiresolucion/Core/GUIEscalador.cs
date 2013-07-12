@@ -17,33 +17,37 @@ using System.Collections.Generic;
 /// llamar a InicioGUI() y al final de la creacion terminar llamando a FinGUI();
 /// </summary>
 public class GUIEscalador {
-	#region constantes
+	#region atributos estaticos
 	/// <summary>
 	/// La anchura nativa es a la que se han diseñado todos los elementos de la GUI
 	/// </summary>
-	public const float ANCHO_NATIVO = 800; 
+	public static float ANCHO_NATIVO {get; private set;}
 	
 	/// <summary>
 	/// La altura nativa es a la que se han diseñado todos los elementos de la GUI
 	/// </summary>
-	public const float ALTO_NATIVO = 1280;          
-	#endregion
+	public static float ALTO_NATIVO {get; private set;}     
 	
-	#region atributos estaticos
 	/// <summary>
 	/// Es el factor que aplicamos al escalado en la coordenada X del elemento GUI.
 	/// Esta relacionado con la altura del dispositivo en el que se ejecuta el juego 
 	/// y el alto nativo usado para crear las texturas
 	/// </summary>
-	public static float factorEscaladoX = Screen.height / ALTO_NATIVO; 
+	public static float factorEscaladoX {get; private set;} 
 	
 	/// <summary>
 	/// The factor escalado y.
 	/// </summary>
-	public static float factorEscaladoY = Screen.width / ANCHO_NATIVO; //el factor que aplicamos al escalado en la coordenada Y esta relacionado con la anchura del dispositivo y el ancho usado para crear las texturas
+	public static float factorEscaladoY {get; private set;} 
+	
+	/// <summary>
+	/// relacion entre pixeles y unidades de unity en camara ortografica inicializado para orientacion de pantalla portrait
+	/// </summary>
+	public static float pixelRatio {get; private set;} 
+	
 	#endregion
 	
-	#region atributos privados
+	#region atributos privados	
 	/// <summary>
 	/// Lista con las matrices 4x4 que se van usando para escalar la gui
 	/// </summary>
@@ -51,6 +55,43 @@ public class GUIEscalador {
 	#endregion
 	
 	#region metodos estaticos
+	/// <summary>
+	/// Inicializa el GUIEscalador
+	/// </summary>
+	/// <param name='camGUI'>
+	/// La camara de la gui
+	/// </param>
+	/// <param name='anchoNativo'>
+	/// Ancho nativo de las texturas
+	/// </param>
+	/// <param name='altoNativo'>
+	/// Alto nativo de las texturas
+	/// </param>
+	public static void inicializar(Camera camGUI, float anchoNativo, float altoNativo){
+		//inicializamos las propiedades
+		ANCHO_NATIVO = anchoNativo;
+		ALTO_NATIVO = altoNativo;
+		pixelRatio = (camGUI.orthographicSize * 2f) / camGUI.pixelHeight;
+		
+		
+		bool esPortrait = Screen.height >= Screen.width;
+		
+		//segun la orientacion de pantalla calculamos los factores de escalado en la X y la Y de los elementos de la GUI
+		//y el pixel ratio
+		if(esPortrait){
+			factorEscaladoX = Screen.height / ALTO_NATIVO; 
+			factorEscaladoY = Screen.width / ANCHO_NATIVO;
+		}
+		else{
+			factorEscaladoX = Screen.height / ANCHO_NATIVO; 
+			factorEscaladoY = Screen.width / ALTO_NATIVO;
+		}
+	}
+	
+	public static void actualizar(){
+		
+	}
+	
 	/// <summary>
 	/// Este metodo debe ser llamado antes de empezar a crear los componentes de la gui, al principio del metodo OnGUI.
 	/// Modifica la GUI.matrix con una matriz que la reescala segun la altura y anchura del dispositivo y la altura/anchura nativa
@@ -64,6 +105,13 @@ public class GUIEscalador {
 	    escaladoEnX = factorEscaladoX;
 	    escaladoEnY = factorEscaladoY;
 	  
+		if(factorEscaladoX == 0f){
+			factorEscaladoX = 1f;	
+		}
+		if(factorEscaladoY == 0f){
+			factorEscaladoY = 1f;	
+		}
+		
 	    m.SetTRS(Vector3.zero, Quaternion.identity, new Vector3(factorEscaladoX, factorEscaladoY, 1));
 	    UnityEngine.GUI.matrix *= m;
 	}

@@ -22,7 +22,10 @@ public class EventosGUIBoton: MonoBehaviour {
 		//segun el estado del evento
 		switch(e.State){
 			case Gesture.GestureState.Began:
-				boton.TexturaDibujar = boton.texturaPulsado;
+				//si tiene asignada una textura para cuando se pulsa el boton, le cambiamos la textura que tiene que dibujarse por esa
+				if(boton.texturaPulsado){
+					boton.TexturaDibujar = boton.texturaPulsado;
+				}
 			break;
 			//si se cancela o finaliza
 			case Gesture.GestureState.Failed:
@@ -31,7 +34,7 @@ public class EventosGUIBoton: MonoBehaviour {
 				boton.TexturaDibujar = boton.texturaNormal;
 			
 				if(e.State == Gesture.GestureState.Failed){
-					Debug.Log("fallo");
+//					Debug.Log("fallo");
 				}
 			break;
 		}

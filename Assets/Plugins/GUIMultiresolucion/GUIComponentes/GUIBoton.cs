@@ -10,6 +10,7 @@ namespace GUIMultiresolucion.GUIComponentes{
 	/// Representa un boton de la gui
 	/// </summary>
 	[System.Serializable]
+	[ExecuteInEditMode]
 	public class GUIBoton: GUIComponente{
 	        
 		public Texture texturaNormal;
