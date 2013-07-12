@@ -26,14 +26,8 @@ namespace GUIMultiresolucion{
 		/// </summary>
 		public GUIComponente[] componentesGUI;
 		
-		
-		public GUIBoton[] botones;
-		public GUIImagen[] imagenes;
-		
-		
-		
-		public GUIStyle p_buttonStyle;
-		public string buttonStyle; //nombre del estilo para el boton
+//		public GUIStyle p_buttonStyle;
+//		public string buttonStyle; //nombre del estilo para el boton
 		
 		
 		/// <summary>
@@ -45,43 +39,52 @@ namespace GUIMultiresolucion{
 		#endregion
 		
 		#region atributos privados
-		private DeviceOrientation orientacionPrevia;
+		/// <summary>
+		/// True si la orientacion previa es en portrait, false si es en landscape (apaisado)
+		/// </summary>
+		private bool orientacionPreviaEraPortrait;
 		
 		/// <summary>
 		/// los componentes de la gui ordenados por la profundidad, para que sean dibujados segun esta
 		/// </summary>
 		private ArrayList componentesGUIOrdenados = new ArrayList();
-		
-		private ArrayList botonesAL = new ArrayList();
-		private ArrayList imagenesAL = new ArrayList();
 		#endregion
 		
 		#region Unity
 		
 		void Awake(){
-			orientacionPrevia = Input.deviceOrientation;
+			//condicion de pantalla en portrait.
+			orientacionPreviaEraPortrait = Screen.height >= Screen.width;
+			
+			//obtenemos la camara de la gui
 			camGUI = GameObject.Find("GUIMultiresolucion").GetComponent<Camera>(); 
 			
+			//inicializamos el escalador de la gui
 			GUIEscalador.inicializar(camGUI, anchoNativo, altoNativo);
 			
 			//primero ordenamos los gui componentes segun su profundidad para que se muestren en orden
 			//primero los menos profundos, y debajo de estos los mas profundos
 			ordenarComponentesADibujar();
 			
+			//inicializamos los componentes de la gui
 			inicializarComponentes();
-			
-			//TEST
-	//		GameObject cubo =  GameObject.CreatePrimitive(PrimitiveType.Cube);
-	//		cubo.name = "cubo";
-	//		cubo.transform.localScale = new Vector3(botones[0].anchura, botones[0].altura, 1);
 		}
 		
-		void Update(){
-			if (Input.deviceOrientation != orientacionPrevia && (Input.deviceOrientation == DeviceOrientation.Portrait || Input.deviceOrientation == DeviceOrientation.PortraitUpsideDown)){
-				Debug.Log("actualizando guiescalador para Portrait");	
+		void LateUpdate(){
+			//comprobamos si esta orientada en portrait o no la pantalla
+			bool esPortraitAhora = Screen.height >= Screen.width;
+			
+			//cambiando orientacion a Portrait
+			if (!orientacionPreviaEraPortrait && esPortraitAhora){
+				orientacionPreviaEraPortrait = true;
+//				GUIEscalador.actualizar(orientacionPreviaEraPortrait);
+//				actualizarComponentes();	
 			}
-			else if(Input.deviceOrientation != orientacionPrevia && (Input.deviceOrientation == DeviceOrientation.LandscapeLeft || Input.deviceOrientation == DeviceOrientation.LandscapeRight)){
-				Debug.Log("actualizando guiescalador para Apaisado");	
+			//cambiando orientacion a Landscape (apaisado)
+			else if(orientacionPreviaEraPortrait && !esPortraitAhora){
+				orientacionPreviaEraPortrait = false;
+//				GUIEscalador.actualizar(orientacionPreviaEraPortrait);
+//				actualizarComponentes();	
 			}
 		}
 		
@@ -90,11 +93,11 @@ namespace GUIMultiresolucion{
 	        GUIEscalador.InicioGUI(); 
 			
 			
-		  		//asignamos un skin a los botones      
-		        if(p_buttonStyle == null)
-		        {
-		            p_buttonStyle = GUI.skin.FindStyle(buttonStyle);
-		        }
+//		  		//asignamos un skin a los botones      
+//		        if(p_buttonStyle == null)
+//		        {
+//		            p_buttonStyle = GUI.skin.FindStyle(buttonStyle);
+//		        }
 		      
 		    	//dibuja todos los componentes GUI adjuntados
 				dibujarComponentes();
@@ -110,11 +113,18 @@ namespace GUIMultiresolucion{
 		
 		
 		#region metodos privados
+		/// <summary>
+		/// inicializamos los componentes
+		/// </summary>
+		public void inicializarComponentes(){
+			foreach (GUIComponente c in componentesGUI){
+				c.inicializar();
+	        }
+		}
 		
-		private void inicializarComponentes(){
-			//inicializamos los botones
-			foreach (GUIBoton t in botones){
-				t.inicializar();
+		public void actualizarComponentes(){
+			foreach (GUIComponente c in componentesGUI){
+				c.actualizar();
 	        }
 		}
 		
@@ -128,22 +138,6 @@ namespace GUIMultiresolucion{
 			}
 			//y los ordenamos
 			componentesGUIOrdenados.Sort();
-			
-//			//ordenamos los botones
-//			foreach (GUIBoton t in botones){
-//				botonesAL.Add(t);
-//				
-//	            //Pressed(buttons[i].name);
-//	        }
-//	
-//			botonesAL.Sort(); //ordenar los botones por la profundidad (ver implementacion de CompareTo() en GUIComponente)
-//			
-//			//ordenamos la imagenes
-//			foreach(GUIImagen i in imagenes){
-//				imagenesAL.Add(i);
-//			}
-//			
-//			imagenesAL.Sort();//ordenar las imagenes por la profundidad (ver implementacion de CompareTo() en GUIComponente)
 		}
 		
 		/// <summary>
@@ -152,32 +146,19 @@ namespace GUIMultiresolucion{
 		private void dibujarComponentes(){
 			//para dibujar los componentes recorremos el arraylist que los contiene ya ordenados por la profundidad
 			foreach(GUIComponente c in componentesGUIOrdenados){
-				//el componente es un GUIBoton
-				if(c.GetType() == typeof(GUIBoton)){
-					GUIBoton b = (GUIBoton) c;
-					GUI.DrawTexture(b.distribucion, b.TexturaDibujar);
-				}
-				else if(c.GetType() == typeof(GUIImagen)){
-					GUIImagen i = (GUIImagen) c;
-					GUI.DrawTexture(i.distribucion, i.textura);
+				//si se puede ver lo dibujamos
+				if(c.visible){
+					//el componente es un GUIBoton
+					if(c.GetType() == typeof(GUIBoton)){
+						GUIBoton b = (GUIBoton) c;
+						GUI.DrawTexture(b.distribucion, b.TexturaDibujar);
+					}
+					else if(c.GetType() == typeof(GUIImagen)){
+						GUIImagen i = (GUIImagen) c;
+						GUI.DrawTexture(i.distribucion, i.textura);
+					}
 				}
 			}
-			
-//			//dibuja los botones
-//			foreach(GUIBoton b in botonesAL){
-//				//si se pulsa un boton
-//				GUI.Button(b.distribucion,b.TexturaDibujar, p_buttonStyle);
-//	//			DibujarRectangulo(b.distribucion, Color.black); //solo para TEST
-//				
-//				
-//			}	
-//			
-//			
-//			//dibuja las imagenes		
-//			foreach(GUIImagen i in imagenesAL){
-//				GUI.DrawTexture(i.distribucion, i.textura);
-//			}
-			
 		}
 		
 //		/// <summary>

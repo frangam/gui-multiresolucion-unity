@@ -44,8 +44,8 @@ namespace GUIMultiresolucion.GUIComponentes{
 		#endregion
 		
 		
-		
-		public void inicializar(){	
+		#region metodos sobreescritos de GUIComponente
+		public override void inicializar(){	
 			//cambiamos las dimensiones si la anchura/altura del componente es 0
 			if(this.anchura == 0 && texturaNormal.width != null){
 	        	this.anchura =  texturaNormal.width;
@@ -56,7 +56,11 @@ namespace GUIMultiresolucion.GUIComponentes{
 			}
 			
 		}		
-		
+		public override void actualizar (){
+			base.actualizar();
+			GetComponent<ColliderBoton>().actualizar();
+		}
+		#endregion
 		
 		#region Unity
 		public void Start(){

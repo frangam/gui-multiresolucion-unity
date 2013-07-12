@@ -100,6 +100,15 @@ namespace GUIMultiresolucion.Core{
 		/// </summary>
 		private Vector2 dimensionPantalla;
 		
+		#region metodos publicos
+		public virtual void inicializar(){
+			
+		}
+		public virtual void actualizar(){
+
+		}
+		#endregion
+		
 		#region implementacion de IPosicionable
 		
 		/// <summary>

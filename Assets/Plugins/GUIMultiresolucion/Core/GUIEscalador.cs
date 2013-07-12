@@ -73,23 +73,41 @@ public class GUIEscalador {
 		ALTO_NATIVO = altoNativo;
 		pixelRatio = (camGUI.orthographicSize * 2f) / camGUI.pixelHeight;
 		
-		
 		bool esPortrait = Screen.height >= Screen.width;
 		
 		//segun la orientacion de pantalla calculamos los factores de escalado en la X y la Y de los elementos de la GUI
-		//y el pixel ratio
+		calculaFactoresEscalado(esPortrait);
+	}
+	
+	/// <summary>
+	/// Actualiza el escalador segun sea la orientacion de la pantalla portrait o landscape (apaisado)
+	/// </summary>
+	/// <param name='esPortrait'>
+	/// True si es portrait la orientacion de la pantalla, false si es landscape (apaisado)
+	/// </param>
+	public static void actualizar(bool esPortrait){
+		calculaFactoresEscalado(esPortrait);
+	}
+	
+	/// <summary>
+	/// Calcula los factores de escalado segun sea la orientacion de la pantalla portrait o landscape (apaisado)
+	/// </summary>
+	/// <param name='esPortrait'>
+	/// True si es portrait la orientacion de la pantalla, false si es landscape (apaisado)
+	/// </param>
+	private static void calculaFactoresEscalado(bool esPortrait){
 		if(esPortrait){
 			factorEscaladoX = Screen.height / ALTO_NATIVO; 
 			factorEscaladoY = Screen.width / ANCHO_NATIVO;
 		}
 		else{
+//			float aux = ALTO_NATIVO;
+//			ALTO_NATIVO = ANCHO_NATIVO;
+//			ANCHO_NATIVO = aux;
+				
 			factorEscaladoX = Screen.height / ANCHO_NATIVO; 
 			factorEscaladoY = Screen.width / ALTO_NATIVO;
 		}
-	}
-	
-	public static void actualizar(){
-		
 	}
 	
 	/// <summary>
