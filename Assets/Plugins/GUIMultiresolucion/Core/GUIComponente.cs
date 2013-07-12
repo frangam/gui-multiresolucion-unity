@@ -50,6 +50,11 @@ namespace GUIMultiresolucion.Core{
 		/// </summary>
 		public bool visible = true;
 		
+		public bool Visible{
+			get{return visible;}
+			set{visible = value;}
+		}
+		
 		/// <summary>
 		/// Un rectangulo que representa la posicion y las dimensiones del componente
 		/// </summary>
@@ -106,6 +111,9 @@ namespace GUIMultiresolucion.Core{
 		}
 		public virtual void actualizar(){
 
+		}
+		public virtual void dibujar(){
+			
 		}
 		#endregion
 		

@@ -148,15 +148,7 @@ namespace GUIMultiresolucion{
 			foreach(GUIComponente c in componentesGUIOrdenados){
 				//si se puede ver lo dibujamos
 				if(c.visible){
-					//el componente es un GUIBoton
-					if(c.GetType() == typeof(GUIBoton)){
-						GUIBoton b = (GUIBoton) c;
-						GUI.DrawTexture(b.distribucion, b.TexturaDibujar);
-					}
-					else if(c.GetType() == typeof(GUIImagen)){
-						GUIImagen i = (GUIImagen) c;
-						GUI.DrawTexture(i.distribucion, i.textura);
-					}
+					c.dibujar();
 				}
 			}
 		}
