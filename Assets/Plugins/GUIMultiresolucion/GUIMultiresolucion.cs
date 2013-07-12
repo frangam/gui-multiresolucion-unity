@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using GUIMultiresolucion.Core;
 using GUIMultiresolucion.GUIComponentes;
 
 
@@ -20,11 +21,16 @@ namespace GUIMultiresolucion{
 		/// </summary>
 		public float altoNativo = 1280;
 		
+		/// <summary>
+		/// Los diferentes componentes de la GUI
+		/// </summary>
+		public GUIComponente[] componentesGUI;
+		
+		
 		public GUIBoton[] botones;
 		public GUIImagen[] imagenes;
 		
-		private ArrayList botonesAL = new ArrayList();
-		private ArrayList imagenesAL = new ArrayList();
+		
 		
 		public GUIStyle p_buttonStyle;
 		public string buttonStyle; //nombre del estilo para el boton
@@ -40,6 +46,14 @@ namespace GUIMultiresolucion{
 		
 		#region atributos privados
 		private DeviceOrientation orientacionPrevia;
+		
+		/// <summary>
+		/// los componentes de la gui ordenados por la profundidad, para que sean dibujados segun esta
+		/// </summary>
+		private ArrayList componentesGUIOrdenados = new ArrayList();
+		
+		private ArrayList botonesAL = new ArrayList();
+		private ArrayList imagenesAL = new ArrayList();
 		#endregion
 		
 		#region Unity
@@ -104,70 +118,93 @@ namespace GUIMultiresolucion{
 	        }
 		}
 		
+		/// <summary>
+		/// Ordena los componentes de la gui segun la profundidad que tengan
+		/// </summary>
 		private void ordenarComponentesADibujar(){
-			//ordenamos los botones
-			foreach (GUIBoton t in botones){
-				botonesAL.Add(t);
-				
-	            //Pressed(buttons[i].name);
-	        }
-	
-			botonesAL.Sort(); //ordenar los botones por la profundidad (ver implementacion de CompareTo() en GUIComponente)
-			
-			//ordenamos la imagenes
-			foreach(GUIImagen i in imagenes){
-				imagenesAL.Add(i);
+			//adjuntamos al array list todos los componentes de la gui
+			foreach(GUIComponente c in componentesGUI){
+				componentesGUIOrdenados.Add(c);
 			}
+			//y los ordenamos
+			componentesGUIOrdenados.Sort();
 			
-			imagenesAL.Sort();//ordenar las imagenes por la profundidad (ver implementacion de CompareTo() en GUIComponente)
+//			//ordenamos los botones
+//			foreach (GUIBoton t in botones){
+//				botonesAL.Add(t);
+//				
+//	            //Pressed(buttons[i].name);
+//	        }
+//	
+//			botonesAL.Sort(); //ordenar los botones por la profundidad (ver implementacion de CompareTo() en GUIComponente)
+//			
+//			//ordenamos la imagenes
+//			foreach(GUIImagen i in imagenes){
+//				imagenesAL.Add(i);
+//			}
+//			
+//			imagenesAL.Sort();//ordenar las imagenes por la profundidad (ver implementacion de CompareTo() en GUIComponente)
 		}
 		
 		/// <summary>
 		/// Dibuja todos los componentes de la GUI que se han adjuntado
 		/// </summary>
 		private void dibujarComponentes(){
-			//dibuja los botones
-			foreach(GUIBoton b in botonesAL){
-				//si se pulsa un boton
-				GUI.Button(b.distribucion,b.TexturaDibujar, p_buttonStyle);
-	//			DibujarRectangulo(b.distribucion, Color.black); //solo para TEST
-				
-				
-			}	
-			
-			
-			//dibuja las imagenes		
-			foreach(GUIImagen i in imagenesAL){
-				GUI.DrawTexture(i.distribucion, i.textura);
+			//para dibujar los componentes recorremos el arraylist que los contiene ya ordenados por la profundidad
+			foreach(GUIComponente c in componentesGUIOrdenados){
+				//el componente es un GUIBoton
+				if(c.GetType() == typeof(GUIBoton)){
+					GUIBoton b = (GUIBoton) c;
+					GUI.DrawTexture(b.distribucion, b.TexturaDibujar);
+				}
+				else if(c.GetType() == typeof(GUIImagen)){
+					GUIImagen i = (GUIImagen) c;
+					GUI.DrawTexture(i.distribucion, i.textura);
+				}
 			}
+			
+//			//dibuja los botones
+//			foreach(GUIBoton b in botonesAL){
+//				//si se pulsa un boton
+//				GUI.Button(b.distribucion,b.TexturaDibujar, p_buttonStyle);
+//	//			DibujarRectangulo(b.distribucion, Color.black); //solo para TEST
+//				
+//				
+//			}	
+//			
+//			
+//			//dibuja las imagenes		
+//			foreach(GUIImagen i in imagenesAL){
+//				GUI.DrawTexture(i.distribucion, i.textura);
+//			}
 			
 		}
 		
-		/// <summary>
-		/// Dibuja un rectangulo
-		/// </summary>
-		/// <param name='distribucion'>
-		/// La distribucion del rectangulo
-		/// </param>
-		/// <param name='color'>
-		/// El color del rectangulo
-		/// </param>
-		void DibujarRectangulo(Rect distribucion, Color color) {
-			Texture2D rgb_texture = new Texture2D((int) distribucion.width, (int) distribucion.height);
-		    Color rgb_color = color;
-		    int i, j;
-		    for(i = 0;i<distribucion.width;i++)
-		    {
-		        for(j = 0;j<distribucion.height;j++)
-		        {
-		            rgb_texture.SetPixel(i, j, rgb_color);
-		        }
-		    }
-		    rgb_texture.Apply();
-		    GUIStyle generic_style = new GUIStyle();
-		    GUI.skin.box = generic_style;
-		    GUI.Box (distribucion, rgb_texture);
-		}
+//		/// <summary>
+//		/// Dibuja un rectangulo
+//		/// </summary>
+//		/// <param name='distribucion'>
+//		/// La distribucion del rectangulo
+//		/// </param>
+//		/// <param name='color'>
+//		/// El color del rectangulo
+//		/// </param>
+//		void DibujarRectangulo(Rect distribucion, Color color) {
+//			Texture2D rgb_texture = new Texture2D((int) distribucion.width, (int) distribucion.height);
+//		    Color rgb_color = color;
+//		    int i, j;
+//		    for(i = 0;i<distribucion.width;i++)
+//		    {
+//		        for(j = 0;j<distribucion.height;j++)
+//		        {
+//		            rgb_texture.SetPixel(i, j, rgb_color);
+//		        }
+//		    }
+//		    rgb_texture.Apply();
+//		    GUIStyle generic_style = new GUIStyle();
+//		    GUI.skin.box = generic_style;
+//		    GUI.Box (distribucion, rgb_texture);
+//		}
 		
 		#endregion
 	}

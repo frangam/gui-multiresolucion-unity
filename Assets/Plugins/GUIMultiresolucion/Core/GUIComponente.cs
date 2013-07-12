@@ -46,6 +46,11 @@ namespace GUIMultiresolucion.Core{
 		public TipoAnclado _relativoA = TipoAnclado.SIN_ANCLADO;
 		
 		/// <summary>
+		/// True para dibujar el componente en la gui, flase para no dibujarlo
+		/// </summary>
+		public bool visible = true;
+		
+		/// <summary>
 		/// Un rectangulo que representa la posicion y las dimensiones del componente
 		/// </summary>
 		public Rect distribucion{
