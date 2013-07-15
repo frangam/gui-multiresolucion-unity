@@ -28,17 +28,17 @@ namespace GUIMultiresolucion.GUIComponentes{
 	    }
 		
 		#region metodos sobreescritos
-		public override void inicializar ()
-		{
-			//cambiamos las dimensiones si la anchura/altura del componente es 0
-			if(this.anchura == 0 && textura.width != null){
-	        	this.anchura =  textura.width;
-			}
-			
-			if(this.altura == 0 && textura.height != null){
-				this.altura = textura.height;	
-			}
-		}
+//		public override void inicializar ()
+//		{
+//			//cambiamos las dimensiones si la anchura/altura del componente es 0
+//			if(this.anchura == 0 && textura.width != null){
+//	        	this.anchura =  textura.width;
+//			}
+//			
+//			if(this.altura == 0 && textura.height != null){
+//				this.altura = textura.height;	
+//			}
+//		}
 		public override void dibujar (){
 			GUI.DrawTexture(distribucion, textura);
 		}

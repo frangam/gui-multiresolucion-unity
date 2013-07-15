@@ -71,21 +71,21 @@ namespace GUIMultiresolucion{
 		}
 		
 		void LateUpdate(){
-			//comprobamos si esta orientada en portrait o no la pantalla
-			bool esPortraitAhora = Screen.height >= Screen.width;
-			
-			//cambiando orientacion a Portrait
-			if (!orientacionPreviaEraPortrait && esPortraitAhora){
-				orientacionPreviaEraPortrait = true;
-//				GUIEscalador.actualizar(orientacionPreviaEraPortrait);
-//				actualizarComponentes();	
-			}
-			//cambiando orientacion a Landscape (apaisado)
-			else if(orientacionPreviaEraPortrait && !esPortraitAhora){
-				orientacionPreviaEraPortrait = false;
-//				GUIEscalador.actualizar(orientacionPreviaEraPortrait);
-//				actualizarComponentes();	
-			}
+//			//comprobamos si esta orientada en portrait o no la pantalla
+//			bool esPortraitAhora = Screen.height >= Screen.width;
+//			
+//			//cambiando orientacion a Portrait
+//			if (!orientacionPreviaEraPortrait && esPortraitAhora){
+//				orientacionPreviaEraPortrait = true;
+////				GUIEscalador.actualizar(orientacionPreviaEraPortrait);
+////				actualizarComponentes();	
+//			}
+//			//cambiando orientacion a Landscape (apaisado)
+//			else if(orientacionPreviaEraPortrait && !esPortraitAhora){
+//				orientacionPreviaEraPortrait = false;
+////				GUIEscalador.actualizar(orientacionPreviaEraPortrait);
+////				actualizarComponentes();	
+//			}
 		}
 		
 		void OnGUI(){

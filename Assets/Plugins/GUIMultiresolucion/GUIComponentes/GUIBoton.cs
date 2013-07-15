@@ -19,14 +19,6 @@ namespace GUIMultiresolucion.GUIComponentes{
 		private Texture texturaDibujar;
 	
 		#region propiedades publicas
-		public bool Visible{
-			get{return base.visible;}
-			set{
-				base.Visible = value;
-				GetComponent<BoxCollider>().enabled = value; //habilitamos o desactivamos el collider
-			}
-		}
-		
 	    public Rect distribucion{
 	        get{
 	           	//cambiamos las dimensiones si la anchura/altura del componente es 0
@@ -52,7 +44,7 @@ namespace GUIMultiresolucion.GUIComponentes{
 		
 		
 		#region metodos sobreescritos de GUIComponente
-		public override void inicializar(){	
+		public override void inicializar(){				
 			//cambiamos las dimensiones si la anchura/altura del componente es 0
 			if(this.anchura == 0 && texturaNormal.width != null){
 	        	this.anchura =  texturaNormal.width;
@@ -62,11 +54,8 @@ namespace GUIMultiresolucion.GUIComponentes{
 				this.altura = texturaNormal.height;	
 			}
 			
+			base.inicializar();
 		}		
-		public override void actualizar (){
-			base.actualizar();
-			GetComponent<GUICollider>().actualizar();
-		}
 		public override void dibujar (){
 			GUI.DrawTexture(distribucion, TexturaDibujar);
 		}
@@ -74,9 +63,7 @@ namespace GUIMultiresolucion.GUIComponentes{
 		
 		#region Unity
 		public void Start(){
-//			base.Start();
 			texturaDibujar = texturaNormal;
-			GetComponent<BoxCollider>().enabled = visible;
 		}
 		#endregion
 	}

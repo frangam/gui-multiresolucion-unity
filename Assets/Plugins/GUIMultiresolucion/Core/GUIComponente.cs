@@ -105,12 +105,39 @@ namespace GUIMultiresolucion.Core{
 		/// </summary>
 		private Vector2 dimensionPantalla;
 		
-		#region metodos publicos
-		public virtual void inicializar(){
+		private GUICollider colliderGUI;
+		public GUICollider ColliderGUI{
+			get{return colliderGUI;}	
+		}
+		
+		#region Unity
+		public void Start(){
 			
 		}
+		#endregion
+		
+		#region metodos publicos
+		public void inicializar(GUIComponente c){
+			nombre = c.nombre;
+			anchura = c.anchura;
+			altura = c.altura;
+			profundidad = c.profundidad;
+			ocuparTodoElAncho = c.ocuparTodoElAncho;
+			ocuparTodoElAlto = c.ocuparTodoElAlto;
+			posicionFija = c.posicionFija;
+			posicionRelativaA = c.posicionRelativaA;
+			_relativoA = c._relativoA;
+			colliderGUI = c.colliderGUI;
+			
+			inicializar();
+		}
+		public virtual void inicializar(){
+			GetComponent<BoxCollider>().enabled = visible;
+			colliderGUI = GetComponent<GUICollider>();	
+			colliderGUI.inicializar(this);
+		}
 		public virtual void actualizar(){
-
+			colliderGUI.actualizar();
 		}
 		public virtual void dibujar(){
 			
@@ -279,8 +306,8 @@ namespace GUIMultiresolucion.Core{
 		/// Porcentaje de distancia en la coordenada Y
 		/// </param>
 		public Vector2 posicionDesdeSuperiorIzquierda(float xPorcentaje, float yPorcentaje){
-			float xEscalada = this.posicionDelAnclado.x + (dimensionPantalla.x*Mathf.Clamp(xPorcentaje, 0f, 1f)); 
-			float yEscalada = this.posicionDelAnclado.y + (dimensionPantalla.y*Mathf.Clamp(yPorcentaje, 0f, 1f)); 
+			float xEscalada = this.posicionDelAnclado.x + (dimensionPantalla.x*xPorcentaje);//Mathf.Clamp(xPorcentaje, 0f, 1f)); 
+			float yEscalada = this.posicionDelAnclado.y + (dimensionPantalla.y*yPorcentaje);//Mathf.Clamp(yPorcentaje, 0f, 1f)); 
 			
 			return new Vector2(xEscalada, yEscalada);
 		}
@@ -299,8 +326,8 @@ namespace GUIMultiresolucion.Core{
 		/// Porcentaje de distancia en la coordenada Y
 		/// </param>
 		public Vector2 posicionDesdeSuperiorCentro(float xPorcentaje, float yPorcentaje){
-			float xEscalada = this.posicionDelAnclado.x + (dimensionPantalla.x/2*Mathf.Clamp(xPorcentaje, -1f, 1f)); //Dividir entre 2 dimensionPantalla.x para no salirnos de los bordes. -1f de minimo (-100%) para distanciarlo hacia la izq
-			float yEscalada = this.posicionDelAnclado.y + (dimensionPantalla.y*Mathf.Clamp(yPorcentaje, 0f, 1f)); 
+			float xEscalada = this.posicionDelAnclado.x + (dimensionPantalla.x/2*xPorcentaje);//Mathf.Clamp(xPorcentaje, -1f, 1f)); //Dividir entre 2 dimensionPantalla.x para no salirnos de los bordes. -1f de minimo (-100%) para distanciarlo hacia la izq
+			float yEscalada = this.posicionDelAnclado.y + (dimensionPantalla.y*yPorcentaje);//Mathf.Clamp(yPorcentaje, 0f, 1f)); 
 			
 			return new Vector2(xEscalada, yEscalada);
 		}
@@ -319,8 +346,8 @@ namespace GUIMultiresolucion.Core{
 		/// Porcentaje de distancia en la coordenada Y
 		/// </param>
 		public Vector2 posicionDesdeSuperiorDerecha(float xPorcentaje, float yPorcentaje){
-			float xEscalada = this.posicionDelAnclado.x - (dimensionPantalla.x*Mathf.Clamp(xPorcentaje, 0f, 1f)); //restamos porque distanciamos el componente gui hacia la izquierda
-			float yEscalada = this.posicionDelAnclado.y + (dimensionPantalla.y*Mathf.Clamp(yPorcentaje, 0f, 1f)); 
+			float xEscalada = this.posicionDelAnclado.x - (dimensionPantalla.x*xPorcentaje);//Mathf.Clamp(xPorcentaje, 0f, 1f)); //restamos porque distanciamos el componente gui hacia la izquierda
+			float yEscalada = this.posicionDelAnclado.y + (dimensionPantalla.y*yPorcentaje);//Mathf.Clamp(yPorcentaje, 0f, 1f)); 
 			
 			return new Vector2(xEscalada, yEscalada);
 		}
@@ -339,8 +366,8 @@ namespace GUIMultiresolucion.Core{
 		/// Porcentaje de distancia en la coordenada Y
 		/// </param>
 		public Vector2 posicionDesdeCentroIzquierda(float xPorcentaje, float yPorcentaje){
-			float xEscalada = this.posicionDelAnclado.x + (dimensionPantalla.x*Mathf.Clamp(xPorcentaje, 0f, 1f)); 
-			float yEscalada = this.posicionDelAnclado.y + (dimensionPantalla.y/2*Mathf.Clamp(yPorcentaje, -1f, 1f)); //Dividir entre 2 dimensionPantalla.x para no salirnos de los bordes. -1f de minimo (-100%) para distanciarlo hacia abajo
+			float xEscalada = this.posicionDelAnclado.x + (dimensionPantalla.x*xPorcentaje);//Mathf.Clamp(xPorcentaje, 0f, 1f)); 
+			float yEscalada = this.posicionDelAnclado.y + (dimensionPantalla.y/2*yPorcentaje);//Mathf.Clamp(yPorcentaje, -1f, 1f)); //Dividir entre 2 dimensionPantalla.x para no salirnos de los bordes. -1f de minimo (-100%) para distanciarlo hacia abajo
 			
 			return new Vector2(xEscalada, yEscalada);
 		}
@@ -359,8 +386,8 @@ namespace GUIMultiresolucion.Core{
 		/// Porcentaje de distancia en la coordenada Y
 		/// </param>
 		public Vector2 posicionDesdeCentro(float xPorcentaje, float yPorcentaje){
-			float xEscalada = this.posicionDelAnclado.x + (dimensionPantalla.x/2*Mathf.Clamp(xPorcentaje, -1f, 1f)); //Dividir entre 2 dimensionPantalla.x para no salirnos de los bordes. -1f de minimo (-100%) para distanciarlo hacia la izq
-			float yEscalada = this.posicionDelAnclado.y + (dimensionPantalla.y/2*Mathf.Clamp(yPorcentaje, -1f, 1f)); //Dividir entre 2 dimensionPantalla.x para no salirnos de los bordes. -1f de minimo (-100%) para distanciarlo hacia abajo
+			float xEscalada = this.posicionDelAnclado.x + (dimensionPantalla.x/2*xPorcentaje);//Mathf.Clamp(xPorcentaje, -1f, 1f)); //Dividir entre 2 dimensionPantalla.x para no salirnos de los bordes. -1f de minimo (-100%) para distanciarlo hacia la izq
+			float yEscalada = this.posicionDelAnclado.y + (dimensionPantalla.y/2*yPorcentaje);//Mathf.Clamp(yPorcentaje, -1f, 1f)); //Dividir entre 2 dimensionPantalla.x para no salirnos de los bordes. -1f de minimo (-100%) para distanciarlo hacia abajo
 			
 			return new Vector2(xEscalada, yEscalada);
 		}
@@ -379,8 +406,8 @@ namespace GUIMultiresolucion.Core{
 		/// Porcentaje de distancia en la coordenada Y
 		/// </param>
 		public Vector2 posicionDesdeCentroDerecha(float xPorcentaje, float yPorcentaje){
-			float xEscalada = this.posicionDelAnclado.x - (dimensionPantalla.x*Mathf.Clamp(xPorcentaje, 0f, 1f)); //restamos porque distanciamos el componente gui hacia la izquierda 
-			float yEscalada = this.posicionDelAnclado.y + (dimensionPantalla.y/2*Mathf.Clamp(yPorcentaje, -1f, 1f)); //Dividir entre 2 dimensionPantalla.x para no salirnos de los bordes. -1f de minimo (-100%) para distanciarlo hacia abajo
+			float xEscalada = this.posicionDelAnclado.x - (dimensionPantalla.x*xPorcentaje);//Mathf.Clamp(xPorcentaje, 0f, 1f)); //restamos porque distanciamos el componente gui hacia la izquierda 
+			float yEscalada = this.posicionDelAnclado.y + (dimensionPantalla.y/2*yPorcentaje);//Mathf.Clamp(yPorcentaje, -1f, 1f)); //Dividir entre 2 dimensionPantalla.x para no salirnos de los bordes. -1f de minimo (-100%) para distanciarlo hacia abajo
 			
 			return new Vector2(xEscalada, yEscalada);
 		}
@@ -399,8 +426,8 @@ namespace GUIMultiresolucion.Core{
 		/// Porcentaje de distancia en la coordenada Y
 		/// </param>
 		public Vector2 posicionDesdeInferiorIzquierda(float xPorcentaje, float yPorcentaje){
-			float xEscalada = this.posicionDelAnclado.x + (dimensionPantalla.x*Mathf.Clamp(xPorcentaje, 0f, 1f)); 
-			float yEscalada = this.posicionDelAnclado.y - (dimensionPantalla.y*Mathf.Clamp(yPorcentaje, 0f, 1f)); //restamos porque distanciamos el componente gui hacia arriba
+			float xEscalada = this.posicionDelAnclado.x + (dimensionPantalla.x*xPorcentaje);//Mathf.Clamp(xPorcentaje, 0f, 1f)); 
+			float yEscalada = this.posicionDelAnclado.y - (dimensionPantalla.y*yPorcentaje);//Mathf.Clamp(yPorcentaje, 0f, 1f)); //restamos porque distanciamos el componente gui hacia arriba
 				
 			return new Vector2(xEscalada, yEscalada);
 		}
@@ -419,8 +446,8 @@ namespace GUIMultiresolucion.Core{
 		/// Porcentaje de distancia en la coordenada Y
 		/// </param>
 		public Vector2 posicionDesdeInferiorCentro(float xPorcentaje, float yPorcentaje){
-			float xEscalada = this.posicionDelAnclado.x + (dimensionPantalla.x/2*Mathf.Clamp(xPorcentaje, -1f, 1f)); //Dividir entre 2 dimensionPantalla.x para no salirnos de los bordes. -1f de minimo (-100%) para distanciarlo hacia la izq
-			float yEscalada = this.posicionDelAnclado.y - (dimensionPantalla.y*Mathf.Clamp(yPorcentaje, 0f, 1f)); //restamos porque distanciamos el componente gui hacia arriba
+			float xEscalada = this.posicionDelAnclado.x + (dimensionPantalla.x/2*xPorcentaje);//Mathf.Clamp(xPorcentaje, -1f, 1f)); //Dividir entre 2 dimensionPantalla.x para no salirnos de los bordes. -1f de minimo (-100%) para distanciarlo hacia la izq
+			float yEscalada = this.posicionDelAnclado.y - (dimensionPantalla.y*yPorcentaje);//Mathf.Clamp(yPorcentaje, 0f, 1f)); //restamos porque distanciamos el componente gui hacia arriba
 				
 			return new Vector2(xEscalada, yEscalada);
 		}
@@ -439,8 +466,8 @@ namespace GUIMultiresolucion.Core{
 		/// Porcentaje de distancia en la coordenada Y
 		/// </param>
 		public Vector2 posicionDesdeInferiorDerecha(float xPorcentaje, float yPorcentaje){
-			float xEscalada = this.posicionDelAnclado.x - (dimensionPantalla.x*Mathf.Clamp(xPorcentaje, 0f, 1f)); //restamos porque distanciamos el componente gui hacia la izquierda
-			float yEscalada = this.posicionDelAnclado.y - (dimensionPantalla.y*Mathf.Clamp(yPorcentaje, 0f, 1f)); //restamos porque distanciamos el componente gui hacia arriba
+			float xEscalada = this.posicionDelAnclado.x - (dimensionPantalla.x*xPorcentaje);//Mathf.Clamp(xPorcentaje, 0f, 1f)); //restamos porque distanciamos el componente gui hacia la izquierda
+			float yEscalada = this.posicionDelAnclado.y - (dimensionPantalla.y*yPorcentaje);//Mathf.Clamp(yPorcentaje, 0f, 1f)); //restamos porque distanciamos el componente gui hacia arriba
 				
 			return new Vector2(xEscalada, yEscalada);
 		}

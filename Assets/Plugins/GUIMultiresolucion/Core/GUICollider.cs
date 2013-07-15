@@ -10,7 +10,7 @@ namespace GUIMultiresolucion.Core{
 	 * y las unidades de unity para escalar el transform
 	 */ 
 	[RequireComponent(typeof(Transform))]
-	[RequireComponent(typeof(GUIComponente))]
+
 	public class GUICollider : MonoBehaviour {
 		/// <summary>
 		/// El componente gui al que se le adjunta el collider
@@ -24,10 +24,9 @@ namespace GUIMultiresolucion.Core{
 		private Vector3 posicion;
 		
 		
-		// Use this for initialization
-		void Start () {
-			//obtenemos el boton
-			componenteGUI = GetComponent<GUIComponente>();
+		public void inicializar (GUIComponente c) {
+			//obtenemos el componente gui
+			componenteGUI = c;
 			actualizar();
 		}
 	

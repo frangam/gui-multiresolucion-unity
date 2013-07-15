@@ -9,63 +9,81 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 	 */ 
 	[System.Serializable]
 	[ExecuteInEditMode]
-	public class GUIItemPanel :  MonoBehaviour{
-		[SerializeField] private GUIComponente componente;
+	public class GUIItemPanel :  GUIComponente{
+		/// <summary>
+		/// El GUIComponente que representa al item adjuntado al panel
+		/// </summary>
+		[SerializeField] private GUIComponente item;
+		
+		/// <summary>
+		/// Si se quiere hacer que el item tenga scroll para desplazar sus items,
+		/// se indica el tipo de scroll que se quiere hacer, o indicar el tipo NINGUNO, para que
+		/// el item no tenga scroll
+		/// </summary>
+		private TipoScroll scroll;
+		
+		private Vector2 posicionInicial;
 		
 		#region propiedades
-		public GUIComponente Componente{
-			get{return componente;}
-			set{componente = value;}
+		public GUIComponente Item{
+			get{return item;}	
 		}
-		
-		public Rect distribucion{
-			get{return componente.distribucion;}	
-		}
-		
-		public void inicializar(){
-			componente.inicializar();	
-		}
-		public void dibujar(){
-			componente.dibujar();	
-		}
-		
-		public bool Visible{
-			get{return componente.Visible;}
-			set{
-				componente.Visible = value;
-				GetComponent<BoxCollider>().enabled = value; //habilitamos o desactivamos el collider
-			}
+		public TipoScroll Scroll{
+			get{return scroll;}	
 		}
 		#endregion
 		
-//		#region metodos sobreescritos
-////		public override void inicializar ()
-////		{
-////			
-////		}
-////		
-////		public override void dibujar (){
-//////			GUI.DrawTexture(distribucion, textura);
-////		}
-//		#endregion
+		#region nuevos metodos
+		public void inicializar(TipoScroll _scroll){	
+			transform.localPosition = new Vector3(0f, 0f, 0.01f);
+			
+			scroll = _scroll;
+			
+			item.inicializar();
+			
+			base.inicializar(item);
+		}
+		
+		public void actualizar(Vector2 posRelativa){
+			item.posicionRelativaA += posRelativa;
+			item.actualizar();
+			actualizar();
+		}
+		#endregion
+		
+		#region metodos sobreescritos de la clase base
+		public override void dibujar ()
+		{
+			item.dibujar();
+		}
+		#endregion
 		
 		#region Unity
 		void Start () {
-			GetComponent<PanGesture>().StateChanged += realizarScroll;;
+			posicionInicial = item.posicionRelativaA;
+			GetComponent<PanGesture>().StateChanged += realizarScroll;	
 		}
 		#endregion
 		
 		#region gesto scroll
 		void realizarScroll (object sender, TouchScript.Events.GestureStateChangeEventArgs e){
-			var gestoScroll = sender as PanGesture;
-			
-			switch(e.State){
-				case Gesture.GestureState.Began:
-				break;
-				case Gesture.GestureState.Changed:
-				break;
-				case Gesture.GestureState.Ended:
-				break;
+			Debug.Log(scroll);
+			if(scroll != TipoScroll.NINGUNO){
+				var gestoScroll = sender as PanGesture;
+				
+				switch(e.State){
+					case Gesture.GestureState.Began:
+					
+					break;
+					case Gesture.GestureState.Changed:
+						
+						Debug.Log("scroll en item");
+						
+					break;
+					case Gesture.GestureState.Ended:
+	//					componente.posicionRelativaA = posicionInicial;
+					break;
+				}
 			}
 		}
 		#endregion
