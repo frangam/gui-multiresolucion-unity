@@ -71,6 +71,8 @@ namespace GUIMultiresolucion.GUIComponentes{
 			
 			//calculamos la anchura del panel en funcion a la anchura de cada item
 			if(items != null && items.Count > 0){
+				this.anchura = 0f;
+				
 				foreach(GUIComponente c in items){
 					this.anchura += c.anchura;
 					
