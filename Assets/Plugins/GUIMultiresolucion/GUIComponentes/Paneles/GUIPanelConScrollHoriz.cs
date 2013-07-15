@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using GUIMultiresolucion.Core;
 using TouchScript.Gestures;
 
-namespace GUIMultiresolucion.GUIComponentes{
+namespace GUIMultiresolucion.GUIComponentes.Paneles{
 	/*
 	 * Representa un panel que incorpora la funcionalidad de un scroll horizontal
 	 * mediante gestos con los dedos. 
@@ -14,9 +14,9 @@ namespace GUIMultiresolucion.GUIComponentes{
 		/// <summary>
 		/// Los elementos que estan dentro del panel
 		/// </summary>
-		[SerializeField] private List<GUIComponente> items;
+		[SerializeField] private List<GUIItemPanel> items;
 		
-		public List<GUIComponente> Items{
+		public List<GUIItemPanel> Items{
 			get{return items;}	
 		}
 		
@@ -65,20 +65,20 @@ namespace GUIMultiresolucion.GUIComponentes{
 			float alturaMax = float.NegativeInfinity;
 			
 			//primero inicializamos los items
-			foreach(GUIComponente c in items){
-				c.inicializar();
+			foreach(GUIItemPanel i in items){
+				i.inicializar();
 			}
 			
 			//calculamos la anchura del panel en funcion a la anchura de cada item
 			if(items != null && items.Count > 0){
 				this.anchura = 0f;
 				
-				foreach(GUIComponente c in items){
-					this.anchura += c.anchura;
+				foreach(GUIItemPanel i in items){
+					this.anchura += i.Componente.anchura;
 					
 					//calculamos que item tiene la mayor altura
-					if(c.altura > alturaMax){
-						alturaMax = c.altura;	
+					if(i.Componente.altura > alturaMax){
+						alturaMax = i.Componente.altura;	
 					}
 				}	
 			}
@@ -87,9 +87,9 @@ namespace GUIMultiresolucion.GUIComponentes{
 		}		
 		
 		public override void dibujar (){
-			foreach(GUIComponente c in items){
-				if(c.visible){
-					c.dibujar();
+			foreach(GUIItemPanel i in items){
+				if(i.Visible){
+					i.dibujar();
 				}
 			}
 		}
