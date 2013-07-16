@@ -23,9 +23,17 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 		/// </summary>
 		[SerializeField] private TipoScroll scroll;
 		
+		private float velocidadScrollHorizontal = 0.8f;
+		private float velocidadScrollVertical = 0.55f;
+		
+		#region propiedades
 		public List<GUIItemPanel> Items{
 			get{return items;}	
 		}
+		public TipoScroll Scroll{
+			get{return scroll;}	
+		}
+		#endregion
 		
 		#region Unity
 		public void Start(){
@@ -33,31 +41,32 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 		}
 		#endregion
 		
-		#region gesto scroll
-		void realizarScroll (object sender, TouchScript.Events.GestureStateChangeEventArgs e){
+		
+		
+		#region gesto scroll		
+		public void realizarScroll (object sender, TouchScript.Events.GestureStateChangeEventArgs e){
 			var gestoScroll = sender as PanGesture;
 			switch(e.State){
 				case Gesture.GestureState.Began:
 				break;
+				
 				case Gesture.GestureState.Changed:
 					Vector2 pos = Vector2.zero;
 					
 					switch(scroll){
 						case TipoScroll.HORIZONTAL:
-							pos = new Vector2(gestoScroll.LocalDeltaPosition.x, 0f);
+							pos = new Vector2(gestoScroll.LocalDeltaPosition.x*velocidadScrollHorizontal, 0f);
 						break;
 						case TipoScroll.VERTICAL:
-							pos = new Vector2(0f, -gestoScroll.LocalDeltaPosition.y);
+							pos = new Vector2(0f, -gestoScroll.LocalDeltaPosition.y*velocidadScrollVertical);
 						break;
 					}	
 				
-//					foreach(GUIItemPanel i in items){
-//						i.actualizar(pos);	
-//					}
-				
-				Debug.Log("scroll en panel");
-					
+					foreach(GUIItemPanel i in items){
+						i.actualizar(pos);	
+					}					
 				break;
+				
 				case Gesture.GestureState.Ended:
 				break;
 			}
@@ -65,33 +74,47 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 		#endregion
 		
 		#region metodos sobreescritos
-		public override void inicializar(){	
-			transform.localPosition = new Vector3(0f, 0f, -0.01f);
-			
-			float alturaMax = float.NegativeInfinity;
-			
-			//primero inicializamos los items
-			foreach(GUIItemPanel i in items){
-				i.inicializar(scroll);
-			}
-			
-			//calculamos la anchura del panel en funcion a la anchura de cada item
+		public override void inicializar(){				
 			if(items != null && items.Count > 0){
-				this.anchura = 0f;
+				//cambiamos la coordenada Z al panel para que se quede detras de los colliders de los items que tenga
+				//para que se puedan detectar sin problemas los gestos sobre los items, de forma independiente a los gestos del panel
+				transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 0.01f);
 				
+				//primero inicializamos los items
 				foreach(GUIItemPanel i in items){
-					this.anchura += i.anchura;
+					i.inicializar(scroll, this);
+				}
+				
+				//horizontal: mantenemos anchura de la pantalla
+				if(scroll == TipoScroll.HORIZONTAL){
+					float alturaMax = float.NegativeInfinity;
 					
-					//calculamos que item tiene la mayor altura
-					if(i.altura > alturaMax){
-						alturaMax = i.altura;	
+					foreach(GUIItemPanel i in items){
+						//calculamos que item tiene la mayor altura
+						if(i.Item.altura > alturaMax){
+							alturaMax = i.Item.altura;	
+						}
 					}
+					
+					this.anchura = dimensionPantallaEscalada().x;
+					this.altura = alturaMax;
+				}
+				//vertical: mantenemos altura de la pantalla
+				else if(scroll == TipoScroll.VERTICAL){
+					float anchuraMax = float.NegativeInfinity;
+					
+					foreach(GUIItemPanel i in items){
+						//calculamos que item tiene la mayor altura
+						if(i.Item.anchura > anchuraMax){
+							anchuraMax = i.Item.anchura;	
+						}
+					}
+					
+					this.altura = dimensionPantallaEscalada().y;
 				}	
+				
+				base.inicializar();
 			}
-			
-			this.altura = alturaMax;
-			
-			base.inicializar();
 		}
 		
 		public override void actualizar (){
@@ -102,7 +125,7 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 		
 		public override void dibujar (){
 			foreach(GUIItemPanel i in items){
-				if(i.Visible && i.Item.Visible){
+				if(i.Item.Visible){
 					i.dibujar();
 				}
 			}

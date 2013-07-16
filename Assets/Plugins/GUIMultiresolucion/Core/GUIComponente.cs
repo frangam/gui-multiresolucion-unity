@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections;
 using System;
+using GUIMultiresolucion.GUIComponentes.Paneles;
+using GUIMultiresolucion.Eventos;
 
 namespace GUIMultiresolucion.Core{
 	/// <summary>
@@ -43,12 +45,37 @@ namespace GUIMultiresolucion.Core{
 		/// <summary>
 		/// Posicionar de forma relativa al tipo de anclado especificado
 		/// </summary>
-		public TipoAnclado _relativoA = TipoAnclado.SIN_ANCLADO;
+		public TipoAnclado relativoA = TipoAnclado.SIN_ANCLADO;
 		
 		/// <summary>
 		/// True para dibujar el componente en la gui, flase para no dibujarlo
 		/// </summary>
 		public bool visible = true;
+		
+		#region atributos privados
+		/// <summary>
+		/// La posicion que ocupa en la pantalla el tipo de anclado
+		/// </summary>
+		private Vector2 posicionDelAnclado;
+		
+		/// <summary>
+		/// La dimension de la pantalla, teniendo en cuenta las dimensiones del componente
+		/// </summary>
+		private Vector2 dimensionPantalla;
+		
+		/// <summary>
+		/// El collider gui para gestionar gestos sobre elementos gui
+		/// </summary>
+		private GUICollider colliderGUI;
+		
+		/// <summary>
+		/// Panel al que pertezeca el componente. Null si no pertenece a un panel.
+		/// Por lo tanto, esto indica que el componente es un GUIItemPanel
+		/// </summary>
+		private GUIPanel panel = null;
+		#endregion
+		
+		#region propiedades
 		
 		public bool Visible{
 			get{return visible;}
@@ -64,8 +91,8 @@ namespace GUIMultiresolucion.Core{
 				Vector2 posicionEscalada = Vector2.zero; //posicion escalada para la resolucion de pantalla
 				Vector2 dimensionesPantalla = dimensionPantallaEscalada(); //obtenemos la dimension de la pantalla ya aplicado el escalado
 				
-				if(_relativoA != TipoAnclado.SIN_ANCLADO){ //si se quiere posicionar de forma relativa a un anclado concreto
-					posicionEscalada = posicionRelativaAlAncla(_relativoA); //obtenemos la posicion relativa al ancla indicada
+				if(relativoA != TipoAnclado.SIN_ANCLADO){ //si se quiere posicionar de forma relativa a un anclado concreto
+					posicionEscalada = posicionRelativaAlAncla(relativoA); //obtenemos la posicion relativa al ancla indicada
 				}
 				else if(posicionFija != null){ //si no se quiere anclar pero se quiere posicionar de forma absoluta por pixeles
 					posicionEscalada = new Vector2(posicionFija.x, posicionFija.y);				
@@ -94,21 +121,13 @@ namespace GUIMultiresolucion.Core{
 				return dist;
 			}
 		}
-	
-		/// <summary>
-		/// La posicion que ocupa en la pantalla el tipo de anclado
-		/// </summary>
-		private Vector2 posicionDelAnclado;
-		
-		/// <summary>
-		/// La dimension de la pantalla, teniendo en cuenta las dimensiones del componente
-		/// </summary>
-		private Vector2 dimensionPantalla;
-		
-		private GUICollider colliderGUI;
 		public GUICollider ColliderGUI{
 			get{return colliderGUI;}	
 		}
+		public GUIPanel Panel{
+			get{return panel;}	
+		}
+		#endregion
 		
 		#region Unity
 		public void Start(){
@@ -117,17 +136,25 @@ namespace GUIMultiresolucion.Core{
 		#endregion
 		
 		#region metodos publicos
-		public void inicializar(GUIComponente c){
-			nombre = c.nombre;
-			anchura = c.anchura;
-			altura = c.altura;
-			profundidad = c.profundidad;
-			ocuparTodoElAncho = c.ocuparTodoElAncho;
-			ocuparTodoElAlto = c.ocuparTodoElAlto;
-			posicionFija = c.posicionFija;
-			posicionRelativaA = c.posicionRelativaA;
-			_relativoA = c._relativoA;
-			colliderGUI = c.colliderGUI;
+		/// <summary>
+		/// Inicializa el panel al que pertenece el componente gui
+		/// y algunos atributos relativos a la posicion del componente respecto al panel al que pertenece
+		/// </summary>
+		/// <param name='_panel'>
+		/// El panel al que pertenece
+		/// </param>
+		public void inicializar(GUIPanel _panel){
+			panel = _panel;
+				
+//			profundidad = panel.profundidad;
+//			relativoA = panel.relativoA;
+//			posicionRelativaA += panel.posicionRelativaA;
+//			
+//			if(panel.relativoA == TipoAnclado.SIN_ANCLADO){
+//				posicionFija = panel.posicionFija;	
+//			}
+			
+			GetComponent<EventosGUIItemPanelScrollable>().inicializar(panel);
 			
 			inicializar();
 		}

@@ -8,39 +8,42 @@ namespace GUIMultiresolucion.Eventos{
 	public class EventosGUIBoton: MonoBehaviour {
 		private GUIBoton boton;
 		
+		/// <summary>
+		/// True si se quiere cambiar la textura cuando se pulsa el boton
+		/// </summary>
+		public bool cambiarTexturaPulsado = true;
+		
 		#region Unity
 		void Start(){
 			boton = GetComponent<GUIBoton>();
-			GetComponent<TapGesture>().StateChanged += HandleStateChanged;
+			GetComponent<TapGesture>().StateChanged += tap;
 		}
 	
 	
 		#endregion
 		
 		#region gestion eventos de toques
-		void HandleStateChanged (object sender, TouchScript.Events.GestureStateChangeEventArgs e)
+		void tap (object sender, TouchScript.Events.GestureStateChangeEventArgs e)
 		{
 			//segun el estado del evento
 			switch(e.State){
 				case Gesture.GestureState.Began:
-//					transform.position = new Vector3(transform.position.x, transform.position.y, 0f);
-				
 					//si tiene asignada una textura para cuando se pulsa el boton, le cambiamos la textura que tiene que dibujarse por esa
-					if(boton.texturaPulsado){
+					//y si se quiere cambiar
+					if(boton.texturaPulsado && cambiarTexturaPulsado){
 						boton.TexturaDibujar = boton.texturaPulsado;
 					}
-				break;
-				case Gesture.GestureState.Changed:
-					transform.position = new Vector3(transform.position.x, transform.position.y, 0.01f);
 				break;
 				//si se cancela o finaliza
 				case Gesture.GestureState.Failed:
 				case  Gesture.GestureState.Cancelled:
 				case Gesture.GestureState.Ended:
-					boton.TexturaDibujar = boton.texturaNormal;
-				
-					if(e.State == Gesture.GestureState.Failed){
-	//					Debug.Log("fallo");
+					if(boton.texturaPulsado && cambiarTexturaPulsado){
+						boton.TexturaDibujar = boton.texturaNormal;
+					
+						if(e.State == Gesture.GestureState.Failed){
+		//					Debug.Log("fallo");
+						}
 					}
 				break;
 			}
