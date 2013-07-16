@@ -26,7 +26,17 @@ public class GUIEscalador {
 	/// <summary>
 	/// La altura nativa es a la que se han diseñado todos los elementos de la GUI
 	/// </summary>
-	public static float ALTO_NATIVO {get; private set;}     
+	public static float ALTO_NATIVO {get; private set;}  
+	
+	/// <summary>
+	/// El ancho de la pantalla ya escalada
+	/// </summary>
+	public static float ANCHO_PANTALLA {get; private set;}
+	
+	/// <summary>
+	/// La altura de la pantalla ya escalada
+	/// </summary>
+	public static float ALTO_PANTALLA {get; private set;}
 	
 	/// <summary>
 	/// Es el factor que aplicamos al escalado en la coordenada X del elemento GUI.
@@ -77,6 +87,12 @@ public class GUIEscalador {
 		
 		//segun la orientacion de pantalla calculamos los factores de escalado en la X y la Y de los elementos de la GUI
 		calculaFactoresEscalado(esPortrait);
+		
+		//por ultimo, cuando ya se conocen todos los valores necesarios
+		//calculamos el ancho y alto de la pantalla ya escalada
+		Vector2 dimensionPantalla = dimensionPantallaEscalada();
+		ANCHO_PANTALLA = dimensionPantalla.x;
+		ALTO_PANTALLA = dimensionPantalla.y;
 	}
 	
 	/// <summary>
@@ -108,6 +124,25 @@ public class GUIEscalador {
 			factorEscaladoX = Screen.height / ANCHO_NATIVO; 
 			factorEscaladoY = Screen.width / ALTO_NATIVO;
 		}
+	}
+	
+	/// <summary>
+	/// La dimension de la pantalla escalada para todo tipo de resoluciones de pantalla
+	/// Componente x: anchura, y:altura
+	/// </summary>
+	/// <returns>
+	/// La componenete x del Vector2 es la anchura escalada, y la componente y la altura escalada
+	/// </returns>
+	private static Vector2 dimensionPantallaEscalada(){
+		float anchuraDispositivo = Screen.width; //la anchura del dispositivo donde se esta ejecutando el juego
+		float alturaDispositivo = Screen.height; //la anchura del dispositivo donde se esta ejecutando el juego
+		float factorEscaladoAnchura = GUIEscalador.factorEscaladoX; //factor para escalar la anchura del componenete gui
+		float factorEscaladoAltura = GUIEscalador.factorEscaladoY; //factor para escalar la altura del componenete gui
+		
+		float anchuraEscalada = (anchuraDispositivo/factorEscaladoAnchura);
+		float alturaEscalada = (alturaDispositivo/factorEscaladoAltura);
+		
+		return new Vector2(anchuraEscalada, alturaEscalada);	
 	}
 	
 	/// <summary>

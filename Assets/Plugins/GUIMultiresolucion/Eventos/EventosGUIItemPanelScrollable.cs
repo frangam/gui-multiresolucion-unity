@@ -29,7 +29,6 @@ namespace GUIMultiresolucion.Eventos{
 		
 		#region gestos
 		void scroll (object sender, TouchScript.Events.GestureStateChangeEventArgs e){
-			Debug.Log("scroll en item");
 			panel.realizarScroll(sender, e);
 		}
 		#endregion
