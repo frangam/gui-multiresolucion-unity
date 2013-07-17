@@ -30,6 +30,12 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 		private float velocidadScrollHorizontal = 0.8f;
 		private float velocidadScrollVertical = 0.55f;
 		
+		private bool primerItenEnPantalla;
+		private bool ultimoItemEnPantalla;
+		private float xPrevia = 0f;
+		private bool resetearPrincipio = false; //true si se tienen que resetear las posiciones de los items del inicio del panel
+		private bool resetearFinal = false; //true si se tienen que resetear las posiciones de los items del final del panel
+		
 		#region propiedades
 		public List<GUIItemPanel> Items{
 			get{return items;}	
@@ -111,8 +117,8 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 		}
 		#endregion
 		
-		private float xPrevia = 0f;
-		bool ultimoItemEnPantalla = false;
+		
+
 		
 		#region gesto scroll		
 		public void realizarScroll (object sender, TouchScript.Events.GestureStateChangeEventArgs e){
@@ -122,41 +128,88 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 				break;
 				
 				case Gesture.GestureState.Changed:
-					Vector2 pos = Vector2.zero;
+					Vector2 desplazamiento = Vector2.zero;
 					
+					xPrevia = gestoScroll.LocalDeltaPosition.x;
+				
 					switch(scroll){
 						case TipoScroll.HORIZONTAL:
-							pos = new Vector2(gestoScroll.LocalDeltaPosition.x*velocidadScrollHorizontal, 0f);
+							resetearPrincipio = primerItem.Item.posicionRelativaA.x > 0.75f;
+							resetearFinal = ultimoItem.Item.posicionRelativaA.x < 0.25f;
+					
+							//caso en que se tenga que reiniciar el principio pero se ha cambiado la direccion del movimiento
+							//por tanto no hay que resetearlo
+							if(resetearPrincipio && xPrevia < 0){
+								resetearPrincipio = false;
+							}	
+					
+							//caso en que se tenga que reiniciar el final pero se ha cambiado la direccion del movimiento
+							//por tanto no hay que resetearlo
+							else if(resetearFinal && xPrevia > 0){
+								resetearFinal = false;
+							}	
+							
+							//si no hay que resetear nada se calcula el desplazamiento de los items
+							if(!resetearPrincipio && !resetearFinal){
+								desplazamiento = new Vector2(gestoScroll.LocalDeltaPosition.x*velocidadScrollHorizontal, 0f);
+							}
 						break;
 						case TipoScroll.VERTICAL:
-							pos = new Vector2(0f, -gestoScroll.LocalDeltaPosition.y*velocidadScrollVertical);
+							
 						break;
 					}	
 				
-					foreach(GUIItemPanel i in items){
-						i.actualizar(pos);	
-					}		
-				
-					xPrevia = gestoScroll.LocalDeltaPosition.x;
+					//si no hay que resetear posiciones ni del principio del panel ni del final
+					//actualizamos las posiciones de todos los items
+					if(!resetearPrincipio && !resetearFinal){
+						actualizarPosiciones(desplazamiento);
+					}
+
 				break;
 				
 				case Gesture.GestureState.Ended:
-					switch(scroll){
-						case TipoScroll.HORIZONTAL:
-							//comprobamos si estan en pantalla el primer y ultimo item
-							bool primerItenEnPantalla = (((primerItem.item.posicionFija.x + primerItem.item.anchura) >= 0f)) && (primerItem.item.posicionFija.x < GUIEscalador.ANCHO_PANTALLA);
-							bool ultimoItemEnPantalla = (((ultimoItem.item.posicionFija.x + ultimoItem.item.anchura) >= 0f)) && (ultimoItem.item.posicionFija.x < GUIEscalador.ANCHO_PANTALLA);
-							
-							//si el movimiento ultimo era hacia la derecha
-							if(xPrevia > 0 && !ultimoItemEnPantalla){
-								resetearPosicionesItems();
-							}
-							//movimiento hacia la izquierda
-							else if(xPrevia < 0 && ultimoItemEnPantalla){
-								actualizarPosicionesItems();
-							}
-							
-						break;
+					//si no hay que resetear el principio pero si el final
+					if(!resetearPrincipio && resetearFinal){
+						Vector2 posRel = ultimoItem.item.posicionRelativaAlAnclaRespectoAPosicionFijaDada(new Vector2(GUIEscalador.ANCHO_PANTALLA-ultimoItem.item.anchura-20f, ultimoItem.Item.posicionFija.y));
+						float desplazamientoFinal = posRel.x - ultimoItem.item.posicionRelativaA.x;
+						actualizarPosiciones(new Vector2(desplazamientoFinal, 0f));
+					}
+					//si hay que resetear el principio y no el final
+					else if(resetearPrincipio && !resetearFinal){
+						resetearPosicionesItems();
+					}
+					//si no hay que resetear posiciones ni del principio del panel ni del final
+					else if(!resetearPrincipio && !resetearFinal){
+						switch(scroll){
+							case TipoScroll.HORIZONTAL:
+								//comprobamos si estan en pantalla el primer y ultimo item
+								bool primerItenEnPantalla = ((primerItem.item.posicionFija.x >= 0f)) && (primerItem.item.posicionFija.x + primerItem.item.anchura < GUIEscalador.ANCHO_PANTALLA);
+								bool ultimoItemEnPantalla = ((ultimoItem.item.posicionFija.x >= 0f)) && (ultimoItem.item.posicionFija.x + ultimoItem.item.anchura < GUIEscalador.ANCHO_PANTALLA);
+								
+	//							Debug.Log(GUIEscalador.ANCHO_PANTALLA-ultimoItem.item.anchura);
+								Vector2 posRel = ultimoItem.item.posicionRelativaAlAnclaRespectoAPosicionFijaDada(new Vector2(GUIEscalador.ANCHO_PANTALLA-ultimoItem.item.anchura-20f, ultimoItem.Item.posicionFija.y));
+	//							Debug.Log(posRel.x+", "+posRel.y);
+								Debug.Log("1o en pantalla? " +primerItenEnPantalla +", ultimo en pantalla? "+ultimoItemEnPantalla);
+	//							Debug.Log(xPrevia);
+						
+								//si el movimiento ultimo del dedo era hacia la derecha
+								if((xPrevia > 0 && primerItem.item.posicionRelativaA.x > 0.75f)
+								|| (xPrevia > 0 && primerItenEnPantalla && !ultimoItemEnPantalla)
+								|| (xPrevia <= 0 && primerItenEnPantalla && !ultimoItemEnPantalla)) //condicion: cambiar movimiento a la izquierda despues de haber hecho uno a la derecha previamente
+								{
+									resetearPosicionesItems();
+								}
+								//movimiento del dedo hacia la izquierda
+								else if(xPrevia < 0 && ultimoItem.item.posicionRelativaA.x < 0.25f
+									|| (xPrevia < 0 && ultimoItemEnPantalla && !primerItenEnPantalla)
+									|| (xPrevia >= 0 && ultimoItemEnPantalla && !primerItenEnPantalla)) //condicion: cambiar movimiento a la derecha despues de haber hecho uno a la izquierda previamente
+								{
+									float desplazamientoFinal = posRel.x - ultimoItem.item.posicionRelativaA.x;
+									actualizarPosiciones(new Vector2(desplazamientoFinal, 0f));
+								}
+								
+							break;
+						}
 					}
 					
 				break;
@@ -169,12 +222,12 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 			}
 		}
 		
-		private void actualizarPosicionesItems(){
-			foreach(GUIItemPanel i in items){
-//				i.item.posicionFija += new Vector2(GUIEscalador.ANCHO_PANTALLA - 10, i.item.posicionFija.y);
-				i.actualizar(new Vector2(0.1f, i.item.posicionRelativaA.y));
+		private void actualizarPosiciones(Vector2 posicion){
+			foreach(GUIItemPanel i in items){	
+				i.actualizar(posicion);
 			}
 		}
+		
 		#endregion
 		
 		

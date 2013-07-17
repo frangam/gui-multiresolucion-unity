@@ -285,6 +285,70 @@ namespace GUIMultiresolucion.Core{
 			return posicionRelativa;
 		}
 		
+		
+		
+		/// <summary>
+		/// Obtiene una posicion relativa al tipo de ancla del componente que se le indique y respecto a unas coordenadas fijas
+		/// de la pantalla en pixeles. Es decir, dada una posicion fija en pixeles y un tipo de ancla, devuelve la posicion
+		/// relativa que le corresponde en esos pixeles y con ese tipo de ancla.
+		/// </summary>
+		/// <returns>
+		/// La posicion relativa
+		/// </returns>
+		/// <param name='posFija'>
+		/// La posicion fija
+		/// </param>
+		public Vector2 posicionRelativaAlAnclaRespectoAPosicionFijaDada(Vector2 posFija){
+			return posicionRelativaAlAnclaRespectoAPosicionFijaDada(posFija, relativoA);
+		}
+		
+		/// <summary>
+		/// Obtiene una posicion relativa al tipo de ancla que se le indique y respecto a unas coordenadas fijas
+		/// de la pantalla en pixeles. Es decir, dada una posicion fija en pixeles y un tipo de ancla, devuelve la posicion
+		/// relativa que le corresponde en esos pixeles y con ese tipo de ancla.
+		/// </summary>
+		/// <returns>
+		/// La posicion relativa
+		/// </returns>
+		/// <param name='anclado'>
+		/// El tipo de anclado
+		/// </param>
+		/// <param name='posFija'>
+		/// La posicion fija
+		/// </param>
+		public Vector2 posicionRelativaAlAnclaRespectoAPosicionFijaDada(Vector2 posFija, TipoAnclado anclado){
+			Vector2 posicionRelativa = Vector2.zero;// la posicion del componente gui escalada y relativa al anclado indicado
+			
+			this.dimensionPantalla = dimensionPantallaEscaladaSegunDimensionesDelComponente(); //x: anchura, y:altura
+			this.posicionDelAnclado = posicionDelAncladoSeleccionado(relativoA); //obtenemos la posicion del anclado seleccionado
+			
+			//segun el tipo de anclado desde el que se toma como referencia
+			switch(anclado){
+				case TipoAnclado.SUPERIOR_IZQUIERDA:
+				case TipoAnclado.SUPERIOR_CENTRO:
+				case TipoAnclado.CENTRO:
+				case TipoAnclado.CENTRO_IZQUIERDA:
+					posicionRelativa = new Vector2(posFija.x / dimensionPantalla.x, posFija.y / dimensionPantalla.y);
+				break;
+				
+				case TipoAnclado.SUPERIOR_DERECHA:
+				case TipoAnclado.CENTRO_DERECHA:
+					posicionRelativa = new Vector2(1f - (posFija.x / dimensionPantalla.x), posFija.y / dimensionPantalla.y);
+				break;
+
+				case TipoAnclado.INFERIOR_IZQUIERDA:
+				case TipoAnclado.INFERIOR_CENTRO:
+					posicionRelativa = new Vector2(posFija.x / dimensionPantalla.x, 1f - (posFija.y / dimensionPantalla.y));
+				break;
+				
+				case TipoAnclado.INFERIOR_DERECHA:
+					posicionRelativa = new Vector2(1f - (posFija.x / dimensionPantalla.x), 1f - (posFija.y / dimensionPantalla.y));
+				break;
+			}	
+			
+			return posicionRelativa;
+		}
+		
 		/// <summary>
 		/// La dimension de la pantalla escalada para todo tipo de resoluciones de pantalla
 		/// Componente x: anchura, y:altura

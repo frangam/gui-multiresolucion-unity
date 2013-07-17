@@ -22,9 +22,14 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 		private GUIPanel panel;
 		
 		/// <summary>
-		/// La posicion inicial en la que se localiza el item
+		/// La posicion relativa al anchlado inicial en la que se localiza el item
 		/// </summary>
-		private Vector2 posicionInicial;
+		private Vector2 posicionRelativaInicial;
+		
+		/// <summary>
+		/// La posicion fija inicial
+		/// </summary>
+		private Vector2 posicionFijaInicial;
 		
 		#region propiedades
 		public GUIComponente Item{
@@ -36,7 +41,8 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 		public void inicializar(TipoScroll _scroll, GUIPanel _panel){
 			panel = _panel;
 			item.inicializar(panel);
-			posicionInicial = item.posicionRelativaA;
+			posicionRelativaInicial = item.posicionRelativaA;
+			posicionFijaInicial = item.posicionFija;
 		}
 		
 		public void resetearPosiciones(){
@@ -51,7 +57,7 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 //				Debug.Log(distanciaAlDestino);
 //			}
 			
-			item.posicionRelativaA = posicionInicial;
+			item.posicionRelativaA = posicionRelativaInicial;
 		}
 		
 		public void actualizar(Vector2 posRelativa){
