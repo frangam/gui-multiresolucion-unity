@@ -203,7 +203,7 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 				case Gesture.GestureState.Changed:
 					Vector2 desplazamiento = Vector2.zero; //el desplazamiento que realizara cada uno de los items
 					xPreviaScroll = gestoScroll.LocalDeltaPosition.x; //vamos registrando la componente x del gesto de scroll
-					yPreviaScroll = gestoScroll.LocalDeltaPosition.y; //vamos registrando la componente y del gesto de scroll
+					yPreviaScroll = -gestoScroll.LocalDeltaPosition.y; //vamos registrando la componente y del gesto de scroll
 				
 					switch(scroll){
 						case TipoScroll.HORIZONTAL:
