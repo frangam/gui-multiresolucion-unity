@@ -34,6 +34,16 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 		/// La velocidad con la que se deben de mover los items del panel con un scroll de tipo vertical
 		/// </summary>
 		[SerializeField] private float velocidadScrollVertical = 0.55f;
+		
+		/// <summary>
+		/// Coordenada X maxima relativa hasta donde se puede realizar el scroll en horizontal
+		/// </summary>
+		[SerializeField] private float xMaximaRelativaScrollable = 0.75f;
+		
+		/// <summary>
+		/// Coordenada Y maxima relativa hasta donde se puede realizar el scroll en vertical
+		/// </summary>
+		[SerializeField] private float yMaximaRelativaScrollable = 0.75f;
 		#endregion
 		
 		#region atributos privados
@@ -73,21 +83,11 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 		/// Coordenada Y del scroll previo
 		/// </summary>
 		private float yPreviaScroll = 0f;
-		
-		/// <summary>
-		/// Coordenada X maxima relativa hasta donde se puede realizar el scroll en horizontal
-		/// </summary>
-		private float xMaximaRelativaScrollable = 0.75f;
 				
 		/// <summary>
 		/// Coordenada X minima relativa hasta donde se puede realizar el scroll en horizontal
 		/// </summary>
 		private float xMinimaRelativaScrollable;
-		
-		/// <summary>
-		/// Coordenada Y maxima relativa hasta donde se puede realizar el scroll en vertical
-		/// </summary>
-		private float yMaximaRelativaScrollable = 0.75f;
 		
 		/// <summary>
 		/// Coordenada Y minima relativa hasta donde se puede realizar el scroll en vertical
@@ -288,13 +288,13 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 			
 			//caso en que se tenga que reiniciar el principio pero se ha cambiado la direccion del movimiento
 			//por tanto no hay que resetearlo
-			if(resetearPrincipio && xPreviaScroll < 0){
+			if(resetearPrincipio && yPreviaScroll < 0){
 				resetearPrincipio = false;
 			}	
 	
 			//caso en que se tenga que reiniciar el final pero se ha cambiado la direccion del movimiento
 			//por tanto no hay que resetearlo
-			else if(resetearFinal && xPreviaScroll > 0){
+			else if(resetearFinal && yPreviaScroll > 0){
 				resetearFinal = false;
 			}	
 			
@@ -323,7 +323,7 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 				break;
 				
 				case TipoScroll.VERTICAL:  //se tienen que posicionar los elementos en la misma distribucion pero junto al margen inferior de la pantalla
-					posFija = new Vector2(ultimoItem.Item.posicionFija.x, GUIEscalador.ALTO_PANTALLA-ultimoItem.item.anchura-margenFinal); //calculamos la posicion del ultimo elemento
+					posFija = new Vector2(ultimoItem.Item.posicionFija.x, GUIEscalador.ALTO_PANTALLA-ultimoItem.item.altura-margenFinal); //calculamos la posicion del ultimo elemento
 					posRelativaAFija = ultimoItem.item.posicionRelativaAlAnclaRespectoAPosicionFijaDada(posFija); //en funcion a esa posicion fija del ultimo elemento calculamos una relativa
 					desplazamientoFinal = posRelativaAFija.y - ultimoItem.item.posicionRelativaA.y; //calculamos el desplazamiento que deberan realizar cada uno de los items
 					actualizarPosiciones(new Vector2(0f, desplazamientoFinal)); //realizamos el desplazamiento en vertical
