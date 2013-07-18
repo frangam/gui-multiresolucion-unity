@@ -67,7 +67,7 @@ namespace GUIMultiresolucion{
 			ordenarComponentesADibujar();
 			
 			//inicializamos los componentes de la gui
-			inicializarComponentes();
+			inicializarComponentes();			
 		}
 		
 		void LateUpdate(){

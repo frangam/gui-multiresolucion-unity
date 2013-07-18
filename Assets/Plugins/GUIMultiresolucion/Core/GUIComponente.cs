@@ -76,7 +76,6 @@ namespace GUIMultiresolucion.Core{
 		
 		public virtual bool Visible{
 			get{
-				gameObject.SetActive(visible);
 				return visible;
 			}
 			set{
@@ -92,7 +91,6 @@ namespace GUIMultiresolucion.Core{
 			get{			
 				Rect dist; //la distribucion
 				Vector2 posicionEscalada = Vector2.zero; //posicion escalada para la resolucion de pantalla
-				Vector2 dimensionesPantalla = dimensionPantallaEscalada(); //obtenemos la dimension de la pantalla ya aplicado el escalado
 				
 				if(relativoA != TipoAnclado.SIN_ANCLADO){ //si se quiere posicionar de forma relativa a un anclado concreto
 					posicionEscalada = posicionRelativaAlAncla(relativoA); //obtenemos la posicion relativa al ancla indicada
@@ -106,17 +104,6 @@ namespace GUIMultiresolucion.Core{
 	//			if(Screen.height < GUIEscalador.ALTO_NATIVO){
 	//				
 	//			}
-				
-				//si se quiere que el componente ocupe toda la anchura de la pantalla
-				//teniendo en cuenta que la anchura de la pantalla es la anchura nativa a la que se ha modelado la gui
-				if(ocuparTodoElAncho){
-					anchura = dimensionesPantalla.x; //anchura	
-				}
-				//si se quiere que el componente ocupe toda la altura de la pantalla
-				//teniendo en cuenta que la altura de la pantalla es la altura nativa a la que se ha modelado la gui
-				if(ocuparTodoElAlto){
-					altura = dimensionesPantalla.y; //altura
-				}
 				
 				//construimos el rectangulo que es la distribucion en pantalla del componente gui
 				dist = new Rect(posicionEscalada.x, posicionEscalada.y, anchura, altura);
@@ -162,7 +149,21 @@ namespace GUIMultiresolucion.Core{
 			inicializar();
 		}
 		public virtual void inicializar(){
-			GetComponent<BoxCollider>().enabled = Visible;
+			Vector2 dimensionesPantalla = dimensionPantallaEscalada(); //obtenemos la dimension de la pantalla ya aplicado el escalado
+			
+			//si se quiere que el componente ocupe toda la anchura de la pantalla
+			//teniendo en cuenta que la anchura de la pantalla es la anchura nativa a la que se ha modelado la gui
+			if(ocuparTodoElAncho){
+				anchura = dimensionesPantalla.x; //anchura	
+			}
+			//si se quiere que el componente ocupe toda la altura de la pantalla
+			//teniendo en cuenta que la altura de la pantalla es la altura nativa a la que se ha modelado la gui
+			if(ocuparTodoElAlto){
+				altura = dimensionesPantalla.y; //altura
+			}
+			
+			gameObject.SetActive(visible);
+			GetComponent<BoxCollider>().enabled = visible;
 			colliderGUI = GetComponent<GUICollider>();	
 			colliderGUI.inicializar(this);
 		}

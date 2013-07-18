@@ -112,16 +112,12 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 		
 		#region propiedades
 		public override bool Visible{
-			get{
-				foreach(GUIItemPanel i in items){
-					i.Item.Visible = visible;
-				}
-				
+			get{				
 				return base.Visible;
 			}
 			set{				
 				foreach(GUIItemPanel i in items){
-					i.Item.Visible = this.Visible;
+					i.Item.Visible = value;
 				}
 				
 				base.Visible = value;
@@ -346,7 +342,7 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 				break;
 			}
 			
-			Debug.Log(desplazamientoFinal);
+//			Debug.Log(desplazamientoFinal);
 		}
 		
 		private void gestionarFinScroll(){

@@ -40,6 +40,7 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 		#region nuevos metodos
 		public void inicializar(TipoScroll _scroll, GUIPanel _panel){
 			panel = _panel;
+			item.Visible = panel.Visible;
 			item.inicializar(panel);
 			posicionRelativaInicial = item.posicionRelativaA;
 			posicionFijaInicial = item.posicionFija;
