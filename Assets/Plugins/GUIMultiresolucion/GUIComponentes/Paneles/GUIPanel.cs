@@ -111,6 +111,22 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 		#endregion
 		
 		#region propiedades
+		public override bool Visible{
+			get{
+				foreach(GUIItemPanel i in items){
+					i.Item.Visible = visible;
+				}
+				
+				return base.Visible;
+			}
+			set{				
+				foreach(GUIItemPanel i in items){
+					i.Item.Visible = this.Visible;
+				}
+				
+				base.Visible = value;
+			}
+		}
 		public List<GUIItemPanel> Items{
 			get{return items;}	
 		}

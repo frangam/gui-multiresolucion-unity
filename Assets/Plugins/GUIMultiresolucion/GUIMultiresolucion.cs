@@ -147,7 +147,7 @@ namespace GUIMultiresolucion{
 			//para dibujar los componentes recorremos el arraylist que los contiene ya ordenados por la profundidad
 			foreach(GUIComponente c in componentesGUIOrdenados){
 				//si se puede ver lo dibujamos
-				if(c.visible){
+				if(c.Visible){
 					c.dibujar();
 				}
 			}

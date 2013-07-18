@@ -16,6 +16,8 @@ namespace GUIMultiresolucion.Core{
 		public float anchura = 0;
 		public float altura = 0;
 		
+		public bool visible = true;
+		
 		/// <summary>
 		/// La profundid es un numero para ordenar el renderizado de los gui componentes,
 		/// es decir, establece un orden de dibujado en pantalla segun este parametro.
@@ -47,11 +49,6 @@ namespace GUIMultiresolucion.Core{
 		/// </summary>
 		public TipoAnclado relativoA = TipoAnclado.SIN_ANCLADO;
 		
-		/// <summary>
-		/// True para dibujar el componente en la gui, flase para no dibujarlo
-		/// </summary>
-		public bool visible = true;
-		
 		#region atributos privados
 		/// <summary>
 		/// La posicion que ocupa en la pantalla el tipo de anclado
@@ -77,9 +74,15 @@ namespace GUIMultiresolucion.Core{
 		
 		#region propiedades
 		
-		public bool Visible{
-			get{return visible;}
-			set{visible = value;}
+		public virtual bool Visible{
+			get{
+				gameObject.SetActive(visible);
+				return visible;
+			}
+			set{
+				visible = value; 
+				gameObject.SetActive(visible);
+			}
 		}
 		
 		/// <summary>
@@ -159,7 +162,7 @@ namespace GUIMultiresolucion.Core{
 			inicializar();
 		}
 		public virtual void inicializar(){
-			GetComponent<BoxCollider>().enabled = visible;
+			GetComponent<BoxCollider>().enabled = Visible;
 			colliderGUI = GetComponent<GUICollider>();	
 			colliderGUI.inicializar(this);
 		}
