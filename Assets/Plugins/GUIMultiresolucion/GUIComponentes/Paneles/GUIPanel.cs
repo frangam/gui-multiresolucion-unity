@@ -348,9 +348,10 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 		private void gestionarFinScroll(){
 			switch(scroll){
 				case TipoScroll.HORIZONTAL:
+					float xAnchuraPanel = this.posicionFija.x+this.anchura;
 					//comprobamos si estan en pantalla el primer y ultimo item
-					primerItenEnPantalla = ((primerItem.item.posicionFija.x >= 0f)) && (primerItem.item.posicionFija.x + primerItem.item.anchura < GUIEscalador.ANCHO_PANTALLA);
-					ultimoItemEnPantalla = ((ultimoItem.item.posicionFija.x >= 0f)) && (ultimoItem.item.posicionFija.x + ultimoItem.item.anchura < GUIEscalador.ANCHO_PANTALLA);
+					primerItenEnPantalla = ((primerItem.item.posicionFija.x >= this.posicionFija.x)) && (primerItem.item.posicionFija.x + primerItem.item.anchura < xAnchuraPanel);
+					ultimoItemEnPantalla = ((ultimoItem.item.posicionFija.x >= this.posicionFija.x)) && (ultimoItem.item.posicionFija.x + ultimoItem.item.anchura < xAnchuraPanel);
 					
 					
 					resetearPrincipio = (xPreviaScroll > 0 && primerItem.item.posicionRelativaA.x > xMaximaRelativaScrollable)
@@ -388,9 +389,11 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 				break;
 				
 				case TipoScroll.VERTICAL:
+					float yAlturaPanel = this.posicionFija.y+this.altura;
+				
 					//comprobamos si estan en pantalla el primer y ultimo item
-					primerItenEnPantalla = ((primerItem.item.posicionFija.y >= 0f)) && (primerItem.item.posicionFija.y + primerItem.item.altura < GUIEscalador.ALTO_PANTALLA);
-					ultimoItemEnPantalla = ((ultimoItem.item.posicionFija.y >= 0f)) && (ultimoItem.item.posicionFija.y + ultimoItem.item.altura < GUIEscalador.ALTO_PANTALLA);
+					primerItenEnPantalla = ((primerItem.item.posicionFija.y >= this.posicionFija.y)) && (primerItem.item.posicionFija.y + primerItem.item.altura < yAlturaPanel);
+					ultimoItemEnPantalla = ((ultimoItem.item.posicionFija.y >= this.posicionFija.y)) && (ultimoItem.item.posicionFija.y + ultimoItem.item.altura < yAlturaPanel);
 					
 			
 					//----

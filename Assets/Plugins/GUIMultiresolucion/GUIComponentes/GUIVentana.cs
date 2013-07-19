@@ -5,6 +5,7 @@ using GUIMultiresolucion.Core;
 using GUIMultiresolucion.GUIComponentes.Paneles;
 
 namespace GUIMultiresolucion.GUIComponentes{
+	[System.Serializable]
 	public class GUIVentana : GUIComponente {
 		#region atributos de configuracion
 		/// <summary>
@@ -27,7 +28,7 @@ namespace GUIMultiresolucion.GUIComponentes{
 		/// </summary>
 		public GUIBoton botonCerrar;
 		
-		public GUIPanel panelScrollable;
+		public GUIPanel panelScrollable;		
 		
 		#endregion
 		
@@ -45,7 +46,7 @@ namespace GUIMultiresolucion.GUIComponentes{
 		public override void inicializar (){
 			//cambiamos la coordenada Z a la ventana para que se quede detras de los colliders de los items que tenga
 			//para que se puedan detectar sin problemas los gestos sobre los items, de forma independiente a los gestos de los items
-			transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 0.1f);
+			transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -0.1f);
 					
 			
 			if(imgFondo != null){
@@ -143,6 +144,7 @@ namespace GUIMultiresolucion.GUIComponentes{
 		
 		#region Unity
 		public void LateUpdate(){
+			//boton cerrar pulsado
 			if(botonCerrar!= null && botonCerrar.EjecutarAccionEstandar){
 				botonCerrar.EjecutarAccionEstandar = false; //actualizar bandera
 				cerrarVentana(); //cerramos la ventana

@@ -65,6 +65,7 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 //			}
 			
 			item.posicionRelativaA = posicionRelativaInicial;
+			item.actualizar();
 		}
 		
 		public void actualizar(Vector2 posRelativa){
@@ -72,6 +73,7 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 			
 			item.posicionRelativaA += posActualizar;
 			item.actualizar();
+			
 			
 			
 //			iniciarAnimacionScroll = true;
