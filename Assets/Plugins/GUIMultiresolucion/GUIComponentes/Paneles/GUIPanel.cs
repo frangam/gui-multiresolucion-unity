@@ -326,14 +326,16 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 			
 			switch(scroll){
 				case TipoScroll.HORIZONTAL: //se tienen que posicionar los elementos en la misma distribucion pero junto al margen derecho de la pantalla
-					posFija = new Vector2(GUIEscalador.ANCHO_PANTALLA-ultimoItem.item.anchura-margenFinal, ultimoItem.Item.posicionFija.y); //calculamos la posicion del ultimo elemento
+					float xAnchuraPanel = this.posicionFija.x+this.anchura;
+					posFija = new Vector2(xAnchuraPanel-ultimoItem.item.anchura-margenFinal, ultimoItem.Item.posicionFija.y); //calculamos la posicion del ultimo elemento
 					posRelativaAFija = ultimoItem.item.posicionRelativaAlAnclaRespectoAPosicionFijaDada(posFija); //en funcion a esa posicion fija del ultimo elemento calculamos una relativa
 					desplazamientoFinal = posRelativaAFija.x - ultimoItem.item.posicionRelativaA.x; //calculamos el desplazamiento que deberan realizar cada uno de los items
 					actualizarPosiciones(new Vector2(desplazamientoFinal, 0f)); //realizamos el desplazamiento en horizontal
 				break;
 				
 				case TipoScroll.VERTICAL:  //se tienen que posicionar los elementos en la misma distribucion pero junto al margen inferior de la pantalla
-					posFija = new Vector2(ultimoItem.Item.posicionFija.x, GUIEscalador.ALTO_PANTALLA-ultimoItem.item.altura-margenFinal); //calculamos la posicion del ultimo elemento
+					float yAlturaPanel = this.posicionFija.y+this.altura;
+					posFija = new Vector2(ultimoItem.Item.posicionFija.x, yAlturaPanel-ultimoItem.item.altura-margenFinal); //calculamos la posicion del ultimo elemento
 					posRelativaAFija = ultimoItem.item.posicionRelativaAlAnclaRespectoAPosicionFijaDada(posFija); //en funcion a esa posicion fija del ultimo elemento calculamos una relativa
 					desplazamientoFinal = posRelativaAFija.y - ultimoItem.item.posicionRelativaA.y; //calculamos el desplazamiento que deberan realizar cada uno de los items
 					actualizarPosiciones(new Vector2(0f, desplazamientoFinal)); //realizamos el desplazamiento en vertical
@@ -415,7 +417,7 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 			}
 		}
 		
-		private void resetearPosicionesItems(){
+		public void resetearPosicionesItems(){
 			foreach(GUIItemPanel i in items){
 				i.resetearPosiciones();	
 			}

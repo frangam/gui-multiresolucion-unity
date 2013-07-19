@@ -37,6 +37,8 @@ namespace GUIMultiresolucion.GUIComponentes{
 		/// </summary>
 		public List<GUIComponente> items;
 		
+		public ArrayList itemsOrdenados;
+		
 		#endregion
 		
 		#region metodos sobreescritos
@@ -44,22 +46,26 @@ namespace GUIMultiresolucion.GUIComponentes{
 			//cambiamos la coordenada Z a la ventana para que se quede detras de los colliders de los items que tenga
 			//para que se puedan detectar sin problemas los gestos sobre los items, de forma independiente a los gestos de los items
 			transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 0.1f);
+					
 			
-						
 			if(imgFondo != null){
+				imgFondo.profundidad = 5;
 				items.Add(imgFondo);
 				imgFondo.transform.position = new Vector3(imgFondo.transform.position.x, imgFondo.transform.position.y, 0.1f);
 			}
 			if(imgCabecera != null){
+				imgCabecera.profundidad = 0;
 				items.Add(imgCabecera);
 				imgCabecera.transform.position = new Vector3(imgCabecera.transform.position.x, imgCabecera.transform.position.y, 0.1f);
 			}
+			if(botonCerrar != null){
+				botonCerrar.profundidad = -5;
+				items.Add(botonCerrar);
+			}
 			if(imgPie != null){
+				imgPie.profundidad = 0;
 				items.Add(imgPie);
 				imgPie.transform.position = new Vector3(imgPie.transform.position.x, imgPie.transform.position.y, 0.1f);
-			}
-			if(botonCerrar != null){
-				items.Add(botonCerrar);
 			}
 	
 			//inicializamos los items
@@ -69,6 +75,7 @@ namespace GUIMultiresolucion.GUIComponentes{
 			
 			//inicializamos el panel
 			if(panelScrollable != null){
+				panelScrollable.profundidad = 3;
 				//posicion en pixeles que debe tener el panel
 				Vector2 posEnPixeles = new Vector2(0f, imgCabecera.posicionFija.y+imgCabecera.altura); 
 				
@@ -89,6 +96,10 @@ namespace GUIMultiresolucion.GUIComponentes{
 				//por ultimo inicializamos el panel
 				items.Add(panelScrollable);
 				panelScrollable.inicializar();
+				
+				//ordenamos los items para pintarlos en pantalla segun la profundidad
+				itemsOrdenados = new ArrayList(items);
+				itemsOrdenados.Sort();
 				
 //				Debug.Log("ancho pantalla: "+Screen.width+", altura pantalla: "+Screen.height);
 //				Debug.Log("ancho pantalla escalada: "+GUIEscalador.ANCHO_PANTALLA+", altura pantalla escalada: "+GUIEscalador.ALTO_PANTALLA);
@@ -112,7 +123,7 @@ namespace GUIMultiresolucion.GUIComponentes{
 		}
 		public override void dibujar (){
 			//por ultimo dibujamos los componentes haciendo uso de los items ordenados, para dibujarlos en el orden correcto
-			foreach(GUIComponente c in items){
+			foreach(GUIComponente c in itemsOrdenados){
 				c.dibujar();	
 			}
 		}
@@ -120,7 +131,13 @@ namespace GUIMultiresolucion.GUIComponentes{
 		
 		#region eventos ventana
 		public void cerrarVentana(){
-			Visible = false;	
+			resetearVentana(); //primero reseteamos todos los componentes de la ventana
+			
+			Visible = false;	//por ultimo la ocultamos
+		}
+		
+		public void resetearVentana(){
+			panelScrollable.resetearPosicionesItems(); //reseteamos el panel	
 		}
 		#endregion
 		

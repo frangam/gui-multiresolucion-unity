@@ -11,6 +11,7 @@ namespace GUIMultiresolucion.Core{
 	/// Representa un componente de la GUI
 	/// </summary>
 	[System.Serializable]
+	[ExecuteInEditMode]
 	public class GUIComponente : MonoBehaviour, IPosicionable, IComparable {	
 		public string nombre;	
 		public float anchura = 0;
