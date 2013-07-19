@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using TouchScript.Gestures;
 using GUIMultiresolucion;
+using GUIMultiresolucion.Core;
 using GUIMultiresolucion.GUIComponentes;
 
 namespace GUIMultiresolucion.Eventos{
@@ -40,11 +41,10 @@ namespace GUIMultiresolucion.Eventos{
 				case Gesture.GestureState.Ended:
 					if(boton.texturaPulsado && cambiarTexturaPulsado){
 						boton.TexturaDibujar = boton.texturaNormal;
-					
-						if(e.State == Gesture.GestureState.Failed){
-		//					Debug.Log("fallo");
-						}
 					}
+				
+					//actualizamos bandera
+					boton.EjecutarAccionEstandar = true;
 				break;
 			}
 		}

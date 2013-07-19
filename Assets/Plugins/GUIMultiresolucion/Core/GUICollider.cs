@@ -52,10 +52,10 @@ namespace GUIMultiresolucion.Core{
 			float posX = GUIEscalador.pixelRatio*GUIEscalador.factorEscaladoX*(componenteGUI.posicionFija.x-origenCoordsColliders.x);
 			float posY = GUIEscalador.pixelRatio*GUIEscalador.factorEscaladoY*(origenCoordsColliders.y-componenteGUI.posicionFija.y);
 	
-			posicion = new Vector3(posX, posY, transform.localPosition.z);
+			posicion = new Vector3(posX, posY, transform.position.z);
 			
 			//asignamos finalmente la posicion
-			transform.localPosition = posicion;	
+			transform.position = posicion;	
 		}
 	}
 }

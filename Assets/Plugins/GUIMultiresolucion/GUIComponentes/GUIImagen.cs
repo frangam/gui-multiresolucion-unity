@@ -8,7 +8,6 @@ namespace GUIMultiresolucion.GUIComponentes{
 	/// 
 	/// Representa una imagen en la gui que tiene una textura
 	/// </summary>
-	[System.Serializable]
 	public class GUIImagen:GUIComponente {
 	    public Texture textura;
 		

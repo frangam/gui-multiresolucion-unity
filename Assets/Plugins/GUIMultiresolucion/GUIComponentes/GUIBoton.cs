@@ -9,16 +9,29 @@ namespace GUIMultiresolucion.GUIComponentes{
 	/// 
 	/// Representa un boton de la gui
 	/// </summary>
-	[System.Serializable]
-	[ExecuteInEditMode]
 	public class GUIBoton: GUIComponente{
-	        
+		/// <summary>
+		/// El tipo de boton que es
+		/// </summary>
+	    public TipoBoton tipo; 
+		
 		public Texture texturaNormal;
 		public Texture texturaPulsado;
 		
 		private Texture texturaDibujar;
+		
+		/// <summary>
+		/// Bandera para saber que se ha pulsado el boton y se tiene que realizar la accion estandar que corresponda
+		/// segun el tipo de boton
+		/// </summary>
+		private bool ejecutarAccionEstandar;
 	
 		#region propiedades publicas
+		public bool EjecutarAccionEstandar{
+			get{return ejecutarAccionEstandar;}
+			set{ejecutarAccionEstandar = value;}
+		}
+		
 	    public Rect distribucion{
 	        get{
 	           	//cambiamos las dimensiones si la anchura/altura del componente es 0

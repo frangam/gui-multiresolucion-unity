@@ -8,7 +8,6 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 	/*
 	 * Representa un elemento que forma parte de un panel
 	 */ 
-	[System.Serializable]
 	[ExecuteInEditMode]
 	public class GUIItemPanel :  MonoBehaviour, IComparable{
 		/// <summary>
@@ -30,6 +29,13 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 		/// La posicion fija inicial
 		/// </summary>
 		private Vector2 posicionFijaInicial;
+		
+		private Vector2 posActualizar;
+		
+		private bool iniciarAnimacionScroll;
+		
+		private float progresoAnimacionScroll = 0f;
+		private float duracionAnimacionScroll = 2f; //los segundos que tarda el lerp
 		
 		#region propiedades
 		public GUIComponente Item{
@@ -62,13 +68,49 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 		}
 		
 		public void actualizar(Vector2 posRelativa){
-			item.posicionRelativaA += posRelativa;
+			posActualizar = posRelativa;
+			
+			item.posicionRelativaA += posActualizar;
 			item.actualizar();
+			
+			
+//			iniciarAnimacionScroll = true;
+			
+//			Debug.Log("posActualizar: "+(posRelativa.x+item.posicionRelativaA.x));
 		}
 
 		public void dibujar ()
 		{
 			item.dibujar();
+		}
+		#endregion
+		
+		#region Unity
+		public void Update(){
+//			if(iniciarAnimacionScroll){
+//				progresoAnimacionScroll += Time.deltaTime / duracionAnimacionScroll;
+//				item.posicionRelativaA = Vector2.Lerp(item.posicionRelativaA, item.posicionRelativaA+posActualizar, progresoAnimacionScroll);
+//				item.actualizar();
+//				
+//				Vector2 aux = (item.posicionRelativaA+posActualizar);
+//				float distanciaDestino = Vector2.Distance(item.posicionRelativaA, aux);
+//				
+//				Debug.Log("distancia destino: "+distanciaDestino);
+//				Debug.Log(item.posicionRelativaA.x+", "+ (posActualizar.x+item.posicionRelativaA.x));
+//				Debug.Log("distancia: "+ Mathf.Abs((item.posicionRelativaA.x-(posActualizar.x+item.posicionRelativaA.x))));
+//				
+//				float distancia = (item.posicionRelativaA.x-(posActualizar.x+item.posicionRelativaA.x));
+//				
+////				if(progresoAnimacionScroll >= 1){
+////					iniciarAnimacionScroll = false;	
+////					progresoAnimacionScroll = 0f;
+////				}		
+//				
+//				if(distanciaDestino >= 0.00001f){
+//					iniciarAnimacionScroll = false;	
+//					progresoAnimacionScroll = 0f;
+//				}		
+//			}
 		}
 		#endregion
 		

@@ -2,26 +2,36 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using GUIMultiresolucion.Core;
+using GUIMultiresolucion.GUIComponentes.Paneles;
 
 namespace GUIMultiresolucion.GUIComponentes{
-	[System.Serializable]
 	public class GUIVentana : GUIComponente {
 		#region atributos de configuracion
 		/// <summary>
-		/// Textura para el fondo de la ventana.
+		/// Imagen para el fondo de la ventana.
 		/// </summary>
-	 	public Texture texturaFondo;
+	 	public GUIImagen imgFondo;
 		
 		/// <summary>
-		/// Textura para la cabecera de la ventana
+		/// Imagen para la cabecera de la ventana
 		/// </summary>
-		public Texture texturaCabecera;
+		public GUIImagen imgCabecera;
 		
 		/// <summary>
-		/// Textura para el pie de la ventana
+		/// Imagen para el pie de la ventana
 		/// </summary>
-		public Texture texturaPie;
+		public GUIImagen imgPie;
 		
+		/// <summary>
+		/// Boton para cerrar ventana
+		/// </summary>
+		public GUIBoton botonCerrar;
+		
+		public GUIPanel panelScrollable;
+		
+		#endregion
+		
+		#region atributos privados
 		/// <summary>
 		/// Componentes gui que estan dentro de la ventana
 		/// </summary>
@@ -29,50 +39,96 @@ namespace GUIMultiresolucion.GUIComponentes{
 		
 		#endregion
 		
-		#region atributos privados
-		/// <summary>
-		/// Los GUIComponetes ordenados segun el criterio implementado en GUIComponente
-		/// </summary>
-		private ArrayList itemsOrdenados;
-		#endregion
-		
 		#region metodos sobreescritos
-		public override void inicializar ()
-		{
-			itemsOrdenados = new ArrayList(items);
-			itemsOrdenados.Sort(); //ordenamos los items por el criterio indicado en el compareTo de GUIComponente
+		public override void inicializar (){
+			//cambiamos la coordenada Z a la ventana para que se quede detras de los colliders de los items que tenga
+			//para que se puedan detectar sin problemas los gestos sobre los items, de forma independiente a los gestos de los items
+			transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 0.1f);
 			
+						
+			if(imgFondo != null){
+				items.Add(imgFondo);
+				imgFondo.transform.position = new Vector3(imgFondo.transform.position.x, imgFondo.transform.position.y, 0.1f);
+			}
+			if(imgCabecera != null){
+				items.Add(imgCabecera);
+				imgCabecera.transform.position = new Vector3(imgCabecera.transform.position.x, imgCabecera.transform.position.y, 0.1f);
+			}
+			if(imgPie != null){
+				items.Add(imgPie);
+				imgPie.transform.position = new Vector3(imgPie.transform.position.x, imgPie.transform.position.y, 0.1f);
+			}
+			if(botonCerrar != null){
+				items.Add(botonCerrar);
+			}
+	
 			//inicializamos los items
 			foreach(GUIComponente c in items){
 				c.inicializar();
 			}
 			
+			//inicializamos el panel
+			if(panelScrollable != null){
+				//posicion en pixeles que debe tener el panel
+				Vector2 posEnPixeles = new Vector2(0f, imgCabecera.posicionFija.y+imgCabecera.altura); 
+				
+				//primero lo escalamos
+				float alturaPanel = GUIEscalador.ALTO_PANTALLA - panelScrollable.posicionFija.y;
+				
+				if(imgPie != null){
+					alturaPanel = (imgPie.posicionFija.y) - posEnPixeles.y;
+				}
+				
+				panelScrollable.altura = alturaPanel;
+				panelScrollable.anchura = GUIEscalador.ANCHO_PANTALLA;
+				
+				if(imgCabecera != null){
+					panelScrollable.posicionRelativaA.y = panelScrollable.posicionRelativaAlAnclaRespectoAPosicionFijaDada(posEnPixeles,TipoAnclado.SUPERIOR_IZQUIERDA).y; //calculamos la pos relativa que le corresponde
+				}
+
+				//por ultimo inicializamos el panel
+				items.Add(panelScrollable);
+				panelScrollable.inicializar();
+				
+//				Debug.Log("ancho pantalla: "+Screen.width+", altura pantalla: "+Screen.height);
+//				Debug.Log("ancho pantalla escalada: "+GUIEscalador.ANCHO_PANTALLA+", altura pantalla escalada: "+GUIEscalador.ALTO_PANTALLA);
+//				Debug.Log("anchura: "+panelScrollable.anchura+", altura: "+panelScrollable.altura);
+			}
+			
+			
 			base.inicializar ();
 		}
 		public override bool Visible{
-			get{
-				foreach(GUIComponente c in items){
-					c.Visible = visible;	
-				}
-				
+			get{			
 				return base.Visible;
 			}	
-			set{
+			set{				
 				foreach(GUIComponente c in items){
-					c.Visible = visible;	
+					c.Visible = value;	
 				}
 				
 				base.Visible = value;
 			}
 		}
 		public override void dibujar (){
-			if(texturaCabecera){
-				GUI.DrawTexture(distribucion, texturaCabecera);
-			}
-			
 			//por ultimo dibujamos los componentes haciendo uso de los items ordenados, para dibujarlos en el orden correcto
-			foreach(GUIComponente c in itemsOrdenados){
+			foreach(GUIComponente c in items){
 				c.dibujar();	
+			}
+		}
+		#endregion
+		
+		#region eventos ventana
+		public void cerrarVentana(){
+			Visible = false;	
+		}
+		#endregion
+		
+		#region Unity
+		public void LateUpdate(){
+			if(botonCerrar!= null && botonCerrar.EjecutarAccionEstandar){
+				botonCerrar.EjecutarAccionEstandar = false; //actualizar bandera
+				cerrarVentana(); //cerramos la ventana
 			}
 		}
 		#endregion

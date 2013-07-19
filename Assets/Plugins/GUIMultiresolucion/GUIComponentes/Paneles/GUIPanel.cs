@@ -9,8 +9,6 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 	 * Representa un panel que incorpora la funcionalidad de un scroll horizontal
 	 * mediante gestos con los dedos. 
 	 */ 
-	[System.Serializable]
-	[ExecuteInEditMode]
 	public class GUIPanel : GUIComponente {
 		#region atributos de configuracion
 		/// <summary>
@@ -133,11 +131,7 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 		
 		#region metodos sobreescritos
 		public override void inicializar(){				
-			if(items != null && items.Count > 0){		
-				//cambiamos la coordenada Z al panel para que se quede detras de los colliders de los items que tenga
-				//para que se puedan detectar sin problemas los gestos sobre los items, de forma independiente a los gestos del panel
-				transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 0.01f);
-				
+			if(items != null && items.Count > 0){						
 				xMinimaRelativaScrollable = 1f - xMaximaRelativaScrollable;
 				yMinimaRelativaScrollable = 1f - yMaximaRelativaScrollable;
 				
@@ -152,35 +146,39 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 				primerItem = (GUIItemPanel) itemsOrdenados[0];
 				ultimoItem = (GUIItemPanel) itemsOrdenados[itemsOrdenados.Count-1];
 				
-				//horizontal: mantenemos anchura de la pantalla
-				if(scroll == TipoScroll.HORIZONTAL){
-					float alturaMax = float.NegativeInfinity;
-					
-					foreach(GUIItemPanel i in items){
-						//calculamos que item tiene la mayor altura
-						if(i.Item.altura > alturaMax){
-							alturaMax = i.Item.altura;	
-						}
-					}
-					
-					this.anchura = GUIEscalador.ANCHO_PANTALLA;
-					this.altura = alturaMax;
-				}
-				//vertical: mantenemos altura de la pantalla
-				else if(scroll == TipoScroll.VERTICAL){
-					float anchuraMax = float.NegativeInfinity;
-					
-					foreach(GUIItemPanel i in items){
-						//calculamos que item tiene la mayor altura
-						if(i.Item.anchura > anchuraMax){
-							anchuraMax = i.Item.anchura;	
-						}
-					}
-					
-					this.altura = GUIEscalador.ALTO_PANTALLA;
-				}	
+//				//horizontal: mantenemos anchura de la pantalla
+//				if(scroll == TipoScroll.HORIZONTAL){
+//					float alturaMax = float.NegativeInfinity;
+//					
+//					foreach(GUIItemPanel i in items){
+//						//calculamos que item tiene la mayor altura
+//						if(i.Item.altura > alturaMax){
+//							alturaMax = i.Item.altura;	
+//						}
+//					}
+//					
+//					this.anchura = GUIEscalador.ANCHO_PANTALLA;
+//					this.altura = alturaMax;
+//				}
+//				//vertical: mantenemos altura de la pantalla
+//				else if(scroll == TipoScroll.VERTICAL){
+//					float anchuraMax = float.NegativeInfinity;
+//					
+//					foreach(GUIItemPanel i in items){
+//						//calculamos que item tiene la mayor altura
+//						if(i.Item.anchura > anchuraMax){
+//							anchuraMax = i.Item.anchura;	
+//						}
+//					}
+//					
+//					this.altura = GUIEscalador.ALTO_PANTALLA;
+//				}	
 				
 				base.inicializar();
+				
+//				//cambiamos la coordenada Z al panel para que se quede detras de los colliders de los items que tenga
+//				//para que se puedan detectar sin problemas los gestos sobre los items, de forma independiente a los gestos del panel
+//				transform.position = new Vector3(transform.position.x, transform.position.y, 0.01f);
 			}
 		}
 		
@@ -352,25 +350,38 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 					primerItenEnPantalla = ((primerItem.item.posicionFija.x >= 0f)) && (primerItem.item.posicionFija.x + primerItem.item.anchura < GUIEscalador.ANCHO_PANTALLA);
 					ultimoItemEnPantalla = ((ultimoItem.item.posicionFija.x >= 0f)) && (ultimoItem.item.posicionFija.x + ultimoItem.item.anchura < GUIEscalador.ANCHO_PANTALLA);
 					
+					
+					resetearPrincipio = (xPreviaScroll > 0 && primerItem.item.posicionRelativaA.x > xMaximaRelativaScrollable)
+					|| (xPreviaScroll > 0 && primerItenEnPantalla && !ultimoItemEnPantalla)
+					|| (xPreviaScroll <= 0 && primerItenEnPantalla && !ultimoItemEnPantalla); //condicion: cambiar movimiento a la izquierda despues de haber hecho uno a la derecha previamente
+				
+					resetearFinal = (xPreviaScroll < 0 && ultimoItem.item.posicionRelativaA.x < xMinimaRelativaScrollable)
+						|| (xPreviaScroll < 0 && ultimoItemEnPantalla && !primerItenEnPantalla)
+						|| (xPreviaScroll >= 0 && ultimoItemEnPantalla && !primerItenEnPantalla);//condicion: cambiar movimiento a la derecha despues de haber hecho uno a la izquierda previamente
+				
+				
 					//----
 				 	// reseteamos posiciones de los items en el principio del panel
 					// si el movimiento ultimo del dedo era hacia la derecha
 					//---
-					if((xPreviaScroll > 0 && primerItem.item.posicionRelativaA.x > xMaximaRelativaScrollable)
-					|| (xPreviaScroll > 0 && primerItenEnPantalla && !ultimoItemEnPantalla)
-					|| (xPreviaScroll <= 0 && primerItenEnPantalla && !ultimoItemEnPantalla)) //condicion: cambiar movimiento a la izquierda despues de haber hecho uno a la derecha previamente
-					{
+					if(resetearPrincipio) {
 						resetearPosicionesItems();
 					}
-				
 					//----
 				 	// reseteamos posiciones de los items en el final del panel
 					// si el movimiento del dedo hacia la izquierda
-					else if((xPreviaScroll < 0 && ultimoItem.item.posicionRelativaA.x < xMinimaRelativaScrollable)
-						|| (xPreviaScroll < 0 && ultimoItemEnPantalla && !primerItenEnPantalla)
-						|| (xPreviaScroll >= 0 && ultimoItemEnPantalla && !primerItenEnPantalla)) //condicion: cambiar movimiento a la derecha despues de haber hecho uno a la izquierda previamente
-					{
+					//---
+					else if(resetearFinal) {
 						resetearItemsDesdeElFinalPanel();
+					}
+					//----
+					// no hay que resetear nada
+					//---
+					else{
+//						Vector2 desplazamiento = new Vector2(xPreviaScroll*5f, 0f);
+//						actualizarPosiciones(desplazamiento);
+//						if(){
+//						}
 					}
 				break;
 				
