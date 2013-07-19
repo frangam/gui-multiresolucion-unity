@@ -23,8 +23,17 @@ namespace GUIMultiresolucion.GUIComponentes{
 		#endregion
 		
 		#region metodos sobreescritos
+		public override void resetear(){
+			botonCerrar = null;
+			imgCabecera = null;
+			imgPie = null;
+			imgFondo = null;
+			botonAtras = null;
+			botonDelante = null;
+		}
+		
 		public void inicializar (GUIMultiVentana multiventana)
-		{
+		{			
 			//---
 			//condiciones para que la ventana posea botones atras y hacia delante
 			//---
@@ -53,6 +62,21 @@ namespace GUIMultiresolucion.GUIComponentes{
 			this.imgPie = multiventana.ventanaComun.imgPie;			
 			
 			base.inicializar ();
+		}
+		
+		public override void dibujar ()
+		{
+			//primero dibujamos la ventana	
+			base.dibujar ();
+			
+			//despues botones
+			if(botonAtras != null){
+				botonAtras.dibujar();	
+			}
+			
+			if(botonDelante != null){
+				botonDelante.dibujar();
+			}
 		}
 		#endregion
 		

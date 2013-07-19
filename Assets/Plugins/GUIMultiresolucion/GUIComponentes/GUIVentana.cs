@@ -42,12 +42,14 @@ namespace GUIMultiresolucion.GUIComponentes{
 		
 		#endregion
 		
-		#region metodos sobreescritos
+		
+		#region metodos sobreescritos		
 		public override void inicializar (){
 			//cambiamos la coordenada Z a la ventana para que se quede detras de los colliders de los items que tenga
 			//para que se puedan detectar sin problemas los gestos sobre los items, de forma independiente a los gestos de los items
 			transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -0.1f);
-					
+			
+			items = new List<GUIComponente>(); //instanciamos la lista de items
 			
 			if(imgFondo != null){
 				imgFondo.profundidad = 5;
@@ -109,6 +111,8 @@ namespace GUIMultiresolucion.GUIComponentes{
 			
 			
 			base.inicializar ();
+			
+			this.Visible = true;
 		}
 		public override bool Visible{
 			get{			
@@ -134,20 +138,24 @@ namespace GUIMultiresolucion.GUIComponentes{
 		public void cerrarVentana(){
 			resetearVentana(); //primero reseteamos todos los componentes de la ventana
 			
-			Visible = false;	//por ultimo la ocultamos
+			this.Visible = false;	//por ultimo la ocultamos
 		}
 		
 		public void resetearVentana(){
-			panelScrollable.resetearPosicionesItems(); //reseteamos el panel	
+			if(panelScrollable != null){
+				panelScrollable.resetearPosicionesItems(); //reseteamos el panel	
+			}
 		}
 		#endregion
 		
 		#region Unity
 		public void LateUpdate(){
 			//boton cerrar pulsado
-			if(botonCerrar!= null && botonCerrar.EjecutarAccionEstandar){
+			if(botonCerrar != null && botonCerrar.EjecutarAccionEstandar){
 				botonCerrar.EjecutarAccionEstandar = false; //actualizar bandera
 				cerrarVentana(); //cerramos la ventana
+				Debug.Log(botonCerrar.tipo);
+				Debug.Log("cerrando ventana");
 			}
 		}
 		#endregion

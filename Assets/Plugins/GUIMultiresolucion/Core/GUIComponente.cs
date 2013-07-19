@@ -81,7 +81,8 @@ namespace GUIMultiresolucion.Core{
 			}
 			set{
 				visible = value; 
-				gameObject.SetActive(visible);
+				gameObject.SetActive(value);
+				GetComponent<BoxCollider>().enabled = value;
 			}
 		}
 		
@@ -149,6 +150,10 @@ namespace GUIMultiresolucion.Core{
 			
 			inicializar();
 		}
+		public virtual void resetear(){
+			
+		}
+		
 		public virtual void inicializar(){
 			Vector2 dimensionesPantalla = dimensionPantallaEscalada(); //obtenemos la dimension de la pantalla ya aplicado el escalado
 			

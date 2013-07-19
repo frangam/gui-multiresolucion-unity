@@ -69,7 +69,10 @@ namespace GUIMultiresolucion.GUIComponentes{
 		#region metodos privados
 		private void abrirVentana(GUIVentanaJerarquizada ventana){
 			if(ventanaActiva != ventana){
-				ventanaActiva = ventana;	
+				ventanaActiva.cerrarVentana();
+				ventana.resetear(); //reseteamos la ventana
+				ventanaActiva = ventana; //cambiamos la ventana activa
+				ventanaActiva.inicializar(this); //inicializamos la ventana activa
 			}
 		}
 		#endregion
@@ -79,6 +82,9 @@ namespace GUIMultiresolucion.GUIComponentes{
 			if(ventanaActiva != null){
 				//boton atras pulsado
 				if(ventanaActiva.botonAtras != null && ventanaActiva.botonAtras.EjecutarAccionEstandar){
+										Debug.Log(ventanaActiva.botonAtras.tipo);
+					Debug.Log("ir a ventana anterior");
+					
 					ventanaActiva.botonAtras.EjecutarAccionEstandar = false; //actualizar bandera
 					int indiceVentanaAnterior = ventanaActiva.ordenEnMultiventana-1;
 					
@@ -90,10 +96,15 @@ namespace GUIMultiresolucion.GUIComponentes{
 					else{
 						Debug.Log("Ventana anterior fuera de rango");	
 					}
+					
+
 				}
 				
 				//boton delante pulsado
 				if(ventanaActiva.botonDelante != null && ventanaActiva.botonDelante.EjecutarAccionEstandar){
+					Debug.Log(ventanaActiva.botonDelante.tipo);
+					Debug.Log("ir a ventana siguiente");
+					
 					ventanaActiva.botonDelante.EjecutarAccionEstandar = false; //actualizar bandera
 					int indiceVentanaSiguiente = ventanaActiva.ordenEnMultiventana+1;
 					
@@ -105,6 +116,8 @@ namespace GUIMultiresolucion.GUIComponentes{
 					else{
 						Debug.Log("Ventana siguiente fuera de rango");	
 					}
+					
+					
 				}
 			}
 		}
