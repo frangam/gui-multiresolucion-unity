@@ -41,7 +41,9 @@ namespace GUIMultiresolucion.GUIComponentes{
 		#endregion
 		
 		#region metodos sobreescritos
-		public override void inicializar (){
+		public override void inicializar (){	
+			ventanaActiva = null;
+			
 			//cambiamos la coordenada Z a la multiventana para que se quede detras de los colliders de los items que tenga
 			//para que se puedan detectar sin problemas los gestos sobre los items, de forma independiente a los gestos de los items
 			transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -0.1f);
@@ -70,7 +72,7 @@ namespace GUIMultiresolucion.GUIComponentes{
 		private void abrirVentana(GUIVentanaJerarquizada ventana){
 			if(ventanaActiva != ventana){
 				ventanaActiva.cerrarVentana();
-				ventana.resetear(); //reseteamos la ventana
+				ventanaActiva.resetear(); //reseteamos la ventana
 				ventanaActiva = ventana; //cambiamos la ventana activa
 				ventanaActiva.inicializar(this); //inicializamos la ventana activa
 			}
