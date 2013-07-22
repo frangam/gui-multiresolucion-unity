@@ -8,7 +8,7 @@ namespace GUIMultiresolucion.GUIComponentes{
 	 * Conjunto de ventanas
 	 */ 
 	[System.Serializable]
-	public class GUIMultiVentana : GUIComponente {
+	public class GUIMultiVentana : GUIVentana {
 		#region atributos de configuracion
 		/// <summary>
 		/// Las ventanas que forman el conjunto
@@ -16,9 +16,14 @@ namespace GUIMultiresolucion.GUIComponentes{
 		public List<GUIVentanaJerarquizada> ventanas;
 		
 		/// <summary>
-		/// Ventana comun para todas las demas
+		/// Boton para navegar hacia atras en la jerarquia de ventanas de una multiventana
 		/// </summary>
-		public GUIVentanaJerarquizada ventanaComun;
+		public GUIBoton botonAtras;
+		
+		/// <summary>
+		/// Boton para navegar hacia delante en la jerarquia de ventanas de una multiventana
+		/// </summary>
+		public GUIBoton botonDelante;
 		
 		/// <summary>
 		/// La ventana que esta activa, que se esta mostrando en el momento actual
@@ -46,33 +51,103 @@ namespace GUIMultiresolucion.GUIComponentes{
 			
 			//cambiamos la coordenada Z a la multiventana para que se quede detras de los colliders de los items que tenga
 			//para que se puedan detectar sin problemas los gestos sobre los items, de forma independiente a los gestos de los items
-			transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -0.1f);
-			
-			ventanaComun.transform.localScale = new Vector3(0, 0f, 0f);
-			ventanaComun.botonAtras.inicializar();
-			ventanaComun.botonDelante.inicializar();
-			
+			transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -0.1f);		
 			
 			ventanasOrdenadas = new ArrayList(ventanas);
 			ventanasOrdenadas.Sort(); //ordenamos las ventanas
-			ventanaActiva = (GUIVentanaJerarquizada) ventanasOrdenadas[0]; //obtenemos la primera ventana de la jerarquia
-			ventanaActiva.inicializar(this); //inicializamos la ventana activa
 			
-			base.inicializar ();
+			ventanaActiva = (GUIVentanaJerarquizada) ventanasOrdenadas[0]; //obtenemos la primera ventana de la jerarquia
+			
+			//inicializar todas las ventanas que no son la primera a mostrar
+			for(int i=1; i<totalVentanas(); i++){
+				((GUIVentanaJerarquizada) ventanasOrdenadas[i]).inicializar(this);
+				((GUIVentanaJerarquizada) ventanasOrdenadas[i]).Visible = false; //ocultamos la ventana
+			}
+			
+			ventanaActiva.inicializar(this); //inicializamos la ventana activa
+			ventanaActiva.abrirVentana(); //abrimos la ventana activa
+			inicializarBotonesNavegacion(); //inicializamos los botones de navegacion entre ventanas	
+			
+			base.inicializar();
 		}
 		
-		public override void dibujar (){
+		public override void dibujar (){	
+			if(imgFondo.Visible){
+				imgFondo.dibujar();
+			}	
+			
+			//por ultimo, dibujamos la ventana activa
 			if(ventanaActiva != null){
-				ventanaActiva.dibujar(); //solo dibujamos la ventana activa
+				ventanaActiva.dibujar(); 
+			}
+			
+			
+			if(imgCabecera.Visible){
+				imgCabecera.dibujar();	
+			}
+			
+			if(botonCerrar.Visible){
+				botonCerrar.dibujar();	
+			}
+			
+			if(imgPie.Visible){
+				imgPie.dibujar();
+			}
+			
+			//--
+			//dibujamos botones de navegacion
+			//--
+			
+			if(botonAtras.Visible){
+				botonAtras.dibujar();	
+			}
+			
+			if(botonDelante.Visible){
+				botonDelante.dibujar();	
 			}
 		}
 		#endregion
 		
 		#region metodos privados
+		/// <summary>
+		/// Inicializa los botones de navegacion entre las ventanas
+		/// </summary>
+		private void inicializarBotonesNavegacion(){
+			//---
+			//condiciones para que la ventana posea botones atras y hacia delante
+			//---
+			
+			if(ventanaActiva.ordenEnMultiventana == 0 && ventanaActiva.ordenEnMultiventana == totalVentanas()-1){
+				botonAtras.Visible = false;
+				botonDelante.Visible = false;
+			}
+			else if(ventanaActiva.ordenEnMultiventana == 0 && ventanaActiva.ordenEnMultiventana < totalVentanas()-1){
+				botonAtras.Visible = false;
+				botonDelante.Visible = true;
+			}	
+			else if(ventanaActiva.ordenEnMultiventana > 0 && ventanaActiva.ordenEnMultiventana == totalVentanas()-1){
+				botonAtras.Visible = true;
+				botonDelante.Visible = false;
+			}
+			else if(ventanaActiva.ordenEnMultiventana > 0 && ventanaActiva.ordenEnMultiventana < totalVentanas()-1){
+				botonAtras.Visible = true;
+				botonDelante.Visible = true;
+			}	
+			
+			//por ultimo, inicializamos los botones de navegacion
+			
+			if(botonAtras.Visible){
+				botonAtras.inicializar();	
+			}
+			
+			if(botonDelante.Visible){
+				botonDelante.inicializar();
+			}
+		}
+		
 		private void abrirVentana(GUIVentanaJerarquizada ventana){
 			if(ventanaActiva != ventana){
 				ventanaActiva.cerrarVentana();
-				ventanaActiva.resetear(); //reseteamos la ventana
 				ventanaActiva = ventana; //cambiamos la ventana activa
 				ventanaActiva.inicializar(this); //inicializamos la ventana activa
 			}
@@ -83,11 +158,11 @@ namespace GUIMultiresolucion.GUIComponentes{
 		public void LateUpdate(){
 			if(ventanaActiva != null){
 				//boton atras pulsado
-				if(ventanaActiva.botonAtras != null && ventanaActiva.botonAtras.EjecutarAccionEstandar){
-										Debug.Log(ventanaActiva.botonAtras.tipo);
+				if(botonAtras != null && botonAtras.EjecutarAccionEstandar){
+					Debug.Log(botonAtras.tipo);
 					Debug.Log("ir a ventana anterior");
 					
-					ventanaActiva.botonAtras.EjecutarAccionEstandar = false; //actualizar bandera
+					botonAtras.EjecutarAccionEstandar = false; //actualizar bandera
 					int indiceVentanaAnterior = ventanaActiva.ordenEnMultiventana-1;
 					
 					//si la ventana anterior es una ventana valida de la jerarquia
@@ -103,11 +178,11 @@ namespace GUIMultiresolucion.GUIComponentes{
 				}
 				
 				//boton delante pulsado
-				if(ventanaActiva.botonDelante != null && ventanaActiva.botonDelante.EjecutarAccionEstandar){
-					Debug.Log(ventanaActiva.botonDelante.tipo);
+				if(botonDelante != null && botonDelante.EjecutarAccionEstandar){
+					Debug.Log(botonDelante.tipo);
 					Debug.Log("ir a ventana siguiente");
 					
-					ventanaActiva.botonDelante.EjecutarAccionEstandar = false; //actualizar bandera
+					botonDelante.EjecutarAccionEstandar = false; //actualizar bandera
 					int indiceVentanaSiguiente = ventanaActiva.ordenEnMultiventana+1;
 					
 					//si la ventana anterior es una ventana valida de la jerarquia
