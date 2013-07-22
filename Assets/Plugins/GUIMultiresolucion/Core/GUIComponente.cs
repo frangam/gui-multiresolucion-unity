@@ -172,6 +172,7 @@ namespace GUIMultiresolucion.Core{
 			GetComponent<BoxCollider>().enabled = visible;
 			colliderGUI = GetComponent<GUICollider>();	
 			colliderGUI.inicializar(this);
+			
 		}
 		public virtual void actualizar(){
 			colliderGUI.actualizar();

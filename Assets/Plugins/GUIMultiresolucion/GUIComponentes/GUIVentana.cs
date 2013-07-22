@@ -36,12 +36,25 @@ namespace GUIMultiresolucion.GUIComponentes{
 		/// <summary>
 		/// Componentes gui que estan dentro de la ventana
 		/// </summary>
-		public List<GUIComponente> items;
+		private List<GUIComponente> items;
 		
-		public ArrayList itemsOrdenados;
+		private ArrayList itemsOrdenados;
+		
+		private float yCabecera;
+		private float alturaCabecera;
+		private float yPie;
 		
 		#endregion
 		
+		#region metodos publicos
+		public void inicializar(float _yCabecera, float _alturaCabecera, float _yPien){
+			yCabecera = yCabecera;
+			alturaCabecera = _alturaCabecera;
+			yPie = _yPien;
+			
+			inicializar();
+		}
+		#endregion
 		
 		#region metodos sobreescritos		
 		public override void inicializar (){
@@ -79,14 +92,25 @@ namespace GUIMultiresolucion.GUIComponentes{
 			//inicializamos el panel
 			if(panelScrollable != null){
 				panelScrollable.profundidad = 3;
+				
 				//posicion en pixeles que debe tener el panel
-				Vector2 posEnPixeles = new Vector2(0f, imgCabecera.posicionFija.y+imgCabecera.altura); 
+				Vector2 posEnPixeles = Vector2.zero;
+				
+				if(imgCabecera != null){
+					posEnPixeles = new Vector2(0f, imgCabecera.posicionFija.y+imgCabecera.altura); 
+				}
+				else{
+					posEnPixeles = new Vector2(0f, yCabecera+alturaCabecera); 	
+				}
 				
 				//primero lo escalamos
 				float alturaPanel = GUIEscalador.ALTO_PANTALLA - panelScrollable.posicionFija.y;
 				
 				if(imgPie != null){
 					alturaPanel = (imgPie.posicionFija.y) - posEnPixeles.y;
+				}
+				else{
+					alturaPanel = (yPie) - posEnPixeles.y;
 				}
 				
 				panelScrollable.altura = alturaPanel;
@@ -100,19 +124,16 @@ namespace GUIMultiresolucion.GUIComponentes{
 				items.Add(panelScrollable);
 				panelScrollable.inicializar();
 				
-				//ordenamos los items para pintarlos en pantalla segun la profundidad
-				itemsOrdenados = new ArrayList(items);
-				itemsOrdenados.Sort();
-				
 //				Debug.Log("ancho pantalla: "+Screen.width+", altura pantalla: "+Screen.height);
 //				Debug.Log("ancho pantalla escalada: "+GUIEscalador.ANCHO_PANTALLA+", altura pantalla escalada: "+GUIEscalador.ALTO_PANTALLA);
 //				Debug.Log("anchura: "+panelScrollable.anchura+", altura: "+panelScrollable.altura);
 			}
 			
+			//ordenamos los items para pintarlos en pantalla segun la profundidad
+			itemsOrdenados = new ArrayList(items);
+			itemsOrdenados.Sort();
 			
 			base.inicializar ();
-			
-			this.Visible = true;
 		}
 		public override bool Visible{
 			get{			
@@ -129,12 +150,17 @@ namespace GUIMultiresolucion.GUIComponentes{
 		public override void dibujar (){
 			//por ultimo dibujamos los componentes haciendo uso de los items ordenados, para dibujarlos en el orden correcto
 			foreach(GUIComponente c in itemsOrdenados){
-				c.dibujar();	
+				if(c.Visible){
+					c.dibujar();	
+				}
 			}
 		}
 		#endregion
 		
 		#region eventos ventana
+		public void abrirVentana(){
+			this.Visible = true;
+		}
 		public void cerrarVentana(){
 			resetearVentana(); //primero reseteamos todos los componentes de la ventana
 			
