@@ -123,26 +123,30 @@ namespace GUIMultiresolucion.GUIComponentes{
 			}
 			else if(ventanaActiva.ordenEnMultiventana == 0 && ventanaActiva.ordenEnMultiventana < totalVentanas()-1){
 				botonAtras.Visible = false;
-				botonDelante.Visible = true;
+				
+				if(!botonDelante.Visible){
+					botonDelante.Visible = true;
+					botonDelante.inicializar();	
+				}
 			}	
 			else if(ventanaActiva.ordenEnMultiventana > 0 && ventanaActiva.ordenEnMultiventana == totalVentanas()-1){
-				botonAtras.Visible = true;
+				if(!botonAtras.Visible){
+					botonAtras.Visible = true;
+					botonAtras.inicializar();	
+				}
 				botonDelante.Visible = false;
 			}
 			else if(ventanaActiva.ordenEnMultiventana > 0 && ventanaActiva.ordenEnMultiventana < totalVentanas()-1){
-				botonAtras.Visible = true;
-				botonDelante.Visible = true;
+				if(!botonAtras.Visible){
+					botonAtras.Visible = true;
+					botonAtras.inicializar();	
+				}
+				
+				if(!botonDelante.Visible){
+					botonDelante.Visible = true;
+					botonDelante.inicializar();	
+				}
 			}	
-			
-			//por ultimo, inicializamos los botones de navegacion
-			
-			if(botonAtras.Visible){
-				botonAtras.inicializar();	
-			}
-			
-			if(botonDelante.Visible){
-				botonDelante.inicializar();
-			}
 		}
 		
 		private void abrirVentana(GUIVentanaJerarquizada ventana){
@@ -150,15 +154,19 @@ namespace GUIMultiresolucion.GUIComponentes{
 				ventanaActiva.cerrarVentana();
 				ventanaActiva = ventana; //cambiamos la ventana activa
 				ventanaActiva.inicializar(this); //inicializamos la ventana activa
+				ventanaActiva.abrirVentana(); //abrimos la ventana
+				inicializarBotonesNavegacion(); //inicializamos los botones de navegacion
 			}
 		}
 		#endregion
 		
 		#region Unity
 		public void LateUpdate(){
+			base.LateUpdate();
+			
 			if(ventanaActiva != null){
 				//boton atras pulsado
-				if(botonAtras != null && botonAtras.EjecutarAccionEstandar){
+				if(botonAtras != null && botonAtras.gameObject.activeSelf && botonAtras.EjecutarAccionEstandar){
 					Debug.Log(botonAtras.tipo);
 					Debug.Log("ir a ventana anterior");
 					
@@ -178,7 +186,7 @@ namespace GUIMultiresolucion.GUIComponentes{
 				}
 				
 				//boton delante pulsado
-				if(botonDelante != null && botonDelante.EjecutarAccionEstandar){
+				if(botonDelante != null && botonDelante.gameObject.activeSelf && botonDelante.EjecutarAccionEstandar){
 					Debug.Log(botonDelante.tipo);
 					Debug.Log("ir a ventana siguiente");
 					

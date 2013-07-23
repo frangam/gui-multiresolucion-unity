@@ -24,7 +24,7 @@ namespace GUIMultiresolucion.GUIComponentes{
 		/// Bandera para saber que se ha pulsado el boton y se tiene que realizar la accion estandar que corresponda
 		/// segun el tipo de boton
 		/// </summary>
-		public bool ejecutarAccionEstandar = false;
+		private bool ejecutarAccionEstandar = false;
 	
 		#region propiedades publicas
 		public bool EjecutarAccionEstandar{

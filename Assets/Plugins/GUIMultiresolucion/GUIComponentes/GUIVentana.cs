@@ -60,7 +60,7 @@ namespace GUIMultiresolucion.GUIComponentes{
 		public override void inicializar (){
 			//cambiamos la coordenada Z a la ventana para que se quede detras de los colliders de los items que tenga
 			//para que se puedan detectar sin problemas los gestos sobre los items, de forma independiente a los gestos de los items
-			transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -0.1f);
+			transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 0.5f);
 			
 			items = new List<GUIComponente>(); //instanciamos la lista de items
 			
@@ -116,9 +116,9 @@ namespace GUIMultiresolucion.GUIComponentes{
 				panelScrollable.altura = alturaPanel;
 				panelScrollable.anchura = GUIEscalador.ANCHO_PANTALLA;
 				
-				if(imgCabecera != null){
-					panelScrollable.posicionRelativaA.y = panelScrollable.posicionRelativaAlAnclaRespectoAPosicionFijaDada(posEnPixeles,TipoAnclado.SUPERIOR_IZQUIERDA).y; //calculamos la pos relativa que le corresponde
-				}
+				
+				panelScrollable.posicionRelativaA.y = panelScrollable.posicionRelativaAlAnclaRespectoAPosicionFijaDada(posEnPixeles,TipoAnclado.SUPERIOR_IZQUIERDA).y; //calculamos la pos relativa que le corresponde
+				
 
 				//por ultimo inicializamos el panel
 				items.Add(panelScrollable);
@@ -177,7 +177,7 @@ namespace GUIMultiresolucion.GUIComponentes{
 		#region Unity
 		public void LateUpdate(){
 			//boton cerrar pulsado
-			if(botonCerrar != null && botonCerrar.EjecutarAccionEstandar){
+			if(botonCerrar != null && botonCerrar.gameObject.activeSelf && botonCerrar.EjecutarAccionEstandar){
 				botonCerrar.EjecutarAccionEstandar = false; //actualizar bandera
 				cerrarVentana(); //cerramos la ventana
 				Debug.Log(botonCerrar.tipo);
