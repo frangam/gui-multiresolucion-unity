@@ -74,10 +74,6 @@ namespace GUIMultiresolucion.GUIComponentes{
 				items.Add(imgCabecera);
 				imgCabecera.transform.position = new Vector3(imgCabecera.transform.position.x, imgCabecera.transform.position.y, 0.1f);
 			}
-			if(botonCerrar != null){
-				botonCerrar.profundidad = -5;
-				items.Add(botonCerrar);
-			}
 			if(imgPie != null){
 				imgPie.profundidad = 0;
 				items.Add(imgPie);
@@ -87,6 +83,13 @@ namespace GUIMultiresolucion.GUIComponentes{
 			//inicializamos los items
 			foreach(GUIComponente c in items){
 				c.inicializar();
+			}
+			
+			//inicializamos el boton cerrar
+			if(botonCerrar != null){
+				botonCerrar.profundidad = -5;
+				items.Add(botonCerrar);
+				botonCerrar.inicializar (this);
 			}
 			
 			//inicializamos el panel
@@ -161,7 +164,7 @@ namespace GUIMultiresolucion.GUIComponentes{
 		public void abrirVentana(){
 			this.Visible = true;
 		}
-		public void cerrarVentana(){
+		public virtual void cerrarVentana(){
 			resetearVentana(); //primero reseteamos todos los componentes de la ventana
 			
 			this.Visible = false;	//por ultimo la ocultamos
@@ -170,18 +173,6 @@ namespace GUIMultiresolucion.GUIComponentes{
 		public void resetearVentana(){
 			if(panelScrollable != null){
 				panelScrollable.resetearPosicionesItems(); //reseteamos el panel	
-			}
-		}
-		#endregion
-		
-		#region Unity
-		public void LateUpdate(){
-			//boton cerrar pulsado
-			if(botonCerrar != null && botonCerrar.gameObject.activeSelf && botonCerrar.EjecutarAccionEstandar){
-				botonCerrar.EjecutarAccionEstandar = false; //actualizar bandera
-				cerrarVentana(); //cerramos la ventana
-				Debug.Log(botonCerrar.tipo);
-				Debug.Log("cerrando ventana");
 			}
 		}
 		#endregion

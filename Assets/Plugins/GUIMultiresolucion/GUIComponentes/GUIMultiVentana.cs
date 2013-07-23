@@ -66,7 +66,12 @@ namespace GUIMultiresolucion.GUIComponentes{
 			
 			ventanaActiva.inicializar(this); //inicializamos la ventana activa
 			ventanaActiva.abrirVentana(); //abrimos la ventana activa
+			
+			botonAtras.Visible = false;
+			botonDelante.Visible = false;
+			
 			inicializarBotonesNavegacion(); //inicializamos los botones de navegacion entre ventanas	
+			
 			
 			base.inicializar();
 		}
@@ -117,94 +122,78 @@ namespace GUIMultiresolucion.GUIComponentes{
 			//condiciones para que la ventana posea botones atras y hacia delante
 			//---
 			
-			if(ventanaActiva.ordenEnMultiventana == 0 && ventanaActiva.ordenEnMultiventana == totalVentanas()-1){
-				botonAtras.Visible = false;
-				botonDelante.Visible = false;
-			}
-			else if(ventanaActiva.ordenEnMultiventana == 0 && ventanaActiva.ordenEnMultiventana < totalVentanas()-1){
+//			if(ventanaActiva.ordenEnMultiventana == 0 && ventanaActiva.ordenEnMultiventana == totalVentanas()-1){
+//				botonAtras.Visible = false;
+//				botonDelante.Visible = false;
+//			}
+//			else if(ventanaActiva.ordenEnMultiventana == 0 && ventanaActiva.ordenEnMultiventana < totalVentanas()-1){
+			if(ventanaActiva.ordenEnMultiventana == 0 && ventanaActiva.ordenEnMultiventana < totalVentanas()-1){
 				botonAtras.Visible = false;
 				
 				if(!botonDelante.Visible){
 					botonDelante.Visible = true;
-					botonDelante.inicializar();	
+					botonDelante.inicializar(this);
 				}
 			}	
 			else if(ventanaActiva.ordenEnMultiventana > 0 && ventanaActiva.ordenEnMultiventana == totalVentanas()-1){
 				if(!botonAtras.Visible){
 					botonAtras.Visible = true;
-					botonAtras.inicializar();	
+					botonAtras.inicializar(this);
 				}
 				botonDelante.Visible = false;
 			}
 			else if(ventanaActiva.ordenEnMultiventana > 0 && ventanaActiva.ordenEnMultiventana < totalVentanas()-1){
 				if(!botonAtras.Visible){
 					botonAtras.Visible = true;
-					botonAtras.inicializar();	
+					botonAtras.inicializar(this);	
 				}
 				
 				if(!botonDelante.Visible){
 					botonDelante.Visible = true;
-					botonDelante.inicializar();	
+					botonDelante.inicializar(this);
 				}
 			}	
 		}
 		
-		private void abrirVentana(GUIVentanaJerarquizada ventana){
-			if(ventanaActiva != ventana){
-				ventanaActiva.cerrarVentana();
-				ventanaActiva = ventana; //cambiamos la ventana activa
-				ventanaActiva.inicializar(this); //inicializamos la ventana activa
-				ventanaActiva.abrirVentana(); //abrimos la ventana
-				inicializarBotonesNavegacion(); //inicializamos los botones de navegacion
+		private void abrirVentana(int indiceVentana){
+			//si la ventana anterior es una ventana valida de la jerarquia
+			if(indiceVentana >=0 && indiceVentana < totalVentanas()){
+				GUIVentanaJerarquizada ventana = (GUIVentanaJerarquizada) ventanasOrdenadas[indiceVentana]; //obtenemos el objeto ventana siguiente
+				
+				if(ventanaActiva != ventana){
+					ventanaActiva.cerrarVentana(); //primero, cerramos la ventana activa
+					ventanaActiva = ventana; //cambiamos la ventana activa por la ventana que queremos abrir
+					ventanaActiva.inicializar(this); //inicializamos la ventana activa
+					ventanaActiva.abrirVentana(); //abrimos la ventana activa
+					inicializarBotonesNavegacion(); //inicializamos los botones de navegacion
+				}
 			}
+			else{
+				Debug.Log("Ventana con indice "+ indiceVentana+" fuera de rango");	
+			}
+			
+			
 		}
 		#endregion
 		
-		#region Unity
-		public void LateUpdate(){
-			base.LateUpdate();
+		#region metodos publicos
+		public override void cerrarVentana ()
+		{
+			ventanaActiva.cerrarVentana(); //cerrar ventana activa
 			
-			if(ventanaActiva != null){
-				//boton atras pulsado
-				if(botonAtras != null && botonAtras.gameObject.activeSelf && botonAtras.EjecutarAccionEstandar){
-					Debug.Log(botonAtras.tipo);
-					Debug.Log("ir a ventana anterior");
-					
-					botonAtras.EjecutarAccionEstandar = false; //actualizar bandera
-					int indiceVentanaAnterior = ventanaActiva.ordenEnMultiventana-1;
-					
-					//si la ventana anterior es una ventana valida de la jerarquia
-					if(indiceVentanaAnterior >=0 && indiceVentanaAnterior <= totalVentanas()){
-						GUIVentanaJerarquizada ventanaAnterior = (GUIVentanaJerarquizada) ventanasOrdenadas[indiceVentanaAnterior]; //obtenemos el objeto ventana anterior
-						abrirVentana(ventanaAnterior); //abrimos la ventana
-					}
-					else{
-						Debug.Log("Ventana anterior fuera de rango");	
-					}
-					
-
-				}
-				
-				//boton delante pulsado
-				if(botonDelante != null && botonDelante.gameObject.activeSelf && botonDelante.EjecutarAccionEstandar){
-					Debug.Log(botonDelante.tipo);
-					Debug.Log("ir a ventana siguiente");
-					
-					botonDelante.EjecutarAccionEstandar = false; //actualizar bandera
-					int indiceVentanaSiguiente = ventanaActiva.ordenEnMultiventana+1;
-					
-					//si la ventana anterior es una ventana valida de la jerarquia
-					if(indiceVentanaSiguiente >=0 && indiceVentanaSiguiente < totalVentanas()){
-						GUIVentanaJerarquizada vetanaSiguiente = (GUIVentanaJerarquizada) ventanasOrdenadas[indiceVentanaSiguiente]; //obtenemos el objeto ventana siguiente
-						abrirVentana(vetanaSiguiente); //abrimos la ventana
-					}
-					else{
-						Debug.Log("Ventana siguiente fuera de rango");	
-					}
-					
-					
-				}
-			}
+			//cerrar botones de navegacion
+			botonAtras.Visible = false;
+			botonDelante.Visible = false;
+			
+			base.cerrarVentana ();
+		}
+		
+		public void abrirVentanaSiguiente(){
+			abrirVentana(ventanaActiva.ordenEnMultiventana + 1);	
+		}
+		
+		public void abrirVentanaAnterior(){
+			abrirVentana(ventanaActiva.ordenEnMultiventana - 1);
 		}
 		#endregion
 	}

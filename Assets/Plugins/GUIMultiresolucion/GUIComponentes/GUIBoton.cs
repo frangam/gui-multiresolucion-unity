@@ -15,23 +15,30 @@ namespace GUIMultiresolucion.GUIComponentes{
 		/// </summary>
 	    public TipoBoton tipo; 
 		
+		/// <summary>
+		/// Textura del boton en estado normal, sin estar pulsado
+		/// </summary>
 		public Texture texturaNormal;
+		
+		/// <summary>
+		/// Textura del boton en estado pulsado
+		/// </summary>
 		public Texture texturaPulsado;
 		
+		#region atributos privados
+		/// <summary>
+		/// La textura que se dibujara para el boton
+		/// </summary>
 		private Texture texturaDibujar;
 		
 		/// <summary>
-		/// Bandera para saber que se ha pulsado el boton y se tiene que realizar la accion estandar que corresponda
-		/// segun el tipo de boton
+		/// (Opcional) El componente gui al que pertenece el boton. Null si no pertecene a ninguno
 		/// </summary>
-		private bool ejecutarAccionEstandar = false;
-	
-		#region propiedades publicas
-		public bool EjecutarAccionEstandar{
-			get{return ejecutarAccionEstandar;}
-			set{ejecutarAccionEstandar = value;}
-		}
+		private GUIComponente componenteAlQuePertenece = null;
 		
+		#endregion
+	
+		#region propiedades publicas		
 	    public Rect distribucion{
 	        get{
 	           	//cambiamos las dimensiones si la anchura/altura del componente es 0
@@ -53,8 +60,52 @@ namespace GUIMultiresolucion.GUIComponentes{
 			set{texturaDibujar = value;}
 		}
 		
+		public GUIComponente ComponenteAlQuePertenece{
+			get{return componenteAlQuePertenece;}	
+		}
 		#endregion
 		
+		#region metodos publicos
+		/// <summary>
+		/// Inicializa el componente gui al que pertenece el boton
+		/// </summary>
+		/// <param name='componente'>
+		/// Componente gui al que pertenece el boton
+		/// </param>
+		public void inicializar(GUIComponente componente){
+			componenteAlQuePertenece = componente;
+			
+			inicializar();
+		}
+		
+		public void ejecutarAccion(){
+			if(componenteAlQuePertenece != null){
+				//GUIVentana
+				if(componenteAlQuePertenece.GetType() == typeof(GUIVentana) && tipo == TipoBoton.CERRAR){
+					GUIVentana ventana = (GUIVentana) componenteAlQuePertenece; //la ventana a la que pertenece el boton
+					ventana.cerrarVentana(); //cerramos la ventana
+				}
+				//GUIMultiventana
+				else if(componenteAlQuePertenece.GetType() == typeof(GUIMultiVentana)){
+					GUIMultiVentana multiventana = (GUIMultiVentana) componenteAlQuePertenece; //la multiventana a la que pertenece el boton
+					
+					switch(tipo){
+						case TipoBoton.CERRAR:
+							multiventana.cerrarVentana(); //cerrar la multiventana
+						break;
+					
+						case TipoBoton.DELANTE:
+							multiventana.abrirVentanaSiguiente(); //abrir ventana siguiente
+						break;
+						
+						case TipoBoton.ATRAS:
+							multiventana.abrirVentanaAnterior(); //abrir ventana anterior
+						break;
+					}
+				}
+			}
+		}
+		#endregion
 		
 		#region metodos sobreescritos de GUIComponente
 		public override void inicializar(){				

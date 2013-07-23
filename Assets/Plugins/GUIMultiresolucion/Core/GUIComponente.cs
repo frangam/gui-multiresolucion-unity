@@ -81,7 +81,6 @@ namespace GUIMultiresolucion.Core{
 			}
 			set{
 				visible = value; 
-				gameObject.SetActive(value);
 				GetComponent<BoxCollider>().enabled = value;
 			}
 		}
@@ -168,8 +167,7 @@ namespace GUIMultiresolucion.Core{
 				altura = dimensionesPantalla.y; //altura
 			}
 			
-			gameObject.SetActive(visible);
-			GetComponent<BoxCollider>().enabled = visible;
+//			GetComponent<BoxCollider>().enabled = visible;
 			colliderGUI = GetComponent<GUICollider>();	
 			colliderGUI.inicializar(this);
 			

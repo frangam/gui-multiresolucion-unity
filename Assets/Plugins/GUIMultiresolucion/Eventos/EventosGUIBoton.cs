@@ -43,8 +43,10 @@ namespace GUIMultiresolucion.Eventos{
 						boton.TexturaDibujar = boton.texturaNormal;
 					}
 				
-					//actualizamos bandera
-					boton.EjecutarAccionEstandar = true;
+					//si el boton pertenece a un componente
+					if(boton.ComponenteAlQuePertenece != null){
+						boton.ejecutarAccion(); //el boton ejecutara la accion que le corresponda segun el componente al que corresponda dicho boton
+					}
 				break;
 			}
 		}
