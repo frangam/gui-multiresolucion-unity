@@ -35,9 +35,10 @@ namespace GUIMultiresolucion.Core{
 			//---------------------------------------------
 			//escala del transform que tiene el collider
 			//---------------------------------------------
-			
+
 			anchuraCollider = GUIEscalador.pixelRatio*GUIEscalador.factorEscaladoX*componenteGUI.distribucion.width;
 			alturaCollider = GUIEscalador.pixelRatio*GUIEscalador.factorEscaladoY*componenteGUI.distribucion.height;
+			
 			transform.localScale = new Vector3(anchuraCollider, alturaCollider, transform.localScale.z);
 			
 			//---------------------------------------------

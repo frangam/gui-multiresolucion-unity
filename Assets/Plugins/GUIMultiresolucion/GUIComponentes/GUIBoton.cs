@@ -103,6 +103,24 @@ namespace GUIMultiresolucion.GUIComponentes{
 						break;
 					}
 				}
+				//GUIPopup
+				else if(componenteAlQuePertenece.GetType() == typeof(GUIPopup)){
+					GUIPopup popup = (GUIPopup) componenteAlQuePertenece; //el popup a la que pertenece el boton
+					
+					switch(tipo){
+						case TipoBoton.CERRAR:
+							popup.cerrarVentana(); //cerrar el popup
+						break;
+					
+						case TipoBoton.DELANTE:
+							
+						break;
+						
+						case TipoBoton.ATRAS:
+							
+						break;
+					}
+				}
 			}
 		}
 		#endregion

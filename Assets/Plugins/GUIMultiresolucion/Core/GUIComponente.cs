@@ -101,10 +101,6 @@ namespace GUIMultiresolucion.Core{
 				}
 				
 				posicionFija = posicionEscalada;
-	
-	//			if(Screen.height < GUIEscalador.ALTO_NATIVO){
-	//				
-	//			}
 				
 				//construimos el rectangulo que es la distribucion en pantalla del componente gui
 				dist = new Rect(posicionEscalada.x, posicionEscalada.y, anchura, altura);
@@ -136,14 +132,6 @@ namespace GUIMultiresolucion.Core{
 		/// </param>
 		public void inicializar(GUIPanel _panel){
 			panel = _panel;
-				
-//			profundidad = panel.profundidad;
-//			relativoA = panel.relativoA;
-//			posicionRelativaA += panel.posicionRelativaA;
-//			
-//			if(panel.relativoA == TipoAnclado.SIN_ANCLADO){
-//				posicionFija = panel.posicionFija;	
-//			}
 			
 			GetComponent<EventosGUIItemPanelScrollable>().inicializar(panel);
 			

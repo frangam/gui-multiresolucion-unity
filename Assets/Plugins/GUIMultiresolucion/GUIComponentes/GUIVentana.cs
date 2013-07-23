@@ -52,11 +52,11 @@ namespace GUIMultiresolucion.GUIComponentes{
 			alturaCabecera = _alturaCabecera;
 			yPie = _yPien;
 			
-			inicializar();
+			base.inicializar();
 		}
 		#endregion
 		
-		#region metodos sobreescritos		
+		#region metodos sobreescritos
 		public override void inicializar (){
 			//cambiamos la coordenada Z a la ventana para que se quede detras de los colliders de los items que tenga
 			//para que se puedan detectar sin problemas los gestos sobre los items, de forma independiente a los gestos de los items
@@ -117,8 +117,7 @@ namespace GUIMultiresolucion.GUIComponentes{
 				}
 				
 				panelScrollable.altura = alturaPanel;
-				panelScrollable.anchura = GUIEscalador.ANCHO_PANTALLA;
-				
+				panelScrollable.anchura = this.anchura;
 				
 				panelScrollable.posicionRelativaA.y = panelScrollable.posicionRelativaAlAnclaRespectoAPosicionFijaDada(posEnPixeles,TipoAnclado.SUPERIOR_IZQUIERDA).y; //calculamos la pos relativa que le corresponde
 				
@@ -149,7 +148,7 @@ namespace GUIMultiresolucion.GUIComponentes{
 				
 				base.Visible = value;
 			}
-		}
+		}		
 		public override void dibujar (){
 			//por ultimo dibujamos los componentes haciendo uso de los items ordenados, para dibujarlos en el orden correcto
 			foreach(GUIComponente c in itemsOrdenados){
