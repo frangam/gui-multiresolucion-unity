@@ -54,6 +54,9 @@ namespace GUIMultiresolucion.GUIComponentes{
 			
 			base.inicializar();
 		}
+		public void inicializarSoloVentana(){
+			base.inicializar();	
+		}
 		#endregion
 		
 		#region metodos sobreescritos
@@ -107,7 +110,7 @@ namespace GUIMultiresolucion.GUIComponentes{
 				}
 				
 				//primero lo escalamos
-				float alturaPanel = GUIEscalador.ALTO_PANTALLA - panelScrollable.posicionFija.y;
+				float alturaPanel = this.altura - panelScrollable.posicionFija.y;
 				
 				if(imgPie != null){
 					alturaPanel = (imgPie.posicionFija.y) - posEnPixeles.y;
@@ -119,6 +122,7 @@ namespace GUIMultiresolucion.GUIComponentes{
 				panelScrollable.altura = alturaPanel;
 				panelScrollable.anchura = this.anchura;
 				
+				panelScrollable.posicionRelativaA.x = this.posicionRelativaA.x;
 				panelScrollable.posicionRelativaA.y = panelScrollable.posicionRelativaAlAnclaRespectoAPosicionFijaDada(posEnPixeles,TipoAnclado.SUPERIOR_IZQUIERDA).y; //calculamos la pos relativa que le corresponde
 				
 

@@ -130,22 +130,31 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 		#endregion
 		
 		#region metodos sobreescritos
-		public override void inicializar(){				
-			if(items != null && items.Count > 0){						
-				xMinimaRelativaScrollable = 1f - xMaximaRelativaScrollable;
-				yMinimaRelativaScrollable = 1f - yMaximaRelativaScrollable;
+		public override void inicializar(){						
+			xMinimaRelativaScrollable = 1f - xMaximaRelativaScrollable;
+			yMinimaRelativaScrollable = 1f - yMaximaRelativaScrollable;
+			
+			//si no se han adjuntado items al panel de forma manual
+			if(items == null || items.Count == 0){
+				GUIItemPanel[] itemsHijos = GetComponentsInChildren<GUIItemPanel>(); //obtenemos los hijos del panel que deben ser GUIItemPanel
 				
-				//primero inicializamos los items
-				foreach(GUIItemPanel i in items){
-					i.inicializar(scroll, this);
+				//adjuntamos esos hijos a los items
+				foreach(GUIItemPanel i in itemsHijos){
+					items.Add(i);	
 				}
-				
-				//ordenamos los items
-				itemsOrdenados = new ArrayList(items);
-				itemsOrdenados.Sort();
-				primerItem = (GUIItemPanel) itemsOrdenados[0];
-				ultimoItem = (GUIItemPanel) itemsOrdenados[itemsOrdenados.Count-1];
-				
+			}
+			
+			//primero inicializamos los items
+			foreach(GUIItemPanel i in items){
+				i.inicializar(scroll, this);
+			}
+			
+			//ordenamos los items
+			itemsOrdenados = new ArrayList(items);
+			itemsOrdenados.Sort();
+			primerItem = (GUIItemPanel) itemsOrdenados[0];
+			ultimoItem = (GUIItemPanel) itemsOrdenados[itemsOrdenados.Count-1];
+			
 //				//horizontal: mantenemos anchura de la pantalla
 //				if(scroll == TipoScroll.HORIZONTAL){
 //					float alturaMax = float.NegativeInfinity;
@@ -173,13 +182,13 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 //					
 //					this.altura = GUIEscalador.ALTO_PANTALLA;
 //				}	
-				
-				base.inicializar();
-				
+			
+			base.inicializar();
+			
 //				//cambiamos la coordenada Z al panel para que se quede detras de los colliders de los items que tenga
 //				//para que se puedan detectar sin problemas los gestos sobre los items, de forma independiente a los gestos del panel
 //				transform.position = new Vector3(transform.position.x, transform.position.y, 0.01f);
-			}
+	
 		}
 		
 		public override void actualizar (){

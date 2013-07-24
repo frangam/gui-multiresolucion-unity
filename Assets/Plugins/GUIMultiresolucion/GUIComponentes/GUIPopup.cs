@@ -15,18 +15,7 @@ namespace GUIMultiresolucion.GUIComponentes{
 		public override void inicializar ()
 		{
 			fondoExterior.inicializar();
-			base.inicializar();
-			
-			//si se quiere que el componente ocupe toda la anchura de la pantalla
-			//teniendo en cuenta que la anchura de la pantalla es la anchura nativa a la que se ha modelado la gui
-			if(ocuparTodoElAncho){
-				this.anchura = GUIEscalador.ANCHO_PANTALLA; //anchura	
-			}
-			//si se quiere que el componente ocupe toda la altura de la pantalla
-			//teniendo en cuenta que la altura de la pantalla es la altura nativa a la que se ha modelado la gui
-			if(ocuparTodoElAlto){
-				this.altura = GUIEscalador.ALTO_PANTALLA; //altura
-			}
+			base.inicializarSoloVentana();
 			
 			if(imgFondo != null){
 				imgFondo.anchura = this.anchura;
@@ -67,7 +56,6 @@ namespace GUIMultiresolucion.GUIComponentes{
 				panelScrollable.relativoA = this.relativoA;
 				panelScrollable.ocuparTodoElAlto = false;
 				panelScrollable.ocuparTodoElAncho = false;
-				panelScrollable.posicionRelativaA = new Vector2(this.posicionRelativaA.x, panelScrollable.posicionRelativaA.y);
 			}
 			
 			
