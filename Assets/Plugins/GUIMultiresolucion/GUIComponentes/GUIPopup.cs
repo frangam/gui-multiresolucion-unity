@@ -15,6 +15,18 @@ namespace GUIMultiresolucion.GUIComponentes{
 		public override void inicializar ()
 		{
 			fondoExterior.inicializar();
+			base.inicializar();
+			
+			//si se quiere que el componente ocupe toda la anchura de la pantalla
+			//teniendo en cuenta que la anchura de la pantalla es la anchura nativa a la que se ha modelado la gui
+			if(ocuparTodoElAncho){
+				this.anchura = GUIEscalador.ANCHO_PANTALLA; //anchura	
+			}
+			//si se quiere que el componente ocupe toda la altura de la pantalla
+			//teniendo en cuenta que la altura de la pantalla es la altura nativa a la que se ha modelado la gui
+			if(ocuparTodoElAlto){
+				this.altura = GUIEscalador.ALTO_PANTALLA; //altura
+			}
 			
 			if(imgFondo != null){
 				imgFondo.anchura = this.anchura;
@@ -22,23 +34,35 @@ namespace GUIMultiresolucion.GUIComponentes{
 				imgFondo.relativoA = this.relativoA;
 				imgFondo.ocuparTodoElAlto = false;
 				imgFondo.ocuparTodoElAncho = false;
-				imgFondo.posicionRelativaA = new Vector2(this.posicionRelativaA.x, imgFondo.posicionRelativaA.y);
+				imgFondo.posicionRelativaA = this.posicionRelativaA;
 			}
 			if(imgCabecera != null){
 				imgCabecera.anchura = this.anchura;
 				imgCabecera.relativoA = this.relativoA;
 				imgCabecera.ocuparTodoElAlto = false;
 				imgCabecera.ocuparTodoElAncho = false;
-				imgCabecera.posicionRelativaA = new Vector2(this.posicionRelativaA.x, imgCabecera.posicionRelativaA.y);
+				
+				Vector2 posEnPixeles = imgCabecera.posicionRelativaAlAnclaRespectoAPosicionFijaDada(new Vector2(0f, this.posicionFija.y), this.relativoA);
+				imgCabecera.posicionRelativaA = new Vector2(this.posicionRelativaA.x, posEnPixeles.y);
+			}
+			if(botonCerrar != null){
+				botonCerrar.relativoA = this.relativoA;
+				
+				Vector2 posEnPixeles = botonCerrar.posicionRelativaAlAnclaRespectoAPosicionFijaDada(new Vector2(((this.posicionFija.x+this.anchura)-(botonCerrar.anchura+5f)), this.posicionFija.y+5f), this.relativoA);
+				botonCerrar.posicionRelativaA = posEnPixeles;
 			}
 			if(imgPie != null){
 				imgPie.anchura = this.anchura;
 				imgPie.relativoA = this.relativoA;
 				imgPie.ocuparTodoElAlto = false;
 				imgPie.ocuparTodoElAncho = false;
-				imgPie.posicionRelativaA = new Vector2(this.posicionRelativaA.x, imgPie.posicionRelativaA.y);
+				
+				Vector2 posEnPixeles = imgPie.posicionRelativaAlAnclaRespectoAPosicionFijaDada(new Vector2(0f, (this.altura + this.posicionFija.y)-imgPie.altura), this.relativoA);
+				float y = posEnPixeles.y == 0 ? 1f : posEnPixeles.y;
+				
+				imgPie.posicionRelativaA = new Vector2(this.posicionRelativaA.x, y);
 			}
-			if(panelScrollable != null){
+			if(panelScrollable != null){	
 				panelScrollable.anchura = this.anchura;
 				panelScrollable.relativoA = this.relativoA;
 				panelScrollable.ocuparTodoElAlto = false;
@@ -50,8 +74,8 @@ namespace GUIMultiresolucion.GUIComponentes{
 			
 			
 			
-			
 			base.inicializar ();
+			
 		}
 		
 		public override void dibujar ()

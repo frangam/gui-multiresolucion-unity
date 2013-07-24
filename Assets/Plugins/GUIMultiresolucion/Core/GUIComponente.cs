@@ -325,21 +325,53 @@ namespace GUIMultiresolucion.Core{
 				case TipoAnclado.SUPERIOR_CENTRO:
 				case TipoAnclado.CENTRO:
 				case TipoAnclado.CENTRO_IZQUIERDA:
-					posicionRelativa = new Vector2(posFija.x / dimensionPantalla.x, posFija.y / dimensionPantalla.y);
+					if(dimensionPantalla.x != 0 && dimensionPantalla.y != 0){
+						posicionRelativa = new Vector2(posFija.x / dimensionPantalla.x, posFija.y / dimensionPantalla.y);
+					}
+					else if(dimensionPantalla.x == 0){
+						posicionRelativa = new Vector2(0, posFija.y / dimensionPantalla.y);
+					}
+					else if(dimensionPantalla.y == 0){
+						posicionRelativa = new Vector2(posFija.x / dimensionPantalla.x, 0);
+					}
 				break;
 				
 				case TipoAnclado.SUPERIOR_DERECHA:
 				case TipoAnclado.CENTRO_DERECHA:
-					posicionRelativa = new Vector2(1f - (posFija.x / dimensionPantalla.x), posFija.y / dimensionPantalla.y);
+					if(dimensionPantalla.x != 0 && dimensionPantalla.y != 0){
+						posicionRelativa = new Vector2(1f - (posFija.x / dimensionPantalla.x), posFija.y / dimensionPantalla.y);
+					}
+					else if(dimensionPantalla.x == 0){
+						posicionRelativa = new Vector2(1f, posFija.y / dimensionPantalla.y);
+					}
+					else if(dimensionPantalla.y == 0){
+						posicionRelativa = new Vector2(1f - (posFija.x / dimensionPantalla.x), 0);
+					}
 				break;
 
 				case TipoAnclado.INFERIOR_IZQUIERDA:
 				case TipoAnclado.INFERIOR_CENTRO:
-					posicionRelativa = new Vector2(posFija.x / dimensionPantalla.x, 1f - (posFija.y / dimensionPantalla.y));
+					if(dimensionPantalla.x != 0 && dimensionPantalla.y != 0){
+						posicionRelativa = new Vector2(posFija.x / dimensionPantalla.x, 1f - (posFija.y / dimensionPantalla.y));
+					}
+					else if(dimensionPantalla.x == 0){
+						posicionRelativa = new Vector2(0, 1f - (posFija.y / dimensionPantalla.y));
+					}
+					else if(dimensionPantalla.y == 0){
+						posicionRelativa = new Vector2(posFija.x / dimensionPantalla.x, 1f);
+					}
 				break;
 				
 				case TipoAnclado.INFERIOR_DERECHA:
-					posicionRelativa = new Vector2(1f - (posFija.x / dimensionPantalla.x), 1f - (posFija.y / dimensionPantalla.y));
+					if(dimensionPantalla.x != 0 && dimensionPantalla.y != 0){
+						posicionRelativa = new Vector2(1f - (posFija.x / dimensionPantalla.x), 1f - (posFija.y / dimensionPantalla.y));
+					}
+					else if(dimensionPantalla.x == 0){
+						posicionRelativa = new Vector2(1f, 1f - (posFija.y / dimensionPantalla.y));
+					}
+					else if(dimensionPantalla.y == 0){
+						posicionRelativa = new Vector2(1f - (posFija.x / dimensionPantalla.x), 1f);
+					}
 				break;
 			}	
 			
