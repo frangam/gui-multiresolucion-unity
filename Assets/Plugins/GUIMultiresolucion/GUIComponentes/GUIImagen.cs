@@ -14,11 +14,11 @@ namespace GUIMultiresolucion.GUIComponentes{
 	    public Rect distribucion{
 	        get{
 				//cambiamos las dimensiones si la anchura/altura del componente es 0
-				if(this.anchura == 0 && textura.width != null){
+				if(this.anchura == 0 && textura != null && textura.width != null){
 		        	this.anchura =  textura.width;
 				}
 				
-				if(this.altura == 0 && textura.height != null){
+				if(this.altura == 0 && textura != null && textura.height != null){
 					this.altura = textura.height;	
 				}
 				
@@ -30,18 +30,20 @@ namespace GUIMultiresolucion.GUIComponentes{
 		public override void inicializar ()
 		{
 			//cambiamos las dimensiones si la anchura/altura del componente es 0
-			if(this.anchura == 0 && textura.width != null){
+			if(this.anchura == 0 && textura != null && textura.width != null){
 	        	this.anchura =  textura.width;
 			}
 			
-			if(this.altura == 0 && textura.height != null){
+			if(this.altura == 0 && textura != null && textura.height != null){
 				this.altura = textura.height;	
 			}
 			
 			base.inicializar();
 		}
 		public override void dibujar (){
-			GUI.DrawTexture(distribucion, textura);
+			if(textura != null){
+				GUI.DrawTexture(distribucion, textura);
+			}
 		}
 		#endregion
 	}

@@ -101,10 +101,6 @@ namespace GUIMultiresolucion.Core{
 				}
 				
 				posicionFija = posicionEscalada;
-	
-	//			if(Screen.height < GUIEscalador.ALTO_NATIVO){
-	//				
-	//			}
 				
 				//construimos el rectangulo que es la distribucion en pantalla del componente gui
 				dist = new Rect(posicionEscalada.x, posicionEscalada.y, anchura, altura);
@@ -136,14 +132,6 @@ namespace GUIMultiresolucion.Core{
 		/// </param>
 		public void inicializar(GUIPanel _panel){
 			panel = _panel;
-				
-//			profundidad = panel.profundidad;
-//			relativoA = panel.relativoA;
-//			posicionRelativaA += panel.posicionRelativaA;
-//			
-//			if(panel.relativoA == TipoAnclado.SIN_ANCLADO){
-//				posicionFija = panel.posicionFija;	
-//			}
 			
 			GetComponent<EventosGUIItemPanelScrollable>().inicializar(panel);
 			
@@ -337,21 +325,53 @@ namespace GUIMultiresolucion.Core{
 				case TipoAnclado.SUPERIOR_CENTRO:
 				case TipoAnclado.CENTRO:
 				case TipoAnclado.CENTRO_IZQUIERDA:
-					posicionRelativa = new Vector2(posFija.x / dimensionPantalla.x, posFija.y / dimensionPantalla.y);
+					if(dimensionPantalla.x != 0 && dimensionPantalla.y != 0){
+						posicionRelativa = new Vector2(posFija.x / dimensionPantalla.x, posFija.y / dimensionPantalla.y);
+					}
+					else if(dimensionPantalla.x == 0){
+						posicionRelativa = new Vector2(0, posFija.y / dimensionPantalla.y);
+					}
+					else if(dimensionPantalla.y == 0){
+						posicionRelativa = new Vector2(posFija.x / dimensionPantalla.x, 0);
+					}
 				break;
 				
 				case TipoAnclado.SUPERIOR_DERECHA:
 				case TipoAnclado.CENTRO_DERECHA:
-					posicionRelativa = new Vector2(1f - (posFija.x / dimensionPantalla.x), posFija.y / dimensionPantalla.y);
+					if(dimensionPantalla.x != 0 && dimensionPantalla.y != 0){
+						posicionRelativa = new Vector2(1f - (posFija.x / dimensionPantalla.x), posFija.y / dimensionPantalla.y);
+					}
+					else if(dimensionPantalla.x == 0){
+						posicionRelativa = new Vector2(1f, posFija.y / dimensionPantalla.y);
+					}
+					else if(dimensionPantalla.y == 0){
+						posicionRelativa = new Vector2(1f - (posFija.x / dimensionPantalla.x), 0);
+					}
 				break;
 
 				case TipoAnclado.INFERIOR_IZQUIERDA:
 				case TipoAnclado.INFERIOR_CENTRO:
-					posicionRelativa = new Vector2(posFija.x / dimensionPantalla.x, 1f - (posFija.y / dimensionPantalla.y));
+					if(dimensionPantalla.x != 0 && dimensionPantalla.y != 0){
+						posicionRelativa = new Vector2(posFija.x / dimensionPantalla.x, 1f - (posFija.y / dimensionPantalla.y));
+					}
+					else if(dimensionPantalla.x == 0){
+						posicionRelativa = new Vector2(0, 1f - (posFija.y / dimensionPantalla.y));
+					}
+					else if(dimensionPantalla.y == 0){
+						posicionRelativa = new Vector2(posFija.x / dimensionPantalla.x, 1f);
+					}
 				break;
 				
 				case TipoAnclado.INFERIOR_DERECHA:
-					posicionRelativa = new Vector2(1f - (posFija.x / dimensionPantalla.x), 1f - (posFija.y / dimensionPantalla.y));
+					if(dimensionPantalla.x != 0 && dimensionPantalla.y != 0){
+						posicionRelativa = new Vector2(1f - (posFija.x / dimensionPantalla.x), 1f - (posFija.y / dimensionPantalla.y));
+					}
+					else if(dimensionPantalla.x == 0){
+						posicionRelativa = new Vector2(1f, 1f - (posFija.y / dimensionPantalla.y));
+					}
+					else if(dimensionPantalla.y == 0){
+						posicionRelativa = new Vector2(1f - (posFija.x / dimensionPantalla.x), 1f);
+					}
 				break;
 			}	
 			
