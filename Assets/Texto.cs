@@ -145,7 +145,7 @@ public class Texto : MonoBehaviour {
 			
 			simbolo.filaSuelo++;
 		}
-		else if(simbolo.filaPartidaDibujar < alturaLinea-simbolo.offsety){
+		else if(simbolo.filaPartidaDibujar < alturaLinea-simbolo.offsety-(alturaLinea - simbolo.h - simbolo.offsety)){
 			//si tiene offset en x rellenamos con transparentes
 			for(int i=0; i<simbolo.offsetx; i++){
 				fila[i] = pixelTransparente; //adjuntamos el pixeles transparentes a la fila
@@ -153,14 +153,14 @@ public class Texto : MonoBehaviour {
 			
 			if(simbolo.filaPartidaDibujar < simbolo.h){					
 				//rellenamos con los pixeles de la letra
-				for(int i=simbolo.offsetx; i<simbolo.w; i++, pixelPartida++){
+				for(int i=simbolo.offsetx; i<simbolo.w+simbolo.offsetx; i++, pixelPartida++){
 					fila[i] = todosPixeles[pixelPartida];	
 				}	
 				
 				simbolo.filaPartidaDibujar++;
 			}
 		}
-		else{
+		else{		
 			for(int i=0; i<simbolo.w+simbolo.offsetx; i++){
 				fila[i] = pixelTransparente; //adjuntamos el pixeles transparentes a la fila
 			}
