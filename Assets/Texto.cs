@@ -44,11 +44,8 @@ public class Texto : MonoBehaviour {
 		
 		if(fuente != null){		
 			Fuente.CustomChar[] simbolos = fuente.GetCharsOfString(texto); //obtenemos los simbolos del texto
-			ArrayList simbolosOrdenadosPorAltura = new ArrayList(simbolos);
-			simbolosOrdenadosPorAltura.Sort();
-			alturaLinea = ((Fuente.CustomChar) simbolosOrdenadosPorAltura[simbolosOrdenadosPorAltura.Capacity-1]).h;
 			Dictionary<int, Color[]> pixelesLetras = new Dictionary<int, Color[]>(); //diccionario que relaciona el codigo ascii de la letra con los pixeles que le corresponden a esa letra en la textura original de la tipografia
-			Dictionary<int, int> filaPixelesRellenando = new Dictionary<int, int>(); //diccionario que relaciona el codigo ascii de la letra con el pixel del partida, a partir del cual se rellena la fila
+			Dictionary<Fuente.CustomChar, int> pixelPartidaRellenarFila = new Dictionary<Fuente.CustomChar, int>(); //diccionario que relaciona el simbolo de la letra con el pixel del partida, a partir del cual se rellena la fila
 			Color[] pixelesDeLaLetra = null;
 			
 			//obtenemos la anchura total de la textura resultante para el texto a dibujar
@@ -66,41 +63,44 @@ public class Texto : MonoBehaviour {
 			
 			//vamos a rellenar los pixeles del resultado final
 			for(int i=0; i<pixelesResultado.Length;){
-				for(int j=0, final=0; final<(simbolos.Length*alturaLinea); final++){ //recorremos los simbolos tantas veces como numero de simbolos haya * la altura de linea (en pixeles)
-					Fuente.CustomChar simbolo = simbolos[j]; //obtenemos el simbolo a recorrer
-					Color[] pixelesSimbolo = pixelesLetras[simbolo.charID]; //obtener los pixeles que le corresponden al caracter del texto que vamos recorriendo
-					
-					//---------
-					//actualizar pixel de partida para rellenar el resultado final
-					//---------
-					if(!filaPixelesRellenando.ContainsKey(simbolo.charID)){ //si el codigo ascii del simbolo no esta aun en el diccionario lo introducimos con su valor inicial del pixel de partida
-						filaPixelesRellenando.Add(simbolo.charID, 0); //inicializacion del diccionario con el codigo ascii del simbolo y el pixel de partida para rellenar la fila el 0
-					}
-					else{
-						filaPixelesRellenando[simbolo.charID] += simbolo.w; //actualizamos el pixel de partida para rellenar la fila 
-					}
-					
-					//---------
-					//obtenemos la fila de pixeles de cada simbolo
-					//---------
-					Color[] filaPixeles = pixelesFila(pixelesSimbolo, filaPixelesRellenando[simbolo.charID], simbolo.w);
-					
-					//---------
-					//asignamos la fila al resultado final
-					//---------
-					foreach(Color p in filaPixeles){
-						pixelesResultado[i] = p;
-						i++;
-					}
-					
-					//---------
-					//actualizar inidice j de recorrido de los simbolos si no se ha terminado
-					//---------
-					if(j == simbolos.Length-1){ //recorriendo ultimo simbolo
-						j = 0; //empezamos en el primer simbolo de nuevo
-					}
-					else{
-						j++; //continuamos con el proximo simbolo	
+				for(int j=0; j<alturaLinea; j++){ //recorremos los simbolos tantas veces como numero de simbolos haya * la altura de linea (en pixeles)
+//					Fuente.CustomChar simbolo = simbolos[j]; //obtenemos el simbolo a recorrer
+					foreach(Fuente.CustomChar simbolo in simbolos){
+						Color[] pixelesSimbolo = pixelesLetras[simbolo.charID]; //obtener los pixeles que le corresponden al caracter del texto que vamos recorriendo
+						
+	//					//---------
+	//					//actualizar pixel de partida para rellenar el resultado final
+	//					//---------
+	//					if(!pixelPartidaRellenarFila.ContainsKey(simbolo)){ //si el simbolo no esta aun en el diccionario lo introducimos con su valor inicial del pixel de partida
+	//						pixelPartidaRellenarFila.Add(simbolo, 0); //inicializacion del diccionario con el codigo ascii del simbolo y el pixel de partida para rellenar la fila el 0
+	//					}
+	//					else{
+	//						pixelPartidaRellenarFila[simbolo] += simbolo.w; //actualizamos el pixel de partida para rellenar la fila 
+	//					}
+						
+						//---------
+						//obtenemos la fila de pixeles de cada simbolo
+						//---------
+	//					Color[] filaPixeles = pixelesFila(pixelesSimbolo, pixelPartidaRellenarFila[simbolo], simbolo.w);
+						Color[] filaPixeles = pixelesFila(pixelesSimbolo, simbolo.w*j, simbolo.w);
+						
+						//---------
+						//asignamos la fila al resultado final
+						//---------
+						foreach(Color p in filaPixeles){
+							pixelesResultado[i] = p;
+							i++;
+						}
+						
+//						//---------
+//						//actualizar inidice j de recorrido de los simbolos si no se ha terminado
+//						//---------
+//						if(j == simbolos.Length-1){ //recorriendo ultimo simbolo
+//							j = 0; //empezamos en el primer simbolo de nuevo
+//						}
+//						else{
+//							j++; //continuamos con el proximo simbolo	
+//						}
 					}
 					
 				}
