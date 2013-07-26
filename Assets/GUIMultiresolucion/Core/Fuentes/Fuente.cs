@@ -5,20 +5,32 @@ using System.Collections;
 namespace GUIMultiresolucion.Core.Fuentes{
 	public class Fuente {
 		
-		private CustomChar[] chars;
+		private SimboloLetra[] chars;
 		private string nombreFichero;
 		
 		public string NombreFichero{
 			get{return nombreFichero;}	
 		}
 		
-		public class CustomChar : IComparable
+		public class SimboloLetra : IComparable
 		{	
 			public int charID;
 			public int posX;
 			public int posY;
 			public int w;
 			public int h;
+			
+			/// <summary>
+			/// Variable de control para saber desde que fila se parte para
+			/// empezar a dibujar el simbolo
+			/// </summary>
+			public int filaPartidaDibujar = 0;
+			
+			/// <summary>
+			/// Variable de control para saber si la fila es suelo ha terminado de dibujarse
+			/// </summary>
+			public int filaSuelo = 0;
+			
 			public int offsetx;
 			public int offsety;
 			public int xadvance;
@@ -34,7 +46,7 @@ namespace GUIMultiresolucion.Core.Fuentes{
 			/// Otro simbolo.
 			/// </param>
 			public int CompareTo(System.Object otroSimbolo){
-				CustomChar simbolo = (CustomChar) otroSimbolo;
+				SimboloLetra simbolo = (SimboloLetra) otroSimbolo;
 				
 				return this.h.CompareTo(simbolo.h);
 			}
@@ -55,9 +67,9 @@ namespace GUIMultiresolucion.Core.Fuentes{
 		/// </summary>
 		private void loadConfigfile( string filename )
 		{
-			chars = new CustomChar[256];
+			chars = new SimboloLetra[256];
 			for( int i = 0; i < chars.Length; i++ )
-				chars[i] = new CustomChar();
+				chars[i] = new SimboloLetra();
 			
 			var asset = Resources.Load( filename, typeof( TextAsset ) ) as TextAsset;
 			if( asset == null )
@@ -130,13 +142,13 @@ namespace GUIMultiresolucion.Core.Fuentes{
 		}
 		
 		
-		public CustomChar[] GetCharsOfString(string text)
+		public SimboloLetra[] GetCharsOfString(string text)
 		{
 			char[] charOfText = text.ToCharArray();
-			CustomChar[] charsCode = new CustomChar[charOfText.Length];
+			SimboloLetra[] charsCode = new SimboloLetra[charOfText.Length];
 			for(int i = 0; i<charsCode.Length; i++)
 			{
-				charsCode[i] = new CustomChar();
+				charsCode[i] = new SimboloLetra();
 				int code = (int)charOfText[i];
 				charsCode[i] = chars[code];
 			}
