@@ -1,0 +1,129 @@
+using UnityEngine;
+using System.Collections;
+
+namespace GUIMultiresolucion.Core.Fuentes{
+	public class Fuente {
+		
+		private CustomChar[] chars;
+		private string nombreFichero;
+		
+		public string NombreFichero{
+			get{return nombreFichero;}	
+		}
+		
+		public struct CustomChar
+		{	
+			public int charID;
+			public int posX;
+			public int posY;
+			public int w;
+			public int h;
+			public int offsetx;
+			public int offsety;
+			public int xadvance;
+		}
+	
+		
+		public Fuente(string archivo)
+		{
+			nombreFichero = archivo;
+			loadConfigfile(archivo);
+		}
+		
+		
+		/// <summary>
+		/// Parse the fnt file with the font definition.  Font files should be in the Resources folder and have a .txt extension.
+		/// Do not inluclude the file extension in the filename!
+		/// </summary>
+		private void loadConfigfile( string filename )
+		{
+			chars = new CustomChar[256];
+			for( int i = 0; i < chars.Length; i++ )
+				chars[i] = new CustomChar();
+			
+			var asset = Resources.Load( filename, typeof( TextAsset ) ) as TextAsset;
+			if( asset == null )
+				Debug.LogError( "Could not find font config file in Resources folder: " + filename );
+		
+			int idNum = 0;
+			
+			foreach( var input in asset.text.Split( new string[] { "\r\n" }, System.StringSplitOptions.RemoveEmptyEntries ) )
+			{
+				//first split line into "space" chars
+	       		string[] words = input.Split(' ');
+				foreach( string word in words )
+	        	{
+					//then split line into "=" sign to get the values for each component
+					string[] wordsSplit = word.Split( '=' );
+					foreach( string word1 in wordsSplit )
+	       	 		{
+						if( string.Equals( word1, "id" ) )
+						{	
+							string tmp = wordsSplit[1].Substring( 0, wordsSplit[1].Length );
+							idNum = System.Int32.Parse( tmp );
+							chars[idNum].charID = new int();
+							chars[idNum].charID = idNum;
+						}
+						else if( string.Equals( word1, "x" ) )
+						{
+							string tmp = wordsSplit[1].Substring( 0, wordsSplit[1].Length );
+							chars[idNum].posX = new int();
+							chars[idNum].posX = System.Int32.Parse( tmp );
+						}
+						else if( string.Equals( word1, "y" ) )
+						{
+							string tmp = wordsSplit[1].Substring( 0, wordsSplit[1].Length );
+							chars[idNum].posY = new int();
+							chars[idNum].posY = System.Int32.Parse( tmp );
+						}
+						else if( string.Equals( word1, "width" ) )
+						{
+							string tmp = wordsSplit[1].Substring( 0, wordsSplit[1].Length );
+							chars[idNum].w = new int();
+							chars[idNum].w = System.Int32.Parse( tmp );
+						}
+						else if( string.Equals( word1, "height" ) )
+						{
+							string tmp = wordsSplit[1].Substring( 0, wordsSplit[1].Length );
+							chars[idNum].h = new int();
+							chars[idNum].h = System.Int32.Parse( tmp );
+						}
+						else if( string.Equals( word1, "xoffset" ) )
+						{
+							string tmp = wordsSplit[1].Substring( 0, wordsSplit[1].Length );
+	//						chars[idNum].offsetx = new int();
+							chars[idNum].offsetx = System.Int32.Parse(tmp);
+						}
+						else if( string.Equals( word1, "yoffset" ) )
+						{
+							string tmp = wordsSplit[1].Substring( 0, wordsSplit[1].Length );
+							chars[idNum].offsety = new int();
+							chars[idNum].offsety = System.Int32.Parse( tmp );
+						}
+						else if( string.Equals( word1, "xadvance" ) )
+						{
+							string tmp = wordsSplit[1].Substring( 0, wordsSplit[1].Length );
+							chars[idNum].xadvance = new int();
+							chars[idNum].xadvance = System.Int32.Parse( tmp );
+						}
+					} // end foreach
+				} // end foreach
+			} // end while
+		}
+		
+		
+		public CustomChar[] GetCharsOfString(string text)
+		{
+			char[] charOfText = text.ToCharArray();
+			CustomChar[] charsCode = new CustomChar[charOfText.Length];
+			for(int i = 0; i<charsCode.Length; i++)
+			{
+				charsCode[i] = new CustomChar();
+				int code = (int)charOfText[i];
+				charsCode[i] = chars[code];
+			}
+			
+			return charsCode;
+		}
+	}
+}
