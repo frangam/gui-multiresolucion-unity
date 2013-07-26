@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 using System.Collections;
 
 namespace GUIMultiresolucion.Core.Fuentes{
@@ -11,7 +12,7 @@ namespace GUIMultiresolucion.Core.Fuentes{
 			get{return nombreFichero;}	
 		}
 		
-		public struct CustomChar
+		public struct CustomChar : IComparable
 		{	
 			public int charID;
 			public int posX;
@@ -21,6 +22,23 @@ namespace GUIMultiresolucion.Core.Fuentes{
 			public int offsetx;
 			public int offsety;
 			public int xadvance;
+			
+			#region implementacion del IComparable
+			/// <summary>
+			/// Compara por la altura del simbolo
+			/// </summary>
+			/// <returns>
+			/// The to.
+			/// </returns>
+			/// <param name='otroSimbolo'>
+			/// Otro simbolo.
+			/// </param>
+			public int CompareTo(System.Object otroSimbolo){
+				CustomChar simbolo = (CustomChar) otroSimbolo;
+				
+				return this.h.CompareTo(simbolo.h);
+			}
+			#endregion	
 		}
 	
 		
@@ -125,5 +143,7 @@ namespace GUIMultiresolucion.Core.Fuentes{
 			
 			return charsCode;
 		}
+		
+			
 	}
 }
