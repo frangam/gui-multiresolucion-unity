@@ -50,7 +50,7 @@ public class Texto : MonoBehaviour {
 			
 			//obtenemos la anchura total de la textura resultante para el texto a dibujar
 			foreach(Fuente.CustomChar s in simbolos){
-				anchuraTotal += s.w;
+				anchuraTotal += (s.w + s.offsetx);
 				
 				//vamos rellenando el diccionario con los pixeles correspondientes a cada letra, sin repetirlos
 				if(!pixelesLetras.ContainsKey(s.charID)){
@@ -64,25 +64,13 @@ public class Texto : MonoBehaviour {
 			//vamos a rellenar los pixeles del resultado final
 			for(int i=0; i<pixelesResultado.Length;){
 				for(int j=0; j<alturaLinea; j++){ //recorremos los simbolos tantas veces como numero de simbolos haya * la altura de linea (en pixeles)
-//					Fuente.CustomChar simbolo = simbolos[j]; //obtenemos el simbolo a recorrer
 					foreach(Fuente.CustomChar simbolo in simbolos){
 						Color[] pixelesSimbolo = pixelesLetras[simbolo.charID]; //obtener los pixeles que le corresponden al caracter del texto que vamos recorriendo
-						
-	//					//---------
-	//					//actualizar pixel de partida para rellenar el resultado final
-	//					//---------
-	//					if(!pixelPartidaRellenarFila.ContainsKey(simbolo)){ //si el simbolo no esta aun en el diccionario lo introducimos con su valor inicial del pixel de partida
-	//						pixelPartidaRellenarFila.Add(simbolo, 0); //inicializacion del diccionario con el codigo ascii del simbolo y el pixel de partida para rellenar la fila el 0
-	//					}
-	//					else{
-	//						pixelPartidaRellenarFila[simbolo] += simbolo.w; //actualizamos el pixel de partida para rellenar la fila 
-	//					}
-						
+
 						//---------
 						//obtenemos la fila de pixeles de cada simbolo
 						//---------
-	//					Color[] filaPixeles = pixelesFila(pixelesSimbolo, pixelPartidaRellenarFila[simbolo], simbolo.w);
-						Color[] filaPixeles = pixelesFila(pixelesSimbolo, simbolo.w*j, simbolo.w);
+						Color[] filaPixeles = obtenerPixelesFila(pixelesSimbolo, simbolo.w*j, simbolo);
 						
 						//---------
 						//asignamos la fila al resultado final
@@ -91,48 +79,8 @@ public class Texto : MonoBehaviour {
 							pixelesResultado[i] = p;
 							i++;
 						}
-						
-//						//---------
-//						//actualizar inidice j de recorrido de los simbolos si no se ha terminado
-//						//---------
-//						if(j == simbolos.Length-1){ //recorriendo ultimo simbolo
-//							j = 0; //empezamos en el primer simbolo de nuevo
-//						}
-//						else{
-//							j++; //continuamos con el proximo simbolo	
-//						}
 					}
-					
 				}
-				
-				
-				
-//				foreach(Fuente.CustomChar c in simbolos){ //recorremos el texto para ir adjuntando la zona de la textura que le corresponde a cada caracter que lo compone
-//			
-//					Color[] pixelesCaracter = null;
-//					bool pixelesObtenidos = pixelesLetras.TryGetValue(c.charID, out pixelesCaracter); //intentamos obtener los pixeles que le corresponden al caracter del texto que vamos recorriendo
-//					
-//					if(pixelesObtenidos){ //si se obtienen los pixeles del diccionario creado previamente
-//						foreach(Color pixel in pixelesCaracter){ //recorremos los pixeles del caracter
-//							pixelesResultado[i] = pixel; //vamos adjuntando cada pixel del caracte al resultado final
-//							i++;
-//						}
-//						
-//						int areaCaracter = c.h * c.w; //area que ocupan los pixeles del caracter
-//						int areaRellenar = alturaLinea * c.w; //el area que se debe rellenar con el caracter y con pixeles transparentes si no se ha rellenado con el caracter el area por completo
-//						
-//						if(areaCaracter < areaRellenar){ //si el area del caracter es menor al area que se tiene que rellenar, adjuntamos pixeles transparentes para completar el relleno
-//							int pixelesRestantes = areaRellenar - areaCaracter; //los pixeles que quedan para rellenar el area completa
-//							
-//							for(int k=0; k<pixelesRestantes; k++){ //rellenamos de pixeles transparentes el array con los pixeles del resultado final
-//								Color pixelTransparente = Color.white; //un pixel blanco
-//								
-//								pixelesResultado[i] = pixelTransparente; //adjuntamos el pixel transparente
-//								i++;
-//							}
-//						}
-//					}
-//				}
 			}
 			
 			resultado = new Texture2D(anchuraTotal, alturaLinea, TextureFormat.ARGB32, false);
@@ -182,20 +130,33 @@ public class Texto : MonoBehaviour {
 	/// <param name='pixelPartida'>
 	/// El pixel del conjunto total de pixeles a partir del cual se empieza a crear la fila
 	/// </param>
-	/// <param name='anchuraFila'>
-	/// Anchura fila.
+	/// <param name='simbolo'>
+	/// El simbolo de la letra
 	/// </param>
-	private Color[] pixelesFila(Color[] todosPixeles, int pixelPartida, int anchuraFila){
-		Color[] fila = new Color[anchuraFila];
+	private Color[] obtenerPixelesFila(Color[] todosPixeles, int pixelPartida, Fuente.CustomChar simbolo){
+		Color[] fila = new Color[simbolo.w+simbolo.offsetx];
 		
 		//si el pixel de partida esta fuera de los limites del array de todos los pixeles
 		if(pixelPartida >= todosPixeles.Length){
-			for(int i=0; i<anchuraFila; i++){
+			for(int i=0; i<simbolo.w; i++){
 				fila[i] = pixelTransparente; //adjuntamos el pixeles transparentes a la fila
 			}
 		}
+		//espacio en blanco en la coordenada y
+		else if(simbolo.offsety > 0){
+			for(int i=0; i<(simbolo.offsetx+simbolo.w); i++){
+				fila[i] = pixelTransparente; //adjuntamos el pixeles transparentes a la fila
+			}
+			simbolo.offsety--;
+		}
 		else{
-			for(int i=0; i<anchuraFila; i++, pixelPartida++){
+			//si tiene offset en x rellenamos con transparentes
+			for(int i=0; i<simbolo.offsetx; i++){
+				fila[i] = pixelTransparente; //adjuntamos el pixeles transparentes a la fila
+			}
+			
+			//rellenamos con los pixeles de la letra
+			for(int i=simbolo.offsetx; i<simbolo.w; i++, pixelPartida++){
 				fila[i] = todosPixeles[pixelPartida];	
 			}
 		}

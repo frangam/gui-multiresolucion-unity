@@ -12,7 +12,7 @@ namespace GUIMultiresolucion.Core.Fuentes{
 			get{return nombreFichero;}	
 		}
 		
-		public struct CustomChar : IComparable
+		public class CustomChar : IComparable
 		{	
 			public int charID;
 			public int posX;
