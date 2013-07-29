@@ -85,17 +85,34 @@ namespace GUIMultiresolucion.GUIComponentes{
 		int alturaLinea = 79; //altura, en pixeles, de la linea
 		#endregion
 		
+		#region propiedades publicas
+		public Rect distribucion{
+			get{
+				//cambiamos las dimensiones si la anchura/altura del componente es 0
+				if(this.anchura == 0 || (texturaFinalLabel != null && texturaFinalLabel.GetPixels().Length > 0 && texturaFinalLabel.width != null)){
+		        	this.anchura =  texturaFinalLabel.width;
+				}
+				
+				if(this.altura == 0 || (texturaFinalLabel != null && texturaFinalLabel.GetPixels().Length > 0 &&  texturaFinalLabel.height != null)){
+					this.altura = texturaFinalLabel.height;	
+				}
+				
+				return base.distribucion;
+			}
+		}
+		#endregion
+		
 		#region metodos sobreescritos
 		public override void inicializar ()
 		{
 			generarTexturaLabel(); //generamos la textura del label
 			
 			//cambiamos las dimensiones si la anchura/altura del componente es 0
-			if(this.anchura == 0 && texturaFinalLabel != null && texturaFinalLabel.GetPixels().Length > 0 && texturaFinalLabel.width != null){
+			if(this.anchura == 0 || (texturaFinalLabel != null && texturaFinalLabel.GetPixels().Length > 0 && texturaFinalLabel.width != null)){
 	        	this.anchura =  texturaFinalLabel.width;
 			}
 			
-			if(this.altura == 0 && texturaFinalLabel != null && texturaFinalLabel.GetPixels().Length > 0 &&  texturaFinalLabel.height != null){
+			if(this.altura == 0 || (texturaFinalLabel != null && texturaFinalLabel.GetPixels().Length > 0 &&  texturaFinalLabel.height != null)){
 				this.altura = texturaFinalLabel.height;	
 			}
 
@@ -105,7 +122,9 @@ namespace GUIMultiresolucion.GUIComponentes{
 		public override void dibujar ()
 		{
 			if(texto != null || texto != "" && texturaFinalLabel != null && texturaFinalLabel.GetPixels().Length > 0){
-				GUI.DrawTexture(new Rect(100, 200, texturaFinalLabel.width, texturaFinalLabel.height), texturaFinalLabel);
+				Debug.Log(distribucion);
+				Debug.Log(new Rect(100, 200, texturaFinalLabel.width, texturaFinalLabel.height));
+				GUI.DrawTexture(distribucion, texturaFinalLabel);
 			}
 		}
 		#endregion
