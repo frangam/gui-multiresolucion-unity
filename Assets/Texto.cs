@@ -95,7 +95,7 @@ public class Texto : MonoBehaviour {
 	
 	void OnGUI(){
 		if(resultado != null && resultado.GetPixels().Length > 0){
-			GUI.DrawTexture(new Rect(100, 200, resultado.width, resultado.height), resultado);
+			GUI.DrawTexture(new Rect(100, 200, resultado.width*0.5f, resultado.height*0.5f), resultado);
 		}
 	}
 	
