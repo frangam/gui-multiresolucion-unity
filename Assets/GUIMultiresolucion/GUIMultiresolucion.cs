@@ -26,8 +26,6 @@ namespace GUIMultiresolucion{
 		/// </summary>
 		public GUIComponente[] componentesGUI;
 		
-public Font fuente;
-		
 		/// <summary>
 		/// la camara de la gui, que es ortografica.
 		/// No crear mas camaras ortograficas, solo con proyeccion perspectiva. 
@@ -68,41 +66,19 @@ public Font fuente;
 			inicializarComponentes();			
 		}
 		
-		void LateUpdate(){
-//			//comprobamos si esta orientada en portrait o no la pantalla
-//			bool esPortraitAhora = Screen.height >= Screen.width;
-//			
-//			//cambiando orientacion a Portrait
-//			if (!orientacionPreviaEraPortrait && esPortraitAhora){
-//				orientacionPreviaEraPortrait = true;
-////				GUIEscalador.actualizar(orientacionPreviaEraPortrait);
-////				actualizarComponentes();	
-//			}
-//			//cambiando orientacion a Landscape (apaisado)
-//			else if(orientacionPreviaEraPortrait && !esPortraitAhora){
-//				orientacionPreviaEraPortrait = false;
-////				GUIEscalador.actualizar(orientacionPreviaEraPortrait);
-////				actualizarComponentes();	
-//			}
-		}
-		
 		void OnGUI(){
-			GUIStyle estiloLabel = new GUIStyle();
-			estiloLabel.font = fuente;
-			
-			GUI.Label (new Rect (10, 10, 300, 100), "ADarTX",estiloLabel);
 			//aqui iniciamos a escalar la GUI para cualquier tipo de resolucion
-//	        GUIEscalador.InicioGUI(); 
+	        GUIEscalador.InicioGUI(); 
 			
 
 		    	//dibuja todos los componentes GUI adjuntados
-//				dibujarComponentes();
+				dibujarComponentes();
 			
 				
 			
 	
 	        //finalizamos el escalado de la GUI restaurando la GUI.matrix
-//	        GUIEscalador.FinGUI();
+	        GUIEscalador.FinGUI();
 	    }
 		
 		#endregion

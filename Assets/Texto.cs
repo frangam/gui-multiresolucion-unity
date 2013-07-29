@@ -138,17 +138,19 @@ public class Texto : MonoBehaviour {
 		Color[] fila = new Color[simbolo.w+simbolo.offsetx];
 		int pixelPartida = simbolo.w * simbolo.filaPartidaDibujar;
 		
+		//por debajo de la letra, hay espacios vacios
 		if(simbolo.filaSuelo < (alturaLinea - simbolo.h - simbolo.offsety)){
 			for(int i=0; i<(simbolo.offsetx+simbolo.w); i++){
-				fila[i] = pixelTransparente; //adjuntamos el pixeles transparentes a la fila
+				fila[i] = pixelTransparente; //adjuntamos los pixeles transparentes a la fila
 			}
 			
 			simbolo.filaSuelo++;
 		}
+		//pixeles de la letra
 		else if(simbolo.filaPartidaDibujar < alturaLinea-simbolo.offsety-(alturaLinea - simbolo.h - simbolo.offsety)){
 			//si tiene offset en x rellenamos con transparentes
 			for(int i=0; i<simbolo.offsetx; i++){
-				fila[i] = pixelTransparente; //adjuntamos el pixeles transparentes a la fila
+				fila[i] = pixelTransparente; //adjuntamos los pixeles transparentes a la fila
 			}
 			
 			if(simbolo.filaPartidaDibujar < simbolo.h){					
@@ -160,41 +162,13 @@ public class Texto : MonoBehaviour {
 				simbolo.filaPartidaDibujar++;
 			}
 		}
+		//por encima de la letra hay espacios vacios
 		else{		
 			for(int i=0; i<simbolo.w+simbolo.offsetx; i++){
-				fila[i] = pixelTransparente; //adjuntamos el pixeles transparentes a la fila
+				fila[i] = pixelTransparente; //adjuntamos los pixeles transparentes a la fila
 			}
 		}
 		
-		
-//		//espacio en blanco en la coordenada y
-//		if(simbolo.offsety > 0){			
-//			for(int i=0; i<(simbolo.offsetx+simbolo.w); i++){
-//				fila[i] = pixelTransparente; //adjuntamos el pixeles transparentes a la fila
-//			}
-//			simbolo.offsety--;
-//		}
-//		else if(simbolo.offsety == 0){
-//			//si tiene offset en x rellenamos con transparentes
-//			for(int i=0; i<simbolo.offsetx; i++){
-//				fila[i] = pixelTransparente; //adjuntamos el pixeles transparentes a la fila
-//			}
-//			
-//			if(simbolo.filaPartida < (alturaLinea - simbolo.h - simbolo.offsety)){					
-//				//rellenamos con los pixeles de la letra
-//				for(int i=simbolo.offsetx; i<simbolo.w; i++, pixelPartida++){
-//					fila[i] = todosPixeles[pixelPartida];	
-//				}	
-//				
-//				simbolo.filaPartida++;
-//			}
-//		}
-//		else if(pixelPartida >= todosPixeles.Length){ //si el pixel de partida esta fuera de los limites del array de todos los pixeles
-//			for(int i=0; i<simbolo.w; i++){
-//				fila[i] = pixelTransparente; //adjuntamos el pixeles transparentes a la fila
-//			}
-//		}
-//		
 		return fila;
 	}	
 }
