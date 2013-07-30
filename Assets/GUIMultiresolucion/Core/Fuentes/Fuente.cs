@@ -1,12 +1,17 @@
 using UnityEngine;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace GUIMultiresolucion.Core.Fuentes{
 	
+	[System.Serializable]
 	public class Fuente {
 		
-		private SimboloLetra[] chars;
+		/// <summary>
+		/// Los simbolos que representan cada letra
+		/// </summary>
+		private SimboloLetra[] simbolos;
 		
 		private string nombreFichero;
 		private string infoFace;
@@ -24,10 +29,11 @@ namespace GUIMultiresolucion.Core.Fuentes{
 		private int _base;
 		private int scaleW;
 		private int scaleH;
+		[SerializeField] private int espacioSize = 30;
 		
 		#region Getters
 		public SimboloLetra[] Chars{
-			get {return chars;}
+			get {return simbolos;}
 		}
 		public string NombreFichero{
 			get{return nombreFichero;}	
@@ -76,6 +82,9 @@ namespace GUIMultiresolucion.Core.Fuentes{
 		}
 		public int ScaleH{
 			get { return scaleH; }
+		}
+		public int EspacioSize{
+			get { return espacioSize; }
 		}
 		#endregion
 		
@@ -129,9 +138,9 @@ namespace GUIMultiresolucion.Core.Fuentes{
 		/// </summary>
 		private void loadConfigfile( string filename )
 		{
-			chars = new SimboloLetra[256];
-			for( int i = 0; i < chars.Length; i++ )
-				chars[i] = new SimboloLetra();
+			simbolos = new SimboloLetra[256];
+			for( int i = 0; i < simbolos.Length; i++ )
+				simbolos[i] = new SimboloLetra();
 			
 			var asset = Resources.Load( filename, typeof( TextAsset ) ) as TextAsset;
 			if( asset == null )
@@ -219,78 +228,111 @@ namespace GUIMultiresolucion.Core.Fuentes{
 							scaleH = System.Int32.Parse( tmp );
 						}
 						
-						
 						//atributos de cada char
 						if( string.Equals( word1, "id" ) )
 						{	
 							string tmp = wordsSplit[1].Substring( 0, wordsSplit[1].Length );
 							idNum = System.Int32.Parse( tmp );
-							chars[idNum].charID = new int();
-							chars[idNum].charID = idNum;
+							simbolos[idNum].charID = new int();
+							simbolos[idNum].charID = idNum;
 						}
 						else if( string.Equals( word1, "x" ) )
 						{
 							string tmp = wordsSplit[1].Substring( 0, wordsSplit[1].Length );
-							chars[idNum].posX = new int();
-							chars[idNum].posX = System.Int32.Parse( tmp );
+							simbolos[idNum].posX = new int();
+							simbolos[idNum].posX = System.Int32.Parse( tmp );
 						}
 						else if( string.Equals( word1, "y" ) )
 						{
 							string tmp = wordsSplit[1].Substring( 0, wordsSplit[1].Length );
-							chars[idNum].posY = new int();
-							chars[idNum].posY = System.Int32.Parse( tmp );
+							simbolos[idNum].posY = new int();
+							simbolos[idNum].posY = System.Int32.Parse( tmp );
 						}
 						else if( string.Equals( word1, "width" ) )
 						{
 							string tmp = wordsSplit[1].Substring( 0, wordsSplit[1].Length );
-							chars[idNum].w = new int();
-							chars[idNum].w = System.Int32.Parse( tmp );
+							simbolos[idNum].w = new int();
+							//preguntamos si el simbolo es el espacio, si lo es le ponemos el tamaño configurado para el espacio sino el que diga el archivo fnt.
+							simbolos[idNum].w = (idNum==32)? EspacioSize : System.Int32.Parse( tmp );
 						}
 						else if( string.Equals( word1, "height" ) )
 						{
 							string tmp = wordsSplit[1].Substring( 0, wordsSplit[1].Length );
-							chars[idNum].h = new int();
-							chars[idNum].h = System.Int32.Parse( tmp );
+							simbolos[idNum].h = new int();
+							simbolos[idNum].h = System.Int32.Parse( tmp );
 						}
 						else if( string.Equals( word1, "xoffset" ) )
 						{
 							string tmp = wordsSplit[1].Substring( 0, wordsSplit[1].Length );
-							chars[idNum].offsetx = new int();
-							chars[idNum].offsetx = System.Int32.Parse(tmp);
+							simbolos[idNum].offsetx = new int();
+							simbolos[idNum].offsetx = System.Int32.Parse(tmp);
 						}
 						else if( string.Equals( word1, "yoffset" ) )
 						{
 							string tmp = wordsSplit[1].Substring( 0, wordsSplit[1].Length );
-							chars[idNum].offsety = new int();
-							chars[idNum].offsety = System.Int32.Parse( tmp );
+							simbolos[idNum].offsety = new int();
+							simbolos[idNum].offsety = System.Int32.Parse( tmp );
 						}
 						else if( string.Equals( word1, "xadvance" ) )
 						{
 							string tmp = wordsSplit[1].Substring( 0, wordsSplit[1].Length );
-							chars[idNum].xadvance = new int();
-							chars[idNum].xadvance = System.Int32.Parse( tmp );
+							simbolos[idNum].xadvance = new int();
+							simbolos[idNum].xadvance = System.Int32.Parse( tmp );
 						}
 					} // end foreach
 				} // end foreach
 			} // end while
 		}	
 		
-		public SimboloLetra[] GetCharsOfString(string text)
+		/// <summary>
+		/// Devuelve un Array de SimbolosLetra de un cadena de texto
+		/// </summary>
+		/// <returns>
+		/// El array con los simbolos de la caneda
+		/// </returns>
+		/// <param name='text'>
+		/// Cadena
+		/// </param>
+		public List<SimboloLetra> GetCharsOfString(string text)
 		{
 			char[] charOfText = text.ToCharArray();
-			SimboloLetra[] charsCode = new SimboloLetra[charOfText.Length];
-			for(int i = 0; i<charsCode.Length; i++)
+			List<SimboloLetra> charsCode = new List<SimboloLetra>();
+			for(int i = 0; i<charOfText.Length; i++)
 			{
 //				charsCode[i] = new SimboloLetra();
 //				int code = (int)charOfText[i];
 //				charsCode[i] = chars[code];
 				int code = (int)charOfText[i];
-				charsCode[i] = new SimboloLetra(chars[code]);
+				charsCode.Add(new SimboloLetra(simbolos[code]));
 			}
 			
 			return charsCode;
 		}
 		
+		/// <summary>
+		/// Divide un texto segun un tamaño dado
+		/// </summary>
+		/// <returns>
+		/// Una lista de SimbolosLetras con todos los trozos que se ha dividido.
+		/// cada elemento de la lista es una linea de texto.
+		/// </returns>
+		/// <param name='texto'>
+		/// Texto a separar.
+		/// </param>
+		/// <param name='tamaño'>
+		/// Tamaño.
+		/// </param>
+		public List<List<SimboloLetra>> TextoATrozos(string texto, int size)
+		{
+			// actualmente solo seapra por espacio.
+			List<List<SimboloLetra>> res = new List<List<SimboloLetra>>();
+			string[] chunk = texto.Split(',');
 			
+			foreach(string s in chunk)
+			{
+				res.Add(GetCharsOfString(s));
+			}
+			return res;
+		}
 	}
 }

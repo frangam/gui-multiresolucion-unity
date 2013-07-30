@@ -93,7 +93,7 @@ namespace GUIMultiresolucion.GUIComponentes{
 		        	this.anchura =  texturaFinalLabel.width;
 				}
 				
-				if(this.altura == 0 || (texturaFinalLabel != null && texturaFinalLabel.GetPixels().Length > 0 &&  texturaFinalLabel.height != null)){
+				if(this.altura == 0 || (texturaFinalLabel != null && texturaFinalLabel.GetPixels().Length > 0 && texturaFinalLabel.height != null)){
 					this.altura = texturaFinalLabel.height;	
 				}
 				
@@ -122,8 +122,8 @@ namespace GUIMultiresolucion.GUIComponentes{
 		public override void dibujar ()
 		{
 			if(texto != null || texto != "" && texturaFinalLabel != null && texturaFinalLabel.GetPixels().Length > 0){
-				Debug.Log(distribucion);
-				Debug.Log(new Rect(100, 200, texturaFinalLabel.width, texturaFinalLabel.height));
+//				Debug.Log(distribucion);
+//				Debug.Log(new Rect(100, 200, texturaFinalLabel.width, texturaFinalLabel.height));
 				GUI.DrawTexture(distribucion, texturaFinalLabel);
 			}
 		}
@@ -133,56 +133,89 @@ namespace GUIMultiresolucion.GUIComponentes{
 		/// Crea la textura final para el label, es decir, el texto que se quiere mostrar como una imagen formada por cada una de las letras
 		/// </summary>
 		private void generarTexturaLabel () {
+			
+
 			pixelTransparente = new Color(1, 1, 1, 1); //inicializamos el pixel transparente
 			Color[] pixelesResultado = null;
-			int anchuraTotal = 0;
+			int anchuraTotal = 0; //anchura total que debe tener la textura final del label
+			int alturaTotal = 1; //altura total que debe tener la textura final del label
 			
 			nombreTipografia = texturaFuente.name;
-			
 			Fuente fuente = seleccionarFuente();
 			
+			
+			
 			if(fuente != null){		
-				Fuente.SimboloLetra[] simbolos = fuente.GetCharsOfString(texto); //obtenemos los simbolos del texto
-				Dictionary<int, Color[]> pixelesLetras = new Dictionary<int, Color[]>(); //diccionario que relaciona el codigo ascii de la letra con los pixeles que le corresponden a esa letra en la textura original de la tipografia
-				Dictionary<Fuente.SimboloLetra, int> pixelPartidaRellenarFila = new Dictionary<Fuente.SimboloLetra, int>(); //diccionario que relaciona el simbolo de la letra con el pixel del partida, a partir del cual se rellena la fila
-				Color[] pixelesDeLaLetra = null;
+			//	Fuente.SimboloLetra[] simbolos = fuente.GetCharsOfString(texto); //obtenemos los simbolos del texto
+				List<List<Fuente.SimboloLetra>> simbolosPorLineas = fuente.TextoATrozos(texto, 0); //conjunto de simbolos (letras) que tiene cada linea del texto a mostrar
+				alturaLinea = fuente.CommonLineHeigth;
+			
 				
-				//obtenemos la anchura total de la textura resultante para el texto a dibujar
-				foreach(Fuente.SimboloLetra s in simbolos){
-					anchuraTotal += (s.w + s.offsetx);
-					
-					//vamos rellenando el diccionario con los pixeles correspondientes a cada letra, sin repetirlos
-					if(!pixelesLetras.ContainsKey(s.charID)){
-						pixelesDeLaLetra = texturaFuente.GetPixels(s.posX, texturaFuente.height - s.posY - s.h, s.w, s.h); //obtenemos los pixeles que le corresponden a la letra de la textura tipografia
-						pixelesLetras.Add (s.charID, pixelesDeLaLetra); //adjuntamos el codigo ascii de la letra y los pixeles de la misma al diccionario
+				//config alto y ancho textura.
+				Dictionary<int, Color[]> pixelesLetras = new Dictionary<int, Color[]>(); //diccionario que relaciona el codigo ascii de la letra con los pixeles que le corresponden a esa letra en la textura original de la tipografia
+				Color[] pixelesDeLaLetra = null;
+				int anchuraMax = -1;
+				int anchuraPalabra = 0;
+				
+				foreach(List<Fuente.SimboloLetra> simbolosDeLaLinea in simbolosPorLineas){ //recorrer cada palabra
+					//obtenemos la anchura total de la textura resultante para el texto a dibujar
+					foreach(Fuente.SimboloLetra s in simbolosDeLaLinea){ //recorre cada simbolo de la palabra recorrida
+						anchuraPalabra += (s.w + s.offsetx);
+						
+						//vamos rellenando el diccionario con los pixeles correspondientes a cada letra, sin repetirlos
+						if(!pixelesLetras.ContainsKey(s.charID)){
+							pixelesDeLaLetra = texturaFuente.GetPixels(s.posX, texturaFuente.height - s.posY - s.h, s.w, s.h); //obtenemos los pixeles que le corresponden a la letra de la textura tipografia
+							pixelesLetras.Add (s.charID, pixelesDeLaLetra); //adjuntamos el codigo ascii de la letra y los pixeles de la misma al diccionario
+						}
 					}
+					
+					//calculo de la maxima anchura de palabras
+					if(anchuraPalabra > anchuraMax){
+						anchuraMax = anchuraPalabra;
+					}
+					anchuraPalabra = 0;
 				}
 				
-				pixelesResultado = new Color[anchuraTotal*alturaLinea]; //instanciamos el array de pixeles del resultado final
+				anchuraTotal = anchuraMax; //asignar anchura de la maxima palabra a la anchura total de la textura final del label
+				alturaTotal = fuente.CommonLineHeigth*simbolosPorLineas.Count; //altura de la textura final del label (numero de lineas de texto * altura comun de linea)
+//				pixelesResultado = new Color[anchuraTotal*alturaLinea]; //instanciamos el array de pixeles del resultado final
+				pixelesResultado = new Color[anchuraTotal*alturaTotal];
 				
 				//vamos a rellenar los pixeles del resultado final
-				for(int i=0; i<pixelesResultado.Length;){
-					for(int j=0; j<alturaLinea; j++){ //recorremos los simbolos tantas veces como numero de simbolos haya * la altura de linea (en pixeles)
-						foreach(Fuente.SimboloLetra simbolo in simbolos){
-							Color[] pixelesSimbolo = pixelesLetras[simbolo.charID]; //obtener los pixeles que le corresponden al caracter del texto que vamos recorriendo
-							
-							//---------
-							//obtenemos la fila de pixeles de cada simbolo
-							//---------
-							Color[] filaPixeles = obtenerPixelesFila(pixelesSimbolo, simbolo);
-							
-							//---------
-							//asignamos la fila al resultado final
-							//---------
-							foreach(Color p in filaPixeles){
-								pixelesResultado[i] = p;
-								i++;
+				for(int i=0; i<pixelesResultado.Length;){		
+					for(int k=simbolosPorLineas.Count-1; k>=0;k--){//recorrer cada linea del texto, empezando por la ultima
+						for(int j=0; j<fuente.CommonLineHeigth; j++){ //recorremos los simbolos tantas veces como numero de simbolos haya * la altura de linea (en pixeles)
+							int anchoActual = 0;
+							foreach(Fuente.SimboloLetra simbolo in simbolosPorLineas[k]){ //recorrer los simbolos que componen la palabra recorrida
+								anchoActual += simbolo.w+simbolo.offsetx;
+								Color[] pixelesSimbolo = pixelesLetras[simbolo.charID]; //obtener los pixeles que le corresponden al caracter del texto que vamos recorriendo
+								
+								//---------
+								//obtenemos la fila de pixeles de cada simbolo
+								//---------
+								Color[] filaPixeles = obtenerPixelesFila(pixelesSimbolo, simbolo);
+								
+								//---------
+								//asignamos la fila al resultado final
+								//---------
+								foreach(Color p in filaPixeles){
+									pixelesResultado[i] = p;
+									i++;
+								}
+							}
+							//si ancho menor que anchototal rellenar con transparente
+							if(anchoActual<anchuraTotal){
+								for(int p=0; p<anchuraTotal-anchoActual; p++, i++){
+									pixelesResultado[i] = pixelTransparente;
+								}
 							}
 						}
 					}
+					
 				}
 				
-				texturaFinalLabel = new Texture2D(anchuraTotal, alturaLinea, TextureFormat.ARGB32, false);
+//				texturaFinalLabel = new Texture2D(anchuraTotal, alturaLinea, TextureFormat.ARGB32, false);
+				texturaFinalLabel = new Texture2D(anchuraTotal, alturaTotal, TextureFormat.ARGB32, false);
 				texturaFinalLabel.SetPixels(pixelesResultado);	
 				texturaFinalLabel.Apply();
 			}
@@ -227,6 +260,7 @@ namespace GUIMultiresolucion.GUIComponentes{
 		/// El simbolo de la letra
 		/// </param>
 		private Color[] obtenerPixelesFila(Color[] todosPixeles, Fuente.SimboloLetra simbolo){
+			
 			Color[] fila = new Color[simbolo.w+simbolo.offsetx];
 			int pixelPartida = simbolo.w * simbolo.filaPartidaDibujar;
 			
