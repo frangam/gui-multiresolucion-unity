@@ -4,6 +4,7 @@ using GUIMultiresolucion.Core;
 
 namespace GUIMultiresolucion.GUIComponentes
 {
+	public enum Relleno{DerechaIzquierda, IzquierdaDerecha}
 	public class GUIBarraProgreso : GUIComponente
 	{	
 		/// <summary>
@@ -18,6 +19,11 @@ namespace GUIMultiresolucion.GUIComponentes
 		/// The porcentaje.
 		/// </summary>
 		public float porcentaje;
+		public int Offsetizquierdo = 5;
+		public int Offsetderecho = 5;
+		public int Offsetarriba = 5;
+		public int Offsetabajo = 5;
+		public Relleno Rellenobarra = Relleno.DerechaIzquierda;
 		
 		public Texture TexturaProgreso
 		{
@@ -46,19 +52,36 @@ namespace GUIMultiresolucion.GUIComponentes
 		public Rect Progreso(float porcentaje)
 		{
 			//creamos un Rect donde se dibujara la barra de progreso
-			Rect res = new Rect(0, 0, altura, anchura);
-			//configuramos el Rect para que la barra de progreso deje un marco y se pueda ver el fondo.
-			res.yMax = altura-5;
-			res.yMin = 5;
-			res.xMax = anchura-10;
-			res.xMin = 5;
-			//posicionamos el Rect en la misma posicion que el GUIBarraProgreso
-			res.x = this.posicionFija.x+5;
-			res.y = this.posicionFija.y+5;
-			//recalculamos el ancho de la barra en funcion del porcetaje que queremos que se rellene.
-			res.width = Mathf.Clamp(((porcentaje*res.xMax)/100),res.xMin,res.xMax);
+			Rect barraProgreso = new Rect(0, 0, altura, anchura);
 			
-			return res;
+			if(Rellenobarra == Relleno.IzquierdaDerecha)
+			{
+				//configuramos el Rect para que la barra de progreso deje un marco y se pueda ver el fondo.
+				barraProgreso.yMax = altura-Offsetarriba;
+				barraProgreso.yMin = Offsetabajo;
+				barraProgreso.xMax = anchura-(Offsetderecho+Offsetizquierdo);
+				barraProgreso.xMin = Offsetderecho;
+				//posicionamos el Rect en la misma posicion que el GUIBarraProgreso
+				barraProgreso.x = this.posicionFija.x+Offsetizquierdo;
+				barraProgreso.y = this.posicionFija.y+Offsetarriba;
+				//recalculamos el ancho de la barra en funcion del porcetaje que queremos que se rellene.
+				barraProgreso.width = Mathf.Clamp(((porcentaje*barraProgreso.xMax)/100),0,barraProgreso.xMax);
+			}
+			else
+			{
+				//configuramos el Rect para que la barra de progreso deje un marco y se pueda ver el fondo.
+				barraProgreso.yMax = altura-Offsetarriba;
+				barraProgreso.yMin = Offsetabajo;
+				
+				barraProgreso.xMax = Offsetizquierdo;
+				barraProgreso.xMin = anchura-(Offsetderecho+Offsetizquierdo*2);
+				//posicionamos el Rect en la misma posicion que el GUIBarraProgreso
+				barraProgreso.x = this.posicionFija.x+barraProgreso.xMin+Offsetderecho;
+				barraProgreso.y = this.posicionFija.y+Offsetarriba;
+				//recalculamos el ancho de la barra en funcion del porcetaje que queremos que se rellene.
+				barraProgreso.width = barraProgreso.xMax - Mathf.Clamp(((porcentaje*barraProgreso.xMin)/100),barraProgreso.xMax,barraProgreso.xMin);
+			}
+			return barraProgreso;
 		}
 		#region metodos sobreescritos de GUIComponente
 		public override void inicializar(){				
