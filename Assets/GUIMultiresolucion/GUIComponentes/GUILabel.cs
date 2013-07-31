@@ -135,7 +135,7 @@ namespace GUIMultiresolucion.GUIComponentes{
 		private void generarTexturaLabel () {
 			
 
-			pixelTransparente = new Color(1, 1, 1, 1); //inicializamos el pixel transparente
+			pixelTransparente = new Color(0, 0, 0, 0); //inicializamos el pixel transparente
 			Color[] pixelesResultado = null;
 			int anchuraTotal = 0; //anchura total que debe tener la textura final del label
 			int alturaTotal = 1; //altura total que debe tener la textura final del label
