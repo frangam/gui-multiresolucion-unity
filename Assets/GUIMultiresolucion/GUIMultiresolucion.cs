@@ -89,6 +89,13 @@ namespace GUIMultiresolucion{
 		/// inicializamos los componentes
 		/// </summary>
 		public void inicializarComponentes(){
+//			GUIComponente[] componentesHijos = GetComponentsInChildren<GUIComponente>(); //obtenemos los componentes que se hayan adjuntado como hijos a GUIMultiresolucion 
+//			
+//			if(componentesHijos.Length > 0){
+//				componentesGUI = new GUIComponente[componentesHijos.Length];
+//				componentesGUI = componentesHijos;
+//			}
+			
 			foreach (GUIComponente c in componentesGUI){
 				c.inicializar();
 	        }
