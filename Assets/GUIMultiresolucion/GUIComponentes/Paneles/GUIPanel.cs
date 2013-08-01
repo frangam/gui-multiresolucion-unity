@@ -115,7 +115,9 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 			}
 			set{				
 				foreach(GUIItemPanel i in items){
-					i.Item.Visible = value;
+					if(i.item != null){
+						i.Item.Visible = value;
+					}
 				}
 				
 				base.Visible = value;
@@ -199,7 +201,7 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 		
 		public override void dibujar (){
 			foreach(GUIItemPanel i in items){
-				if(i.Item.Visible){
+				if(i.Item != null && i.Item.Visible){
 					i.dibujar();
 				}
 			}

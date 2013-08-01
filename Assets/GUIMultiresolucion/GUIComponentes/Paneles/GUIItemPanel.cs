@@ -46,10 +46,13 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 		#region nuevos metodos
 		public void inicializar(TipoScroll _scroll, GUIPanel _panel){
 			panel = _panel;
-			item.Visible = panel.Visible;
-			item.inicializar(panel);
-			posicionRelativaInicial = item.posicionRelativaA;
-			posicionFijaInicial = item.posicionFija;
+			
+			if(item != null){
+				item.Visible = panel.Visible;
+				item.inicializar(panel);
+				posicionRelativaInicial = item.posicionRelativaA;
+				posicionFijaInicial = item.posicionFija;
+			}
 		}
 		
 		public void resetearPosiciones(){
@@ -64,16 +67,19 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 //				Debug.Log(distanciaAlDestino);
 //			}
 			
-			item.posicionRelativaA = posicionRelativaInicial;
-			item.actualizar();
+			if(item != null){
+				item.posicionRelativaA = posicionRelativaInicial;
+				item.actualizar();
+			}
 		}
 		
 		public void actualizar(Vector2 posRelativa){
 			posActualizar = posRelativa;
 			
-			item.posicionRelativaA += posActualizar;
-			item.actualizar();
-			
+			if(item != null){
+				item.posicionRelativaA += posActualizar;
+				item.actualizar();
+			}
 			
 			
 //			iniciarAnimacionScroll = true;
@@ -83,7 +89,9 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 
 		public void dibujar ()
 		{
-			item.dibujar();
+			if(item != null){
+				item.dibujar();
+			}
 		}
 		#endregion
 		
@@ -132,7 +140,7 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 		public int CompareTo(System.Object otroItemPanel){
 			int res = 0;
 			
-			if(panel != null){
+			if(panel != null && this.item != null){
 				GUIItemPanel aux = (GUIItemPanel) otroItemPanel;
 				
 				switch(panel.Scroll){

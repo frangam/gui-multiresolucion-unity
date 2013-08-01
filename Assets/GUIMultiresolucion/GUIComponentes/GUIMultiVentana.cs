@@ -53,6 +53,16 @@ namespace GUIMultiresolucion.GUIComponentes{
 			//para que se puedan detectar sin problemas los gestos sobre los items, de forma independiente a los gestos de los items
 			transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -0.1f);		
 			
+			//si no se han adjuntado las ventanas de forma manual
+			if(ventanas == null || ventanas.Count == 0){
+				GUIVentanaJerarquizada[] ventanasHijos = transform.parent.GetComponentsInChildren<GUIVentanaJerarquizada>(); //obtenemos los hijos de la multiventana que deben ser GUIVentanaJerarquizada
+				
+				//adjuntamos esos hijos a los items
+				foreach(GUIVentanaJerarquizada v in ventanasHijos){
+					ventanas.Add(v);	
+				}
+			}
+			
 			ventanasOrdenadas = new ArrayList(ventanas);
 			ventanasOrdenadas.Sort(); //ordenamos las ventanas
 			
@@ -60,7 +70,7 @@ namespace GUIMultiresolucion.GUIComponentes{
 			
 			//inicializar todas las ventanas que no son la primera a mostrar
 			for(int i=1; i<totalVentanas(); i++){
-				((GUIVentanaJerarquizada) ventanasOrdenadas[i]).inicializar(this);
+				((GUIVentanaJerarquizada) ventanasOrdenadas[i]).inicializar(this, false);
 				((GUIVentanaJerarquizada) ventanasOrdenadas[i]).Visible = false; //ocultamos la ventana
 			}
 			

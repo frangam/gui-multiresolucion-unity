@@ -13,10 +13,10 @@ namespace GUIMultiresolucion.GUIComponentes{
 		#endregion
 		
 		#region privados
-		public void inicializar(GUIMultiVentana multiventana, bool ventanaActiva = false){
+		public void inicializar(GUIMultiVentana multiventana, bool _ventanaActiva){
 			base.inicializar(multiventana.imgCabecera.posicionFija.y, multiventana.imgCabecera.altura, multiventana.imgPie.posicionFija.y);
 			
-			if(ventanaActiva){
+			if(_ventanaActiva){
 				base.inicializar();	
 			}
 		}
