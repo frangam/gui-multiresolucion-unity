@@ -151,6 +151,9 @@ namespace GUIMultiresolucion.GUIComponentes{
 						c.Visible = value;	
 					}
 				}
+				else if(panelScrollable != null){
+					panelScrollable.Visible = value;
+				}
 				
 				base.Visible = value;
 			}

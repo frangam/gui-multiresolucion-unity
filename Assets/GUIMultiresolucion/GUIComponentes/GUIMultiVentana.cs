@@ -64,7 +64,8 @@ namespace GUIMultiresolucion.GUIComponentes{
 				((GUIVentanaJerarquizada) ventanasOrdenadas[i]).Visible = false; //ocultamos la ventana
 			}
 			
-			ventanaActiva.inicializar(this); //inicializamos la ventana activa
+			ventanaActiva.inicializar(this, true); //inicializamos la ventana activa
+			
 			ventanaActiva.abrirVentana(); //abrimos la ventana activa
 			
 			botonAtras.Visible = false;
@@ -163,7 +164,7 @@ namespace GUIMultiresolucion.GUIComponentes{
 				if(ventanaActiva != ventana){
 					ventanaActiva.cerrarVentana(); //primero, cerramos la ventana activa
 					ventanaActiva = ventana; //cambiamos la ventana activa por la ventana que queremos abrir
-					ventanaActiva.inicializar(this); //inicializamos la ventana activa
+					ventanaActiva.inicializar(this, true); //inicializamos la ventana activa
 					ventanaActiva.abrirVentana(); //abrimos la ventana activa
 					inicializarBotonesNavegacion(); //inicializamos los botones de navegacion
 				}
