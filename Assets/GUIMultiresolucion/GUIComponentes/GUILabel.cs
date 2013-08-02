@@ -71,6 +71,7 @@ namespace GUIMultiresolucion.GUIComponentes{
 		/// El espacio, en pixeles, que existe entre cada letra
 		/// </summary>
 		public int espacioLetras = 10;
+		public float PorcentajeSize = 1;
 		
 		#endregion
 		
@@ -124,7 +125,8 @@ namespace GUIMultiresolucion.GUIComponentes{
 			if(texto != null || texto != "" && texturaFinalLabel != null && texturaFinalLabel.GetPixels().Length > 0){
 //				Debug.Log(distribucion);
 //				Debug.Log(new Rect(100, 200, texturaFinalLabel.width, texturaFinalLabel.height));
-				GUI.DrawTexture(distribucion, texturaFinalLabel);
+				Rect _dist = new Rect(distribucion.x, distribucion.y, distribucion.width * PorcentajeSize, distribucion.height * PorcentajeSize); 
+				GUI.DrawTexture(_dist, texturaFinalLabel);
 			}
 		}
 		#endregion
@@ -135,7 +137,7 @@ namespace GUIMultiresolucion.GUIComponentes{
 		private void generarTexturaLabel () {
 			
 
-			pixelTransparente = new Color(0, 0, 0, 0); //inicializamos el pixel transparente
+			pixelTransparente = new Color(1, 1, 1, 0); //inicializamos el pixel transparente
 			Color[] pixelesResultado = null;
 			int anchuraTotal = 0; //anchura total que debe tener la textura final del label
 			int alturaTotal = 1; //altura total que debe tener la textura final del label
