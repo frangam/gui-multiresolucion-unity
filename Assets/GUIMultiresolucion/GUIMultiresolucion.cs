@@ -98,6 +98,10 @@ namespace GUIMultiresolucion{
 			
 			foreach (GUIComponente c in componentesGUI){
 				c.inicializar();
+				
+				if(!c.visible){
+					c.Visible = false;
+				}
 	        }
 		}
 		

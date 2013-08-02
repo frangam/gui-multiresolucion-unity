@@ -46,6 +46,26 @@ namespace GUIMultiresolucion.GUIComponentes{
 		#endregion
 		
 		#region metodos sobreescritos
+		public override bool Visible{
+			get{			
+				return base.Visible;
+			}	
+			set{	
+				foreach(GUIVentanaJerarquizada vj in ventanas){
+					if(vj != null && value == false){
+						vj.Visible = false;
+					}
+				}
+				
+				if(value){
+					ventanaActiva.abrirVentana(); //abrimos la ventana activa
+					inicializarBotonesNavegacion(); //inicializamos los botones de navegacion entre ventanas	
+				}
+				
+				base.Visible = value;
+			}
+		}		
+		
 		public override void inicializar (){	
 			ventanaActiva = null;
 			
@@ -76,12 +96,12 @@ namespace GUIMultiresolucion.GUIComponentes{
 			
 			ventanaActiva.inicializar(this, true); //inicializamos la ventana activa
 			
-			ventanaActiva.abrirVentana(); //abrimos la ventana activa
+			
 			
 			botonAtras.Visible = false;
 			botonDelante.Visible = false;
 			
-			inicializarBotonesNavegacion(); //inicializamos los botones de navegacion entre ventanas	
+			
 			
 			
 			base.inicializar();
@@ -166,7 +186,7 @@ namespace GUIMultiresolucion.GUIComponentes{
 			}	
 		}
 		
-		private void abrirVentana(int indiceVentana){
+		public void abrirVentana(int indiceVentana){
 			//si la ventana anterior es una ventana valida de la jerarquia
 			if(indiceVentana >=0 && indiceVentana < totalVentanas()){
 				GUIVentanaJerarquizada ventana = (GUIVentanaJerarquizada) ventanasOrdenadas[indiceVentana]; //obtenemos el objeto ventana siguiente
