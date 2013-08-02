@@ -40,7 +40,7 @@ namespace GUIMultiresolucion.GUIComponentes
 	        get{
 				//cambiamos las dimensiones si la anchura/altura del componente es 0
 				if(this.anchura == 0 && fondo.width != null){
-		        	this.anchura =  fondo.width;
+		        	this.anchura = fondo.width;
 				}
 				if(this.altura == 0 && fondo.height != null){
 					this.altura = fondo.height;	
@@ -74,7 +74,7 @@ namespace GUIMultiresolucion.GUIComponentes
 				barraProgreso.yMin = Offsetabajo;
 				
 				barraProgreso.xMax = Offsetizquierdo;
-				barraProgreso.xMin = anchura-(Offsetderecho+Offsetizquierdo*2);
+				barraProgreso.xMin = anchura-(Offsetderecho+Offsetizquierdo);
 				//posicionamos el Rect en la misma posicion que el GUIBarraProgreso
 				barraProgreso.x = this.posicionFija.x+barraProgreso.xMin+Offsetderecho;
 				barraProgreso.y = this.posicionFija.y+Offsetarriba;
