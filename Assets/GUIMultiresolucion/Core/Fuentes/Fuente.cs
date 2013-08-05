@@ -325,40 +325,46 @@ namespace GUIMultiresolucion.Core.Fuentes{
 		/// </param>
 		public List<List<SimboloLetra>> TextoATrozos(string texto, int size)
 		{
-			// actualmente solo seapra por espacio.
+			//inicializamos la lista que devolveremos.
 			List<List<SimboloLetra>> res = new List<List<SimboloLetra>>();
-			//array de string con las palabras del texto.
-            string[] palabras = Regex.Split(texto," ");
-			//string donde se ira almacenado el texto de cada linea.
-            string fraseString = string.Empty;
-			//contador para saber en que momento nos pasamos del tamaño dado.
-            int fraseStringLength = 0;
-			//recorremos todas las palabras del array palabras
-            foreach (String palabra in palabras)
-            {
-				//contador para saber los pixeles de cada palabra.
-				int lenghtPalabra= 0;
-				//actualizamos el contador de lenghtPalabra con el tamaño de la palabra actual.
-				GetCharsOfString(palabra).ForEach(obj=>lenghtPalabra +=obj.w+obj.offsetx);
-				//se lo añadimos al contador general de esa lineea.
-				fraseStringLength += lenghtPalabra;
-				
-				//si la frase aun entra en el size se añade la palabra a la frase de esa linea.
-				if(fraseStringLength <= size)
-				{
-					fraseString+=palabra+" ";
-				//si no entra se guarda la linea en el resultado y la palabra actual se pone en la siguiente linea.
-				}else{
-					res.Add(GetCharsOfString(fraseString));
-					fraseString = palabra+" ";
-					fraseStringLength = lenghtPalabra;
-				}
-            }
-			//si hemos terminado el for y se ha kedado el ultimo trozo con algun texto lo añadimos limpiando el espacio final que se le añadio.
-			if(fraseString != ""){
-				res.Add (GetCharsOfString(fraseString.Trim()));
+			
+			if(size == 0){
+				res.Add(GetCharsOfString(texto));
 			}
-	        
+			else
+			{
+				//array de string con las palabras del texto.
+	            string[] palabras = Regex.Split(texto," ");
+				//string donde se ira almacenado el texto de cada linea.
+	            string fraseString = string.Empty;
+				//contador para saber en que momento nos pasamos del tamaño dado.
+	            int fraseStringLength = 0;
+				//recorremos todas las palabras del array palabras
+	            foreach (String palabra in palabras)
+	            {
+					//contador para saber los pixeles de cada palabra.
+					int lenghtPalabra= 0;
+					//actualizamos el contador de lenghtPalabra con el tamaño de la palabra actual.
+					GetCharsOfString(palabra).ForEach(obj=>lenghtPalabra +=obj.w+obj.offsetx);
+					//se lo añadimos al contador general de esa lineea.
+					fraseStringLength += lenghtPalabra;
+					
+					//si la frase aun entra en el size se añade la palabra a la frase de esa linea.
+					if(fraseStringLength <= size)
+					{
+						fraseString+=palabra+" ";
+					//si no entra se guarda la linea en el resultado y la palabra actual se pone en la siguiente linea.
+					}else{
+						res.Add(GetCharsOfString(fraseString));
+						fraseString = palabra+" ";
+						fraseStringLength = lenghtPalabra;
+					}
+	            }
+				//si hemos terminado el for y se ha kedado el ultimo trozo con algun texto lo añadimos limpiando el espacio final que se le añadio.
+				if(fraseString != ""){
+					res.Add (GetCharsOfString(fraseString.Trim()));
+				}
+			}
 			return res;
 		}
 	}

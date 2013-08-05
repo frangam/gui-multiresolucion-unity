@@ -72,6 +72,10 @@ namespace GUIMultiresolucion.GUIComponentes{
 		/// </summary>
 		public int espacioLetras = 10;
 		public float PorcentajeSize = 1;
+		/// <summary>
+		///si size es >0 troceara la frase en trozos de tantos pixeles como el valor de size;
+		/// </summary>
+		public int size = 0;
 		
 		#endregion
 		
@@ -149,7 +153,7 @@ namespace GUIMultiresolucion.GUIComponentes{
 			
 			if(fuente != null){		
 			//	Fuente.SimboloLetra[] simbolos = fuente.GetCharsOfString(texto); //obtenemos los simbolos del texto
-				List<List<Fuente.SimboloLetra>> simbolosPorLineas = fuente.TextoATrozos(texto, 2000); //conjunto de simbolos (letras) que tiene cada linea del texto a mostrar
+				List<List<Fuente.SimboloLetra>> simbolosPorLineas = fuente.TextoATrozos(texto, size); //conjunto de simbolos (letras) que tiene cada linea del texto a mostrar
 				alturaLinea = fuente.CommonLineHeigth;
 			
 				
