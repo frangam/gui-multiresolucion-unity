@@ -91,11 +91,11 @@ namespace GUIMultiresolucion.GUIComponentes{
 			get{
 				//cambiamos las dimensiones si la anchura/altura del componente es 0
 				if(this.anchura == 0 || (texturaFinalLabel != null && texturaFinalLabel.GetPixels().Length > 0 && texturaFinalLabel.width != null)){
-		        	this.anchura =  texturaFinalLabel.width;
+		        	this.anchura =  texturaFinalLabel.width*PorcentajeSize;
 				}
 				
 				if(this.altura == 0 || (texturaFinalLabel != null && texturaFinalLabel.GetPixels().Length > 0 && texturaFinalLabel.height != null)){
-					this.altura = texturaFinalLabel.height;	
+					this.altura = texturaFinalLabel.height*PorcentajeSize;	
 				}
 				
 				return base.distribucion;
@@ -125,8 +125,8 @@ namespace GUIMultiresolucion.GUIComponentes{
 			if(texto != null || texto != "" && texturaFinalLabel != null && texturaFinalLabel.GetPixels().Length > 0){
 //				Debug.Log(distribucion);
 //				Debug.Log(new Rect(100, 200, texturaFinalLabel.width, texturaFinalLabel.height));
-				Rect _dist = new Rect(distribucion.x, distribucion.y, distribucion.width * PorcentajeSize, distribucion.height * PorcentajeSize); 
-				GUI.DrawTexture(_dist, texturaFinalLabel);
+//				Rect _dist = new Rect(distribucion.x, distribucion.y, distribucion.width * PorcentajeSize, distribucion.height * PorcentajeSize); 
+				GUI.DrawTexture(distribucion, texturaFinalLabel);
 			}
 		}
 		#endregion
@@ -149,7 +149,7 @@ namespace GUIMultiresolucion.GUIComponentes{
 			
 			if(fuente != null){		
 			//	Fuente.SimboloLetra[] simbolos = fuente.GetCharsOfString(texto); //obtenemos los simbolos del texto
-				List<List<Fuente.SimboloLetra>> simbolosPorLineas = fuente.TextoATrozos(texto, 0); //conjunto de simbolos (letras) que tiene cada linea del texto a mostrar
+				List<List<Fuente.SimboloLetra>> simbolosPorLineas = fuente.TextoATrozos(texto, 2000); //conjunto de simbolos (letras) que tiene cada linea del texto a mostrar
 				alturaLinea = fuente.CommonLineHeigth;
 			
 				
