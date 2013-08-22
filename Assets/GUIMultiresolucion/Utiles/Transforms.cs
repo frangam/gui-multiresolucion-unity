@@ -15,11 +15,11 @@ public class Transforms : MonoBehaviour {
 	/// <param name='name'>
 	/// Nombre del hijo a encontrar
 	/// </param>
-	public static Transform FindTransform(Transform parent, string name){
+	public static Transform FindChildTransform(Transform parent, string name){
         if (parent.name.Equals(name)) return parent;
 
         foreach (Transform child in parent){
-            Transform result = FindTransform(child, name);
+            Transform result = FindChildTransform(child, name);
 
             if (result != null) return result;
         }
