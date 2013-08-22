@@ -14,7 +14,13 @@ namespace GUIMultiresolucion.GUIComponentes{
 		
 		#region privados
 		public void inicializar(GUIMultiVentana multiventana, bool _ventanaActiva){
-			base.inicializar(multiventana.imgCabecera.posicionFija.y, multiventana.imgCabecera.altura, multiventana.imgPie.posicionFija.y);
+			float yCabecera, yPie, alturaCabecera = 0f;
+			
+			yCabecera = multiventana.imgCabecera != null ? multiventana.imgCabecera.posicionFija.y : 0f;
+			yPie = multiventana.imgPie != null ? multiventana.imgPie.posicionFija.y : GUIEscalador.ALTO_PANTALLA;
+			alturaCabecera = multiventana.imgCabecera != null ? multiventana.imgCabecera.altura : 0f;
+			
+			base.inicializar(yCabecera, alturaCabecera, yPie);
 			
 			if(_ventanaActiva){
 				base.inicializar();	

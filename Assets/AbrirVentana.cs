@@ -5,7 +5,8 @@ using TouchScript.Gestures;
 
 public class AbrirVentana : MonoBehaviour {
 	
-	public GUIMultiVentana ventana; 
+	public GUIMultiVentana ventana;
+	public int indiceVentana = 0;
 		#region Unity
 		void Start(){
 			
@@ -20,17 +21,10 @@ public class AbrirVentana : MonoBehaviour {
 		{
 			//segun el estado del evento
 			switch(e.State){
-				case Gesture.GestureState.Began:
-					//si tiene asignada una textura para cuando se pulsa el boton, le cambiamos la textura que tiene que dibujarse por esa
-					//y si se quiere cambiar
-					
-				break;
-				//si se cancela o finaliza
-				case Gesture.GestureState.Failed:
-				case  Gesture.GestureState.Cancelled:
 				case Gesture.GestureState.Ended:
-					ventana.Visible = true;
-					ventana.abrirVentana(2);
+					Debug.Log("Pulsado");
+					ventana.abrirVentana(indiceVentana);
+					
 				break;
 			}
 		}

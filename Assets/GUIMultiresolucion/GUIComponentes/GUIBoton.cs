@@ -94,12 +94,13 @@ namespace GUIMultiresolucion.GUIComponentes{
 							multiventana.cerrarVentana(); //cerrar la multiventana
 						break;
 					
-						case TipoBoton.DELANTE:
-							multiventana.abrirVentanaSiguiente(); //abrir ventana siguiente
-						break;
+//						case TipoBoton.DELANTE:
+//							multiventana.abrirVentanaSiguiente(); //abrir ventana siguiente
+//						break;
 						
 						case TipoBoton.ATRAS:
-							multiventana.abrirVentanaAnterior(); //abrir ventana anterior
+							multiventana.abrirVentanaInicio(); //abrir la ventana de inicio
+//							multiventana.abrirVentanaAnterior(); //abrir ventana anterior
 						break;
 					}
 				}

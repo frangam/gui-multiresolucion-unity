@@ -9,21 +9,11 @@ namespace GUIMultiresolucion.GUIComponentes{
 	 */ 
 	[System.Serializable]
 	public class GUIMultiVentana : GUIVentana {
-		#region atributos de configuracion
-		/// <summary>
-		/// Las ventanas que forman el conjunto
-		/// </summary>
-		public List<GUIVentanaJerarquizada> ventanas;
-		
+		#region atributos de configuracion		
 		/// <summary>
 		/// Boton para navegar hacia atras en la jerarquia de ventanas de una multiventana
 		/// </summary>
 		public GUIBoton botonAtras;
-		
-		/// <summary>
-		/// Boton para navegar hacia delante en la jerarquia de ventanas de una multiventana
-		/// </summary>
-		public GUIBoton botonDelante;
 		
 		/// <summary>
 		/// La ventana que esta activa, que se esta mostrando en el momento actual
@@ -33,6 +23,11 @@ namespace GUIMultiresolucion.GUIComponentes{
 		#endregion
 		
 		#region atributos privados
+		/// <summary>
+		/// Las ventanas que forman el conjunto
+		/// </summary>
+		private List<GUIVentanaJerarquizada> ventanas;
+		
 		/// <summary>
 		/// Las ventanas ordenadas segun el orden que ocupan en la jerarquia
 		/// </summary>
@@ -50,7 +45,8 @@ namespace GUIMultiresolucion.GUIComponentes{
 			get{			
 				return base.Visible;
 			}	
-			set{	
+			set{
+				
 				foreach(GUIVentanaJerarquizada vj in ventanas){
 					if(vj != null && value == false){
 						vj.Visible = false;
@@ -73,14 +69,12 @@ namespace GUIMultiresolucion.GUIComponentes{
 			//para que se puedan detectar sin problemas los gestos sobre los items, de forma independiente a los gestos de los items
 			transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -0.1f);		
 			
-			//si no se han adjuntado las ventanas de forma manual
-			if(ventanas == null || ventanas.Count == 0){
-				GUIVentanaJerarquizada[] ventanasHijos = transform.parent.GetComponentsInChildren<GUIVentanaJerarquizada>(); //obtenemos los hijos de la multiventana que deben ser GUIVentanaJerarquizada
-				
-				//adjuntamos esos hijos a los items
-				foreach(GUIVentanaJerarquizada v in ventanasHijos){
-					ventanas.Add(v);	
-				}
+			ventanas = new List<GUIVentanaJerarquizada>(); //instanciamos las ventanas
+			GUIVentanaJerarquizada[] ventanasHijos = transform.parent.GetComponentsInChildren<GUIVentanaJerarquizada>(); //obtenemos los hijos de la multiventana que deben ser GUIVentanaJerarquizada
+			
+			//adjuntamos esos hijos a los items
+			foreach(GUIVentanaJerarquizada v in ventanasHijos){
+				ventanas.Add(v);	
 			}
 			
 			ventanasOrdenadas = new ArrayList(ventanas);
@@ -95,20 +89,15 @@ namespace GUIMultiresolucion.GUIComponentes{
 			}
 			
 			ventanaActiva.inicializar(this, true); //inicializamos la ventana activa
-			
-			
-			
+
 			botonAtras.Visible = false;
-			botonDelante.Visible = false;
-			
-			
-			
+
 			
 			base.inicializar();
 		}
 		
 		public override void dibujar (){	
-			if(imgFondo.Visible){
+			if(imgFondo != null && imgFondo.Visible){
 				imgFondo.dibujar();
 			}	
 			
@@ -118,15 +107,19 @@ namespace GUIMultiresolucion.GUIComponentes{
 			}
 			
 			
-			if(imgCabecera.Visible){
+			if(imgCabecera != null && imgCabecera.Visible){
 				imgCabecera.dibujar();	
+			}
+			
+			if(titulo != null && titulo.Visible){
+				titulo.dibujar();
 			}
 			
 			if(botonCerrar.Visible){
 				botonCerrar.dibujar();	
 			}
 			
-			if(imgPie.Visible){
+			if(imgPie != null && imgPie.Visible){
 				imgPie.dibujar();
 			}
 			
@@ -136,10 +129,6 @@ namespace GUIMultiresolucion.GUIComponentes{
 			
 			if(botonAtras.Visible){
 				botonAtras.dibujar();	
-			}
-			
-			if(botonDelante.Visible){
-				botonDelante.dibujar();	
 			}
 		}
 		#endregion
@@ -152,38 +141,42 @@ namespace GUIMultiresolucion.GUIComponentes{
 			//---
 			//condiciones para que la ventana posea botones atras y hacia delante
 			//---
+			if(ventanaActiva.ordenEnMultiventana > 0){
+				botonAtras.Visible = true;
+				botonAtras.inicializar(this);
+			}
 			
 //			if(ventanaActiva.ordenEnMultiventana == 0 && ventanaActiva.ordenEnMultiventana == totalVentanas()-1){
 //				botonAtras.Visible = false;
 //				botonDelante.Visible = false;
 //			}
 //			else if(ventanaActiva.ordenEnMultiventana == 0 && ventanaActiva.ordenEnMultiventana < totalVentanas()-1){
-			if(ventanaActiva.ordenEnMultiventana == 0 && ventanaActiva.ordenEnMultiventana < totalVentanas()-1){
-				botonAtras.Visible = false;
-				
-				if(!botonDelante.Visible){
-					botonDelante.Visible = true;
-					botonDelante.inicializar(this);
-				}
-			}	
-			else if(ventanaActiva.ordenEnMultiventana > 0 && ventanaActiva.ordenEnMultiventana == totalVentanas()-1){
-				if(!botonAtras.Visible){
-					botonAtras.Visible = true;
-					botonAtras.inicializar(this);
-				}
-				botonDelante.Visible = false;
-			}
-			else if(ventanaActiva.ordenEnMultiventana > 0 && ventanaActiva.ordenEnMultiventana < totalVentanas()-1){
-				if(!botonAtras.Visible){
-					botonAtras.Visible = true;
-					botonAtras.inicializar(this);	
-				}
-				
-				if(!botonDelante.Visible){
-					botonDelante.Visible = true;
-					botonDelante.inicializar(this);
-				}
-			}	
+//			if(ventanaActiva.ordenEnMultiventana == 0 && ventanaActiva.ordenEnMultiventana < totalVentanas()-1){
+//				botonAtras.Visible = false;
+//				
+//				if(!botonDelante.Visible){
+//					botonDelante.Visible = true;
+//					botonDelante.inicializar(this);
+//				}
+//			}	
+//			else if(ventanaActiva.ordenEnMultiventana > 0 && ventanaActiva.ordenEnMultiventana == totalVentanas()-1){
+//				if(!botonAtras.Visible){
+//					botonAtras.Visible = true;
+//					botonAtras.inicializar(this);
+//				}
+//				botonDelante.Visible = false;
+//			}
+//			else if(ventanaActiva.ordenEnMultiventana > 0 && ventanaActiva.ordenEnMultiventana < totalVentanas()-1){
+//				if(!botonAtras.Visible){
+//					botonAtras.Visible = true;
+//					botonAtras.inicializar(this);	
+//				}
+//				
+//				if(!botonDelante.Visible){
+//					botonDelante.Visible = true;
+//					botonDelante.inicializar(this);
+//				}
+//			}	
 		}
 		
 		public void abrirVentana(int indiceVentana){
@@ -197,7 +190,9 @@ namespace GUIMultiresolucion.GUIComponentes{
 					ventanaActiva.inicializar(this, true); //inicializamos la ventana activa
 					ventanaActiva.abrirVentana(); //abrimos la ventana activa
 					inicializarBotonesNavegacion(); //inicializamos los botones de navegacion
+					
 				}
+				Visible = true;
 			}
 			else{
 				Debug.Log("Ventana con indice "+ indiceVentana+" fuera de rango");	
@@ -214,13 +209,16 @@ namespace GUIMultiresolucion.GUIComponentes{
 			
 			//cerrar botones de navegacion
 			botonAtras.Visible = false;
-			botonDelante.Visible = false;
 			
 			base.cerrarVentana ();
 		}
 		
 		public void abrirVentanaSiguiente(){
 			abrirVentana(ventanaActiva.ordenEnMultiventana + 1);	
+		}
+		
+		public void abrirVentanaInicio(){
+			abrirVentana(0);
 		}
 		
 		public void abrirVentanaAnterior(){

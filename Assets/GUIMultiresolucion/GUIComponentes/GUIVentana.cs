@@ -28,6 +28,11 @@ namespace GUIMultiresolucion.GUIComponentes{
 		/// </summary>
 		public GUIBoton botonCerrar;
 		
+		/// <summary>
+		/// El titulo de la ventana
+		/// </summary>
+		public GUILabel titulo;
+		
 		public GUIPanel panelScrollable;		
 		
 		#endregion
@@ -76,6 +81,10 @@ namespace GUIMultiresolucion.GUIComponentes{
 				imgCabecera.profundidad = 0;
 				items.Add(imgCabecera);
 				imgCabecera.transform.position = new Vector3(imgCabecera.transform.position.x, imgCabecera.transform.position.y, 0.1f);
+			}
+			if(titulo != null){
+				titulo.profundidad = -5;
+				items.Add(titulo);
 			}
 			if(imgPie != null){
 				imgPie.profundidad = 0;

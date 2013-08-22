@@ -10,12 +10,7 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 	 * mediante gestos con los dedos. 
 	 */ 
 	public class GUIPanel : GUIComponente {
-		#region atributos de configuracion
-		/// <summary>
-		/// Los elementos que estan dentro del panel
-		/// </summary>
-		[SerializeField] private List<GUIItemPanel> items;
-		
+		#region atributos de configuracion		
 		/// <summary>
 		/// Si se quiere hacer que el panel tenga scroll para desplazar sus items,
 		/// se indica el tipo de scroll que se quiere hacer, o indicar el tipo NINGUNO, para que
@@ -45,6 +40,11 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 		#endregion
 		
 		#region atributos privados
+		/// <summary>
+		/// Los elementos que estan dentro del panel
+		/// </summary>
+		private List<GUIItemPanel> items;
+		
 		/// <summary>
 		/// Los items que estan en el panel ordenados por el criterio de IComparable implementado en GUIItemPanel
 		/// </summary>
@@ -113,10 +113,12 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 			get{				
 				return base.Visible;
 			}
-			set{				
-				foreach(GUIItemPanel i in items){
-					if(i.item != null){
-						i.Item.Visible = value;
+			set{
+				if(items != null){
+					foreach(GUIItemPanel i in items){
+						if(i.item != null){
+							i.Item.Visible = value;
+						}
 					}
 				}
 				
@@ -136,15 +138,14 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 			xMinimaRelativaScrollable = 1f - xMaximaRelativaScrollable;
 			yMinimaRelativaScrollable = 1f - yMaximaRelativaScrollable;
 			
-			//si no se han adjuntado items al panel de forma manual
-			if(items == null || items.Count == 0){
-				GUIItemPanel[] itemsHijos = GetComponentsInChildren<GUIItemPanel>(); //obtenemos los hijos del panel que deben ser GUIItemPanel
-				
-				//adjuntamos esos hijos a los items
-				foreach(GUIItemPanel i in itemsHijos){
-					items.Add(i);	
-				}
+			items = new List<GUIItemPanel>(); //instanciamos la lista de items
+			GUIItemPanel[] itemsHijos = GetComponentsInChildren<GUIItemPanel>(); //obtenemos los hijos del panel que deben ser GUIItemPanel
+			
+			//adjuntamos esos hijos a los items
+			foreach(GUIItemPanel i in itemsHijos){
+				items.Add(i);	
 			}
+			
 			
 			//primero inicializamos los items
 			foreach(GUIItemPanel i in items){
