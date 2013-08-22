@@ -140,51 +140,32 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 			
 			items = new List<GUIItemPanel>(); //instanciamos la lista de items
 			GUIItemPanel[] itemsHijos = GetComponentsInChildren<GUIItemPanel>(); //obtenemos los hijos del panel que deben ser GUIItemPanel
+			Transform itemsGO = Transforms.FindChildTransform(transform.parent, "itemsPanel"); //obtiene el hijo "itemsPanel"
+			GUIComponente[] componentesGUIPanel = itemsGO.GetComponentsInChildren<GUIComponente>(); //obtenemos los items gui componentes que se adjuntan en los gui item panel
 			
-			//adjuntamos esos hijos a los items
-			foreach(GUIItemPanel i in itemsHijos){
-				items.Add(i);	
+			if(componentesGUIPanel.Length == itemsHijos.Length){
+			
+				//adjuntamos esos hijos a los items
+				for(int i=0; i<componentesGUIPanel.Length; i++){
+					itemsHijos[i].item = componentesGUIPanel[i]; //adjuntamos el componente gui como item del gui item panel
+					items.Add(itemsHijos[i]);//adjuntamos ese gui item panel a la lista de items	
+				}
+				
+				//primero inicializamos los items
+				foreach(GUIItemPanel i in items){
+					i.inicializar(scroll, this);
+				}
+				
+				//ordenamos los items
+				itemsOrdenados = new ArrayList(items);
+				itemsOrdenados.Sort();
+				primerItem = (GUIItemPanel) itemsOrdenados[0];
+				ultimoItem = (GUIItemPanel) itemsOrdenados[itemsOrdenados.Count-1];
+				
 			}
-			
-			
-			//primero inicializamos los items
-			foreach(GUIItemPanel i in items){
-				i.inicializar(scroll, this);
+			else{
+				Debug.LogError("Revise el numero de componentes gui ("+componentesGUIPanel.Length+") que desea que tenga como GUI Item Panel("+itemsHijos.Length+ ") su panel");	
 			}
-			
-			//ordenamos los items
-			itemsOrdenados = new ArrayList(items);
-			itemsOrdenados.Sort();
-			primerItem = (GUIItemPanel) itemsOrdenados[0];
-			ultimoItem = (GUIItemPanel) itemsOrdenados[itemsOrdenados.Count-1];
-			
-//				//horizontal: mantenemos anchura de la pantalla
-//				if(scroll == TipoScroll.HORIZONTAL){
-//					float alturaMax = float.NegativeInfinity;
-//					
-//					foreach(GUIItemPanel i in items){
-//						//calculamos que item tiene la mayor altura
-//						if(i.Item.altura > alturaMax){
-//							alturaMax = i.Item.altura;	
-//						}
-//					}
-//					
-//					this.anchura = GUIEscalador.ANCHO_PANTALLA;
-//					this.altura = alturaMax;
-//				}
-//				//vertical: mantenemos altura de la pantalla
-//				else if(scroll == TipoScroll.VERTICAL){
-//					float anchuraMax = float.NegativeInfinity;
-//					
-//					foreach(GUIItemPanel i in items){
-//						//calculamos que item tiene la mayor altura
-//						if(i.Item.anchura > anchuraMax){
-//							anchuraMax = i.Item.anchura;	
-//						}
-//					}
-//					
-//					this.altura = GUIEscalador.ALTO_PANTALLA;
-//				}	
 			
 			base.inicializar();
 			

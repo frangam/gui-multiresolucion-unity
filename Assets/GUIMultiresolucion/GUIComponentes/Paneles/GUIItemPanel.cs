@@ -9,12 +9,7 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 	 * Representa un elemento que forma parte de un panel
 	 */ 
 	[ExecuteInEditMode]
-	public class GUIItemPanel :  MonoBehaviour, IComparable{
-		/// <summary>
-		/// El GUIComponente que representa al item adjuntado al panel
-		/// </summary>
-		public GUIComponente item;
-		
+	public class GUIItemPanel :  MonoBehaviour, IComparable{		
 		/// <summary>
 		/// El panel al que pertenece el item
 		/// </summary>
@@ -33,6 +28,11 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 		private Vector2 posActualizar;
 		
 		private bool iniciarAnimacionScroll;
+		
+		/// <summary>
+		/// El GUIComponente que representa al item adjuntado al panel
+		/// </summary>
+		private GUIComponente item;
 		
 		private float progresoAnimacionScroll = 0f;
 		private float duracionAnimacionScroll = 2f; //los segundos que tarda el lerp
