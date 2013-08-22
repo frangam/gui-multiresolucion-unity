@@ -32,7 +32,7 @@ namespace GUIMultiresolucion.GUIComponentes.Paneles{
 		/// <summary>
 		/// El GUIComponente que representa al item adjuntado al panel
 		/// </summary>
-		private GUIComponente item;
+		public GUIComponente item;
 		
 		private float progresoAnimacionScroll = 0f;
 		private float duracionAnimacionScroll = 2f; //los segundos que tarda el lerp
